@@ -1,0 +1,193 @@
+@font-face {
+    font-family: Halo;
+    src: url(./Assets/Fonts/Rajdhani-Regular.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: HaloSB;
+    src: url(./Assets/Fonts/Rajdhani-SemiBold.ttf);
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: HaloB;
+    src: url(./Assets/Fonts/Rajdhani-Bold.ttf);
+    font-weight: bolder;
+}
+
+@font-face {
+    font-family: HaloL;
+    src: url(./Assets/Fonts/Rajdhani-Light.ttf);
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: HaloM;
+    src: url(./Assets/Fonts/Rajdhani-Medium.ttf);
+}
+
+body {
+    font-family: Halo !important;
+    color: white;
+}
+
+h2 {
+   color:#F2DF7A!important;
+}
+
+h3 {
+    color: #D3A03B !important;
+}
+
+div {
+    border-radius: 5px;
+}
+
+
+div.mapbox {
+
+    height: 65px;
+    border-radius: 0px;
+    justify-content: center;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid #454A65!important;
+    box-shadow: 0 0 200px rgba(0,0,0,0.65) inset;
+    font-family: HaloM;
+    font-size: 2rem;
+    color: white;
+    text-shadow: #2B2E2E 3px 3px;
+}
+
+section>div {
+        background-color: #1B1D27;
+        border: 1px solid #191F32;
+}
+
+article>div, div.card, .carousel, div.mapback, button, #seasonContainer, #pageMain, #rightColumn {
+    background-color: #191F32 !important;
+    border: 1px solid #454A65!important;
+    color: white !important;
+    overflow: hidden;
+}
+
+ #pageMain {
+    box-shadow: 0px 0px 150px rgba(210, 216, 244, .1);
+ }
+
+#seasonContainer, #seasonContainer>* {
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #454A65!important;;
+    transition: 0.25s;
+}
+
+article>div.row:hover,
+div.mapbox:hover,
+div.card:hover,
+div.card-img-overlay:hover {
+    color: rgba(255, 255, 255, 1);
+    box-shadow: inset 10px 10px 50px rgba(210, 216, 244, .2);
+    transform: scale(1.02);
+    overflow: hidden;
+    transition: 0.15s;
+
+}
+
+
+body {
+    background-color: black !important;
+}
+
+nav,footer {
+
+    background-color: #2B2E2E;
+    background-image: url(./Assets//expand.png);
+    box-shadow: 1px 1px 25px rgba(242, 223, 122, .2), inset 1px 1px 5px rgba(210, 216, 244, .2);
+}
+
+.card-img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+}
+
+@media only screen and (max-width: 768px) {
+.cardContainer {
+    max-width: 45%;
+}
+}
+
+nav {
+    border-bottom: 1px solid #D3A03B;
+}
+
+ul.dropdown-menu, a.dropdown-item {
+    background-color: #191F32;
+    background-size: auto;
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.dropdown-item:hover {
+    background-color: #D3A03B !important;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+footer {
+    border-top: 1px solid #D3A03B;
+}
+
+#aquarius {
+    background-image: url(./Assets/Aquarius.png);
+    
+}
+
+#empyrean {
+    background-image: url(./Assets/Empyrean.jpg);
+}
+
+#forbidden {
+    background-image: url(./Assets/forbidden.jpg);
+}
+
+#fortress {
+    background-image: url(./Assets/Fortress.jpg);
+}
+
+#lattice {
+    background-image: url(./Assets/Lattice.jpg);
+}
+
+#livefire {
+    background-image: url(./Assets/Live\ Fire.jpg);
+}
+
+#origin {
+    background-image: url(./Assets/Origin.jpg);
+}
+
+#recharge {
+    background-image: url(./Assets/Recharge.jpg);
+}
+
+#serenity {
+    background-image: url(./Assets/Serenity.jpg);
+}
+
+#solitude {
+    background-image: url(./Assets/Solitude.jpg);
+}
+
+#streets {
+    background-image: url(./Assets/Streets.png);
+}
+
+#spare {
+    background-image: url(./Assets/othermaps.jpg);
+}

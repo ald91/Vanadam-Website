@@ -1,0 +1,7 @@
+.env
+.vscode
+.git
+*.pptx
+*.docx
+
+assets/*
