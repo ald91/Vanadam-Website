@@ -1,30 +1,30 @@
 @font-face {
     font-family: Halo;
-    src: url(./Assets/Fonts/Rajdhani-Regular.ttf);
+    src: url(../Assets/Fonts/Rajdhani-Regular.ttf);
     font-weight: normal;
 }
 
 @font-face {
     font-family: HaloSB;
-    src: url(./Assets/Fonts/Rajdhani-SemiBold.ttf);
+    src: url(../Assets/Fonts/Rajdhani-SemiBold.ttf);
     font-weight: bold;
 }
 
 @font-face {
     font-family: HaloB;
-    src: url(./Assets/Fonts/Rajdhani-Bold.ttf);
+    src: url(../Assets/Fonts/Rajdhani-Bold.ttf);
     font-weight: bolder;
 }
 
 @font-face {
     font-family: HaloL;
-    src: url(./Assets/Fonts/Rajdhani-Light.ttf);
+    src: url(../Assets/Fonts/Rajdhani-Light.ttf);
     font-weight: lighter;
 }
 
 @font-face {
     font-family: HaloM;
-    src: url(./Assets/Fonts/Rajdhani-Medium.ttf);
+    src: url(../Assets/Fonts/Rajdhani-Medium.ttf);
 }
 
 body {
@@ -105,7 +105,7 @@ body {
 nav,footer {
 
     background-color: #2B2E2E;
-    background-image: url(./Assets//expand.png);
+    background-image: url(../Assets//expand.png);
     box-shadow: 1px 1px 25px rgba(242, 223, 122, .2), inset 1px 1px 5px rgba(210, 216, 244, .2);
 }
 
@@ -144,50 +144,50 @@ footer {
 }
 
 #aquarius {
-    background-image: url(./Assets/Aquarius.png);
+    background-image: url(../Assets/Aquarius.png);
     
 }
 
 #empyrean {
-    background-image: url(./Assets/Empyrean.jpg);
+    background-image: url(../Assets/Empyrean.jpg);
 }
 
 #forbidden {
-    background-image: url(./Assets/forbidden.jpg);
+    background-image: url(../Assets/forbidden.jpg);
 }
 
 #fortress {
-    background-image: url(./Assets/Fortress.jpg);
+    background-image: url(../Assets/Fortress.jpg);
 }
 
 #lattice {
-    background-image: url(./Assets/Lattice.jpg);
+    background-image: url(../Assets/Lattice.jpg);
 }
 
 #livefire {
-    background-image: url(./Assets/Live\ Fire.jpg);
+    background-image: url(../Assets/Live\ Fire.jpg);
 }
 
 #origin {
-    background-image: url(./Assets/Origin.jpg);
+    background-image: url(../Assets/Origin.jpg);
 }
 
 #recharge {
-    background-image: url(./Assets/Recharge.jpg);
+    background-image: url(../Assets/Recharge.jpg);
 }
 
 #serenity {
-    background-image: url(./Assets/Serenity.jpg);
+    background-image: url(../Assets/Serenity.jpg);
 }
 
 #solitude {
-    background-image: url(./Assets/Solitude.jpg);
+    background-image: url(../Assets/Solitude.jpg);
 }
 
 #streets {
-    background-image: url(./Assets/Streets.png);
+    background-image: url(../Assets/Streets.png);
 }
 
 #spare {
-    background-image: url(./Assets/othermaps.jpg);
+    background-image: url(../Assets/othermaps.jpg);
 }
