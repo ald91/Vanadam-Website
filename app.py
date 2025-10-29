@@ -1,8 +1,16 @@
 # This code imports the Flask library and some functions from it.
-from flask import Flask, render_template
-import sqlite3, os
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from flask_bcrypt import Bcrypt
+from flask_wtf import FlaskForm
+
+from wtforms import EmailField, PasswordField, StringField, SubmitField
+from wtforms.validators import DataRequired, Email
+import sqlite3, os, hashlib, base64
 from dbconstructor import create_database
 
+
+#
+hash = hashlib.sha256()
 dbpath = "database.db"
 if os.path.exists(dbpath):
     conn = sqlite3.connect("database.db")
@@ -11,9 +19,24 @@ else:
     print("Database doesn't exist, constructing...")
     create_database()
     conn = sqlite3.connect("database.db")
+#Create a cursor for db interaction
+cur = conn.cursor()
 
 # Create a Flask application instance
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "dev_key_for_testing_only")
+
+#Construct user validation and registration form classes
+class LoginForm(FlaskForm):
+    username = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators = [DataRequired()])
+    submit = SubmitField('Login')
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username', validators = [DataRequired()])
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators = [DataRequired()])
+    submit = SubmitField('Register')
 
 # Routes
 #===================
@@ -31,10 +54,29 @@ def mapPage(mapName):
 
 @app.route('/login', methods=['GET'])
 def login():
-    pass
+    form = LoginForm()
+    if form.validate_on_submit():  # Checks that submitted login form adheres to input validation rules
+        username = form.username.data
+        password = form.password.data
+
+        query = "SELECT * FROM users WHERE username = ?"
+        cur.execute(query, (username,))
+        result = cur.fetchone()
+        print(result)
+
+        if result is None:
+            print("User not found")
+        else:
+            if result['password'] == hashlib.sha256(password).hexdigest():
+                print("Login successful")
+            else:
+                print("Login failed")
+
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
+    #pop user from session
     pass
 
 @app.route('/register', methods=['GET', 'POST'])
