@@ -4,4 +4,9 @@
 *.pptx
 *.docx
 
-assets/*
+
+
+core.py
+
+
+__pycache__/*
