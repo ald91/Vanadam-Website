@@ -21,6 +21,7 @@ else:
     conn = sqlite3.connect("database.db")
 #Create a cursor for db interaction
 cur = conn.cursor()
+from HaloData import HI_MAPS
 
 # Create a Flask application instance
 app = Flask(__name__)
@@ -47,11 +48,6 @@ class RegisterForm(FlaskForm):
 def index():
     return render_template('home.html', title="Vanadam Halo")
 
-@app.route('/mapPage/<mapName>', methods=['GET'])
-def mapPage(mapName):
-    print(f'got request for: {mapName}')
-    return render_template(f'{mapName}.html', mapName=mapName)
-
 @app.route('/login', methods=['GET'])
 def login():
     form = LoginForm()
@@ -74,6 +70,17 @@ def login():
 
     return render_template('login.html')
 
+
+@app.route('/mapPage/<mapID>', methods=['GET'])
+def mapPage(mapID):
+    print(f'got request for: {mapID}')
+    mapID = str(mapID).capitalize()
+    map_data = HI_MAPS.get(mapID)
+    if not map_data:
+        return render_template('404.html')
+    
+    print(map_data)
+    return render_template('map.html', map=map_data)
 @app.route('/logout')
 def logout():
     #pop user from session
