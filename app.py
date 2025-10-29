@@ -1,13 +1,16 @@
 # This code imports the Flask library and some functions from it.
 from flask import Flask, render_template
-import sqlite3
+import sqlite3, os
+from dbconstructor import create_database
 
-try:
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-except:
-    print("Error connecting to database")
-
+dbpath = "database.db"
+if os.path.exists(dbpath):
+    conn = sqlite3.connect("database.db")
+    print("Connected to database!")
+else:
+    print("Database doesn't exist, constructing...")
+    create_database()
+    conn = sqlite3.connect("database.db")
 
 # Create a Flask application instance
 app = Flask(__name__)
@@ -26,7 +29,7 @@ def mapPage(mapName):
     print(f'got request for: {mapName}')
     return render_template(f'{mapName}.html', mapName=mapName)
 
-@app.route('login', methods=['GET'])
+@app.route('/login', methods=['GET'])
 def login():
     pass
 
