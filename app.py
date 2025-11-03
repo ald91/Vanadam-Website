@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
 
 from wtforms import EmailField, PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, Regexp
+from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 import sqlite3, os, hashlib, base64
 from dbconstructor import create_database
 
@@ -34,12 +34,17 @@ csrf = CSRFProtect(app)
 #Construct user validation and registration form classes
 class LoginForm(FlaskForm):
     username = StringField('Username',
-                           validators=[
-                               DataRequired(),
-                               Length(min=3, max=16),
-                               Regexp('^[A-Za-z][A-Za-z0-9_.]*$', )
-                           ])
-    password = PasswordField('Password', validators = [DataRequired()])
+                            validators=[
+                                DataRequired(),
+                                Length(min=3, max=16),
+                                Regexp('^[A-Za-z][A-Za-z0-9_.]*$', )
+                            ])
+    password = PasswordField('Password',
+                            validators = [
+                                DataRequired(),
+                                Length(min=8, max=64),
+                                Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
+                            ])
     submit = SubmitField('Login')
 
 #Length and Regexp need checking
@@ -49,16 +54,29 @@ class RegisterForm(FlaskForm):
                                 DataRequired(message="Username is not Valid."),
                                 Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
                                 Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
-                                ])
+                            ])
     
     email = EmailField('Email', 
-                       validators = [
-                            DataRequired(message="Email is not Valid."),
-                            Email()])
+                            validators = [
+                                DataRequired(message="Email is not Valid."),
+                                Email()
+                            ])
     
-    password = PasswordField('Password', validators = [DataRequired()])
+    password = PasswordField('Password',
+                            validators = [
+                                DataRequired(),
+                                Length(min=8, max=64, message="Password must be between 8 and 64 characters."),
+                                Regexp(
+                                    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
+                                    message="Password must contain uppercase, lowercase, number, and symbol."
+                                )
+                            ])
 
-    passwordConfirm = PasswordField('Password2', validators= [DataRequired()])
+    passwordConfirm = PasswordField('Password2',
+                            validators= [
+                                DataRequired(),
+                                EqualTo('password', message="Passwords must match.")
+                            ])
 
     submit = SubmitField('Register')
 
