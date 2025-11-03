@@ -44,6 +44,9 @@ div {
     border-radius: 5px;
 }
 
+#pageMain {
+    min-height: 80vh;
+}
 
 div.mapbox {
 
@@ -107,6 +110,7 @@ nav,footer {
     background-color: #2B2E2E;
     background-image: url(../Assets//expand.png);
     box-shadow: 1px 1px 25px rgba(242, 223, 122, .2), inset 1px 1px 5px rgba(210, 216, 244, .2);
+
 }
 
 .card-img {
