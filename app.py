@@ -55,7 +55,7 @@ class RegisterForm(FlaskForm):
                                 DataRequired(message="Username is not Valid."),
                                 Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
                                 Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
-                                ])
+                            ])
     
     email = EmailField('Email', 
                             validators = [
@@ -73,7 +73,11 @@ class RegisterForm(FlaskForm):
                                 )
                             ])
 
-    password2 = PasswordField('Confirm Password', validators= [DataRequired()])
+    passwordConfirm = PasswordField('Password2',
+                            validators= [
+                                DataRequired(),
+                                EqualTo('password', message="Passwords must match.")
+                            ])
 
     submit = SubmitField('Register')
 
