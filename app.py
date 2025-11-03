@@ -124,11 +124,21 @@ def login():
 
         if result is None:
             print("User not found")
+            return render_template('login.html', form=form)
+        hashed_input = hashlib.sha256(password.encode()).hexdigest()
+        stored_password = result['password']
+
+        if hashed_input == stored_password:
+            #Clear session data to remove stale data, then fill in session data
+            session.clear()
+            session['id'] = result['id']
+            session['username'] = username
+            flash("Login successful!", "success")
+
+            return redirect(url_for('index'))
+
         else:
-            if result['password'] == hashlib.sha256(password).hexdigest():
-                print("Login successful")
-            else:
-                print("Login failed")
+            flash("Incorrect password.", "error")
 
     return render_template('login.html', form=form)
 
