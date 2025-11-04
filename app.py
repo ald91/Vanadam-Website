@@ -1,5 +1,4 @@
 # This code imports the Flask library and some functions from it.
-import flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
@@ -157,6 +156,7 @@ def mapPage(mapID):
     mapID = str(mapID).capitalize()
     map_data = HI_MAPS.get(mapID)
     if not map_data:
+        print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
         return render_template('siteError.html')
     
     print(map_data)
