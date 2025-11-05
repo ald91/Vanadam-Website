@@ -1,5 +1,4 @@
 import requests
-from core import Keys
 
 API_KEY = Keys["API_KEY"]
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
