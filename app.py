@@ -25,14 +25,14 @@ hash = hashlib.sha256()
 def get_database():
     if 'db' not in g:
         dbpath = "database.db"
-        if os.path.exists(dbpath):
-            g.db = sqlite3.connect("database.db")
-            print("Connected to database!")
-            return g.db
-        else:
-            print("Database doesn't exist, constructing...")
+        if not os.path.exists(dbpath):
             create_database()
-            conn = sqlite3.connect("database.db")
+
+        g.db = sqlite3.connect("database.db")
+        g.db.row_factory = sqlite3.Row
+
+        print("Connected to database!")
+        return g.db
 
 @app.teardown_appcontext
 def close_db(exception):
@@ -45,14 +45,14 @@ class LoginForm(FlaskForm):
     username = StringField('Username',
                             validators=[
                                 DataRequired(),
-                                Length(min=3, max=16),
-                                Regexp('^[A-Za-z][A-Za-z0-9_.]*$', )
+                                #Length(min=3, max=16),
+                                #Regexp('^[A-Za-z][A-Za-z0-9_.]*$', )
                             ])
     password = PasswordField('Password',
                             validators = [
                                 DataRequired(),
-                                Length(min=8, max=64),
-                                Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
+                                #Length(min=8, max=64),
+                                #Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
                             ])
     submit = SubmitField('Login')
 
@@ -61,30 +61,30 @@ class RegisterForm(FlaskForm):
     username = StringField('Username',
                             validators = [
                                 DataRequired(message="Username is not Valid."),
-                                Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
-                                Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
+                                #Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
+                                #Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
                             ])
     
     email = EmailField('Email', 
                             validators = [
                                 DataRequired(message="Email is not Valid."),
-                                Email()
+                                #Email()
                             ])
     
     password = PasswordField('Password',
                             validators = [
                                 DataRequired(),
-                                Length(min=8, max=64, message="Password must be between 8 and 64 characters."),
-                                Regexp(
-                                    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
-                                    message="Password must contain uppercase, lowercase, number, and symbol."
-                                )
+                                #Length(min=8, max=64, message="Password must be between 8 and 64 characters."),
+                                #Regexp(
+                                #    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
+                                #    message="Password must contain uppercase, lowercase, number, and symbol."
+                                #)
                             ])
 
     password2 = PasswordField('Confirm Password',
                             validators= [
                                 DataRequired(),
-                                EqualTo('password', message="Passwords must match.")
+                                #EqualTo('password', message="Passwords must match.")
                             ])
 
     submit = SubmitField('Register')
@@ -110,6 +110,9 @@ def infoPages(infoType):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if 'username' in session:
+        print("Already logged in")
+        return redirect(url_for('index'))
 
     db = get_database()
     cur = db.cursor()
@@ -120,7 +123,6 @@ def login():
         query = "SELECT * FROM users WHERE username = ?"
         cur.execute(query, (username,))
         result = cur.fetchone()
-        print(result)
 
         if result is None:
             print("User not found")
@@ -128,11 +130,11 @@ def login():
         hashed_input = hashlib.sha256(password.encode()).hexdigest()
         stored_password = result['password']
 
+
         if hashed_input == stored_password:
             #Clear session data to remove stale data, then fill in session data
             session.clear()
-            session['id'] = result['id']
-            session['username'] = username
+            session['username'] = result['username']
             flash("Login successful!", "success")
 
             return redirect(url_for('index'))
@@ -144,8 +146,56 @@ def login():
 
 @app.route('/logout')
 def logout():
-    #pop user from session
+    session.pop('username', None)
+    session.pop('logged_in', None)
+
+    flash("You’ve been logged out.", "info")
+    return redirect(url_for('index'))
     pass
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    print("0")
+    form = RegisterForm()
+    # Create db connection and cursor
+    db = get_database()
+    cur = db.cursor()
+
+    if form.validate_on_submit():  # If form passes validation rules
+        # Retrieve inputs from form
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        password2 = form.password2.data
+
+        if password != password2:
+            flash("Passwords don't match!", "error")
+            return render_template('register.html', form=form)
+
+        query = "SELECT * FROM users WHERE username = ? OR email = ?"
+        cur.execute(query, (username, email))
+        existing_user = cur.fetchone()
+
+        if existing_user is None:
+            # Hash password and insert new user record
+            hashpass = hashlib.sha256(password.encode()).hexdigest()
+            cur.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+                        (username, email, hashpass))
+            db.commit()
+
+            flash("Registration Successful", "success")
+            # Set session cookie data
+            session['username'] = username
+
+            return redirect(url_for('index'))
+        else:
+            print("4")
+            flash("Credentials already taken", "error")
+            return redirect(url_for('register'))
+
+    return render_template('register.html', form=form)
+
 
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
@@ -166,35 +216,7 @@ def mapPage(mapID):
 def profilePage(username):
     pass
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    #Create db cconnection
-    db = get_database()
-    cur = db.cursor()
 
-    if form.validate_on_submit():
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-
-        query = "SELECT * FROM users WHERE username = ? OR email = ?"
-        cur.execute(query, (username, email))
-        existing_user = cur.fetchone()
-
-        if existing_user is None:
-            hashpass = hashlib.sha256(password.encode()).hexdigest()
-            cur.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-                        (username, email, hashpass))
-            db.commit()
-            flash("Registration Successful", "success")
-            return redirect(url_for('login'))
-        else:
-            flash("Credentials already taken", "error")
-            return redirect(url_for('register'))
-
-    return render_template('register.html', form=form)
-  
 @app.route('/report', methods=['POST'])
 def report():
     pass
