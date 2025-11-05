@@ -8,6 +8,7 @@
 {% block content %}
 <div id="registration" class="row align-content-center justify-content-center mx-auto my-auto p-1 pb-2">
     <div class="col-12">
+    <h2>User Registration</h2>
     <form action="{{ url_for('register') }}" method="POST">
         {{ form.hidden_tag() }}
         <div class="mb-1">

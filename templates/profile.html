@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Profile {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+<div id="userblock" class="d-flex flex-column">
+    <div class="row" height="300px">
+        <!--user block Avatar area-->
+        <div class="col-3">
+            <div class="d-flex">
+                <img src="/static/Assets/BrandLogo.jpg">
+            </div>
+        </div>
+
+        <!--user block credentials area-->
+        <div class="col-9">
+            <div class="d-flex flex-column">
+                <p> Username </p>
+                <p> placeholder username</p>
+                <p> XBL name</p>
+                <p> placeholder XBL name</p>
+                <p> numerical rank</p>
+                <p> placeholder rank</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block pageScripts %}
+{% endblock %}

@@ -1,0 +1,3 @@
+05-11-2025 
+Flash messages removed in correct amount of time (e.g - registration)
+mobile formatting for base.html
