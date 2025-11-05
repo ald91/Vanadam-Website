@@ -84,6 +84,11 @@
 
     <section id="main-content" class="mt-5 pt-5">
       <div id="pageMain" class="container-sm mx-auto my-auto ps-2 pb-1 pt-2">
+
+    <!-- Flash Messages: This will display any error/success/status messages to the user -->
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
         
         <!-- Main content -->
         {% block content %} {% endblock %}
@@ -91,10 +96,10 @@
         </div>
     </section>
 
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-4 mt-4">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center alight-self-end py-4 mt-4">
         <div class="col-md-4 d-flex flex-column">
             <span class="mb-3 ms-5 mb-md-0 text-white">© 2025 Vanadam Esports </span>
-            <span class="mb-3 ms-5 mb-md-0 text-white"> Designed by Ryan Frere & Adam Davis for Vanadam Esports</span>
+            <span class="mb-3 ms-5 mb-md-0 text-white d-none d-lg-block"> Designed by Ryan Frere & Adam Davis for Vanadam Esports</span>
         </div>
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex pe-3">
             <li class="ms-3">
