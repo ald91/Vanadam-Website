@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
+from flask_session import Session
 
 from wtforms import EmailField, PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
@@ -14,11 +15,19 @@ from HaloData import HI_MAPS
 # Create a Flask application instance
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev_key_for_testing_only")
+app.config.from_pyfile("config.py")
+
+# temp folder for storing session files (make SQL?)
+SESSION_DIR = './flask_sessions'
+os.makedirs(SESSION_DIR, exist_ok=True)
 
 #cross site protection
 csrf = CSRFProtect(app)
+Session(app)
+
 #hash object
 hash = hashlib.sha256()
+
 
 #Get DB instance per request, to avoid cross thread errors with db cursor
 def get_database():
@@ -95,6 +104,9 @@ class RegisterForm(FlaskForm):
 # Home Page
 @app.route('/')
 def index():
+    if not session.get("name"):
+        print(session)
+    print(session)
     return render_template('home.html', title="Vanadam Halo")
 
 @app.route('/article', methods=['GET', 'PATCH', 'POST', 'DELETE'])
@@ -109,9 +121,10 @@ def infoPages(infoType):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if 'username' in session:
-        print("Already logged in")
-        return redirect(url_for('index'))
+    if request.method == "GET" and 'username' in session:
+            print("Already logged in")
+            flash("Cannot log in while already logged in.", "error")   
+            return redirect(url_for('index'))
 
     db = get_database()
     cur = db.cursor()
@@ -133,7 +146,7 @@ def login():
             #Clear session data to remove stale data, then fill in session data
             session.clear()
             session['username'] = result['username']
-            flash("Login successful!", "success")
+            flash(f"Logged in as {session['username']}", "success")
 
             return redirect(url_for('index'))
         else:
@@ -151,7 +164,12 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    print("0")
+    if request.method == "GET" and 'username' in session:
+            print("Already logged in")
+            flash("Cannot register a new account while already logged in.", "error")   
+            return redirect(url_for('index'))
+    
+    print("ResgiterForm has been sent to server")
     form = RegisterForm()
     # Create db connection and cursor
     db = get_database()
@@ -206,9 +224,21 @@ def mapPage(mapID):
     print(map_data)
     return render_template('map.html', map=map_data)
 
-@app.route('/profile/<userID>', methods=['GET', 'PATCH', 'DELETE'])
+@app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):
-    pass
+    logged_in_user = session.get('username')
+    print(f"session username:", logged_in_user)
+
+    if not logged_in_user:
+        flash("you must be logged in to view your profile", "error")
+        return redirect(url_for('index'))
+
+    if username != logged_in_user:
+        flash("sneaky! you can only view your own profile at the moment!", "error")
+        return redirect(url_for('index'))
+    
+    print(f"got request to load profile page for: {logged_in_user}")
+    return render_template('profile.html', username=logged_in_user)
 
 
 @app.route('/report', methods=['POST'])
