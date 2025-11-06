@@ -1,13 +1,10 @@
 .env
+.venv
 .vscode
 .git
 *.pptx
 *.docx
 
-
-
-core.py
-
-hallam/*
+flask_session/*
 __pycache__/*
 /.idea
