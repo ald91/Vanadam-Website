@@ -4,13 +4,14 @@ from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
 from flask_session import Session
 
-from wtforms import EmailField, PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
+from wtforms import EmailField, PasswordField, StringField, SelectMultipleField, SelectField, SubmitField, IntegerField, widgets
+from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
 import sqlite3, os, hashlib, base64
 from dbconstructor import create_database
 
 from HaloData import HI_MAPS
+from formclasses import LoginForm, RegisterForm, SearchForm
 
 # Create a Flask application instance
 app = Flask(__name__)
@@ -29,7 +30,8 @@ Session(app)
 hash = hashlib.sha256()
 
 
-#Get DB instance per request, to avoid cross thread errors with db cursor
+#Get DB instance per request, g is a flask object, which stores stuff for the lifetime of a request
+#Prevents the connection from being started from one CPU thread and accessed in another, raising an error
 def get_database():
     if 'db' not in g:
         dbpath = "database.db"
@@ -40,62 +42,14 @@ def get_database():
         g.db.row_factory = sqlite3.Row
 
         print("Connected to database!")
-        return g.db
+    return g.db
 
+#This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
 def close_db(exception):
     db = g.pop('db', None)
     if db is not None:
         db.close()
-
-#Construct user validation and registration form classes
-class LoginForm(FlaskForm):
-    username = StringField('Username',
-                            validators=[
-                                DataRequired(),
-                                #Length(min=3, max=16),
-                                #Regexp('^[A-Za-z][A-Za-z0-9_.]*$', )
-                            ])
-    password = PasswordField('Password',
-                            validators = [
-                                DataRequired(),
-                                #Length(min=8, max=64),
-                                #Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
-                            ])
-    submit = SubmitField('Login')
-
-#Length and Regexp need checking
-class RegisterForm(FlaskForm):
-    username = StringField('Username',
-                            validators = [
-                                DataRequired(message="Username is not Valid."),
-                                #Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
-                                #Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
-                            ])
-    
-    email = EmailField('Email', 
-                            validators = [
-                                DataRequired(message="Email is not Valid."),
-                                #Email()
-                            ])
-    
-    password = PasswordField('Password',
-                            validators = [
-                                DataRequired(),
-                                #Length(min=8, max=64, message="Password must be between 8 and 64 characters."),
-                                #Regexp(
-                                #    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
-                                #    message="Password must contain uppercase, lowercase, number, and symbol."
-                                #)
-                            ])
-
-    password2 = PasswordField('Confirm Password',
-                            validators= [
-                                DataRequired(),
-                                #EqualTo('password', message="Passwords must match.")
-                            ])
-
-    submit = SubmitField('Register')
 
 # Routes
 #===================
@@ -109,15 +63,9 @@ def index():
     print(session)
     return render_template('home.html', title="Vanadam Halo")
 
-@app.route('/article', methods=['GET', 'PATCH', 'POST', 'DELETE'])
-def article():
-    pass
 
-@app.route('/info/<infoType>', methods=['GET'])
-def infoPages(infoType):
-    # coaching, get involved, etc. not sure if should all have endpoints... (discuss?)
-    pass
-
+#===================
+#Registration & Validation
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -170,7 +118,7 @@ def register():
             flash("Cannot register a new account while already logged in.", "error")   
             return redirect(url_for('index'))
     
-    print("ResgiterForm has been sent to server")
+    print("RegisterForm has been sent to server")
     form = RegisterForm()
     # Create db connection and cursor
     db = get_database()
@@ -182,7 +130,7 @@ def register():
         email = form.email.data
         password = form.password.data
         password2 = form.password2.data
-
+        print("RegisterForm has been validated")
         if password != password2:
             flash("Passwords don't match!", "error")
             return render_template('register.html', form=form)
@@ -207,8 +155,16 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html', form=form)
+#===================
+#Content
+@app.route('/article', methods=['GET', 'PATCH', 'POST', 'DELETE'])
+def article():
+    pass
 
-
+@app.route('/info/<infoType>', methods=['GET'])
+def infoPages(infoType):
+    # coaching, get involved, etc. not sure if should all have endpoints... (discuss?)
+    pass
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
     return render_template('maps.html')
@@ -246,9 +202,32 @@ def profilePage(username):
 def report():
     pass
 
-@app.route('/search', methods=['GET, POST'])
-def search(criteria):
-    pass
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+        # Extract into Python variables
+        date = form.date.data
+        tags = form.tags.data
+        original_poster = form.original_poster.data
+        vid_type = form.vid_type.data
+        selected_games = form.games.data  # List of selected games
+        selected_maps = form.maps.data  # List of selected maps
+        gamemode = form.gamemode.data
+        min_mmr = form.min_mmr.data
+        max_mmr = form.max_mmr.data
+
+        # Print for debugging
+        print("Date:", date)
+        print("Tags:", tags)
+        print("Original Poster:", original_poster)
+        print("Video Type:", vid_type)
+        print("Selected Games:", selected_games)
+        print("Selected Maps:", selected_maps)
+        print("Game Mode:", gamemode)
+        print("Min MMR:", min_mmr)
+        print("Max MMR:", max_mmr)
+    return render_template('search.html', form=form)
 
 @app.route('/videos/<videoID>', methods=['GET'])
 def video(videoID):
