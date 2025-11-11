@@ -170,6 +170,7 @@ def article():
 def infoPages(infoType):
     # coaching, get involved, etc. not sure if should all have endpoints... (discuss?)
     pass
+
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
     return render_template('maps.html')
