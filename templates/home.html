@@ -250,33 +250,3 @@
     </div>
 </div>
 {% endblock %}
-
-{% block pageScripts %}
-    <script type="text/javascript">
-        const mapIds = [
-            "aquarius",
-            "empyrean",
-            "forbidden",
-            "fortress",
-            "lattice",
-            "livefire",
-            "origin",
-            "recharge",
-            "serenity",
-            "solitude",
-            "streets",
-            "allmaps"
-        ];
-
-mapIds.forEach(id => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.addEventListener("click", () => {
-      // Redirect the browser to the new URL
-      window.location.href = `/mapPage/${id}`;
-    });
-  }
-});
-
-    </script>
-{% endblock %}

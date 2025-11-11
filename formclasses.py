@@ -56,6 +56,13 @@ class RegisterForm(FlaskForm):
 
     submit = SubmitField('Register')
 
+#profile edit form for use in LFG and Forums later
+class ProfileEditForm(FlaskForm):
+    #only editable by PATCH request from /profile/<username>
+    username = StringField()
+    gamertag = StringField()
+    # current_mmr = 
+
 #I assume there will be some sort of issue with wtfforms datefield and sqlite as there is no date datatype but need
 #to test this once we have hands on some data?
 class SearchForm(FlaskForm):
@@ -70,18 +77,18 @@ class SearchForm(FlaskForm):
     games = SelectMultipleField(
         'Game(s)',
         choices=[
-            ('Halo: Combat Evolved', 'Halo: Combat Evolved (2001)'),
-            ('Halo 2', 'Halo 2 (2004)'),
-            ('Halo 3', 'Halo 3 (2007)'),
-            ('Halo Wars', 'Halo Wars (2009)'),
-            ('Halo 3: ODST', 'Halo 3: ODST (2009)'),
-            ('Halo: Reach', 'Halo: Reach (2010)'),
-            ('Halo 4', 'Halo 4 (2012)'),
-            ('Halo: Spartan Assault', 'Halo: Spartan Assault (2013)'),
-            ('Halo: Spartan Strike', 'Halo: Spartan Strike (2015)'),
-            ('Halo 5: Guardians', 'Halo 5: Guardians (2015)'),
-            ('Halo Wars 2', 'Halo Wars 2 (2017)'),
-            ('Halo Infinite', 'Halo Infinite (2021)')
+            #('Halo: Combat Evolved', 'Halo: Combat Evolved'),
+            #('Halo 2', 'Halo 2'),
+            #('Halo 3', 'Halo 3'),
+            #('Halo Wars', 'Halo Wars'),
+            #('Halo 3: ODST', 'Halo 3: ODST'),
+            #('Halo: Reach', 'Halo: Reach'),
+            #('Halo 4', 'Halo 4'),
+            #('Halo: Spartan Assault', 'Halo: Spartan Assault'),
+            #('Halo: Spartan Strike', 'Halo: Spartan Strike'),
+            #('Halo 5: Guardians', 'Halo 5: Guardians'),
+            #('Halo Wars 2', 'Halo Wars 2'),
+            ('Halo Infinite', 'Halo Infinite')
         ],
         option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
@@ -116,19 +123,50 @@ class SearchForm(FlaskForm):
             ('Capture the Flag', 'Capture the Flag'),
             ('Slayer', 'Slayer'),
             ('Oddball', 'Oddball'),
-            ('Arena', 'Arena'),
+            #('Arena', 'Arena'),
             ('Strongholds', 'Strongholds'),
-            ('Fiesta', 'Fiesta'),
-            ('Juggernaut', 'Juggernaut'),
+            #('Fiesta', 'Fiesta'),
+            #('Juggernaut', 'Juggernaut'),
             ('King of the Hill', 'King of the Hill'),
-            ('Stockpile', 'Stockpile'),
+            #('Stockpile', 'Stockpile'),
             ('Assault', 'Assault'),
-            ('Domination', 'Domination')
+            #('Domination', 'Domination')
         ],
         validators=[Optional()]
     )
 
-    min_mmr = IntegerField('Min MMR', validators=[Optional()])
-    max_mmr = IntegerField('Max MMR', validators=[Optional()])
+    min_mmr = SelectField(
+        'Min MMR',
+        choices=[
+            ('', '-- Select a minimum Rank --'),
+            ('Bronze', 'Bronze'),
+            ('Silver', 'Silver'),
+            ('Gold', 'Gold'),
+            ('Platinum', 'platinum'),
+            ('Diamond', 'Diamond'),
+            ('Onyx', 'Onyx'),
+            ('EHL', 'EHL'),
+            ('HCS', 'HCS'),
+
+        ],
+        validators=[Optional()]
+    )
+
+    max_mmr = SelectField(
+        'Max MMR',
+        choices=[
+            ('', '-- Select a maximum Rank --'),
+            ('Bronze', 'Bronze'),
+            ('Silver', 'Silver'),
+            ('Gold', 'Gold'),
+            ('Platinum', 'platinum'),
+            ('Diamond', 'Diamond'),
+            ('Onyx', 'Onyx'),
+            ('EHL', 'EHL'),
+            ('HCS', 'HCS'),
+
+        ],
+        validators=[Optional()]
+    )
 
     submit = SubmitField('Search')

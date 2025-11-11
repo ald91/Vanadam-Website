@@ -188,19 +188,57 @@ def mapPage(mapID):
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):
-    logged_in_user = session.get('username')
-    print(f"session username:", logged_in_user)
+    if request.method == "GET":
+        logged_in_user = session.get('username')
+        print(f"session username:", logged_in_user)
 
-    if not logged_in_user:
-        flash("you must be logged in to view your profile", "error")
-        return redirect(url_for('index'))
+        if not logged_in_user:
+            flash("you must be logged in to view your profile", "error")
+            return redirect(url_for('index'))
 
-    if username != logged_in_user:
-        flash("sneaky! you can only view your own profile at the moment!", "error")
-        return redirect(url_for('index'))
+        if username != logged_in_user:
+            flash("sneaky! you can only view your own profile at the moment!", "error")
+            return redirect(url_for('index'))
+        
+        print(f"got request to load profile page for: {logged_in_user}")
+        return render_template('profile.html', username=logged_in_user)
     
-    print(f"got request to load profile page for: {logged_in_user}")
-    return render_template('profile.html', username=logged_in_user)
+    if request.method == "PATCH" and logged_in_user == username:
+        form = ProfileEditForm()
+    # Create db connection and cursor
+    db = get_database()
+    cur = db.cursor()
+
+    if form.validate_on_submit():  # If form passes validation rules
+        # Retrieve inputs from form
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        password2 = form.password2.data
+        print("RegisterForm has been validated")
+        if password != password2:
+            flash("Passwords don't match!", "error")
+            return render_template('register.html', form=form)
+
+        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
+        cur.execute(query, (username, email))
+        existing_user = cur.fetchone()
+
+        if existing_user is None:
+            # Hash password and insert new user record
+            hashpass = hashlib.sha256(password.encode()).hexdigest()
+            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
+                        (username, email, hashpass))
+            db.commit()
+
+            flash("Registration Successful", "success")
+            session['username'] = username
+
+            return redirect(url_for('index'))
+        else:
+            flash("Credentials already taken", "error")
+            return redirect(url_for('register'))
+
 
 
 @app.route('/report', methods=['POST'])
