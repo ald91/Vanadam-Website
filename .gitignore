@@ -4,6 +4,7 @@
 .git
 *.pptx
 *.docx
+*.db
 
 flask_session/*
 __pycache__/*
