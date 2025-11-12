@@ -6,6 +6,7 @@
 *.docx
 *.db
 
+errors_to_look_at/*
 flask_session/*
 __pycache__/*
 /.idea

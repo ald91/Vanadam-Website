@@ -4,3 +4,6 @@ home.html - make generation of map section limited to 12 but pulls from maps in 
 home.html - line 61 unfinished
 map.html - make page with ALL maps listed
 mobile formatting for base.html
+
+exteralize db functions from main app.py to help with readability
+factor and organise code into sections
