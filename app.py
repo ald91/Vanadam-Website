@@ -1,27 +1,37 @@
-# This code imports the Flask library and some functions from it.
+# ADAM
+#================================================
+#im working on the recovery email in auth.py :) dont hate me for refactoring please x
+
+#Flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
-from flask_mail import Mail
+
+#Security
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
-import dbconstructor
+#Sessions
 from flask_session import Session
 
+#Forms
 from wtforms import EmailField, PasswordField, StringField, SelectMultipleField, SelectField, SubmitField, IntegerField, widgets
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
+#Databases
 import sqlite3, os, hashlib, base64
 from dbconstructor import create_database
 
+#internal imports
+#=================
+from extensions import app
+from auth import log_in_user, register_user, recover_user
 from HaloData import HI_MAPS
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
+from db import *
+import dbconstructor
 
 
-
-# Create a Flask application instance
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev_key_for_testing_only")
+#security and config
 app.security_password_salt = os.environ.get('SECURITY_PASSWORD_SALT')
 app.config.from_pyfile("config.py")
 
@@ -33,53 +43,8 @@ os.makedirs(SESSION_DIR, exist_ok=True)
 csrf = CSRFProtect(app)
 Session(app)
 
-#password recovery serializer
-serializer = URLSafeTimedSerializer(app.secret_key)
-
-#email functionality 
-mail = Mail(app)
-
-
 #hash object
 hash = hashlib.sha256()
-
-dbpath = "database.db"
-if not os.path.exists(dbpath):
-    dbconstructor.create_database()
-
-#Get DB instance per request, g is a flask object, which stores stuff for the lifetime of a request
-#Prevents the connection from being started from one CPU thread and accessed in another, raising an error
-def get_database():
-    if 'db' not in g:
-        dbpath = "database.db"
-        if not os.path.exists(dbpath):
-            dbconstructor.create_database()
-
-        g.db = sqlite3.connect("database.db")
-        g.db.row_factory = sqlite3.Row
-
-        print("Connected to database!")
-    return g.db
-
-#Pass reset email token
-def verify_reset_token(token, expiration=3600):
-    try:
-        email = serializer.loads(token, salt= app.security_password_salt , max_age=expiration)
-    except Exception:
-        return None
-    return email
-
-def send_recovery_email(email, username):
-    token = serializer.dumps(email, salt= app.security_password_salt)
-    reset_url = url_for('reset_password', token=token, _external=True)
-
-    msg = Message(
-        subject="Vanadam Halo - Password Reset Request",
-        sender="VanadamEsports@gmail.com",
-        recipients= email,
-    )
-    msg.body = render_template("email/password_reset.txt", username=username, reset_url=reset_url)
-    mail.send(msg)
 
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
@@ -88,11 +53,11 @@ def close_db(exception):
     if db is not None:
         db.close()
 
+
 # Routes
-#===================
-# These define which template is loaded, or action is taken, depending on the URL requested
-#===================
+
 # Home Page
+#===================
 @app.route('/')
 def index():
     if not session.get("name"):
@@ -101,44 +66,29 @@ def index():
     return render_template('home.html', title="Vanadam Halo")
 
 
-#===================
 #Registration & Validation
+#===================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     form = LoginForm()
+        
     if request.method == "GET" and 'username' in session:
             print("Already logged in")
             flash("Cannot log in while already logged in.", "error")   
             return redirect(url_for('index'))
+    
+    elif request.method == "GET":
+        return render_template('login.html', form=form)
+    
+    elif request.method == "POST":
+            if log_in_user(form):
+                flash(f"Logged in as {session['username']}", "success")
+                return redirect(url_for('index'))
+    else:
+        flash("Incorrect password.", "error")
+        return render_template('login.html', form=form)
 
-    db = get_database()
-    cur = db.cursor()
-    if form.validate_on_submit():  # Checks that submitted login form adheres to input validation rules
-        username = form.username.data
-        password = form.password.data
-
-        query = "SELECT * FROM Users WHERE username = ?"
-        cur.execute(query, (username,))
-        result = cur.fetchone()
-
-        if result is None:
-            print("User not found")
-            flash("Incorrect username or password.", "error")
-            return render_template('login.html', form=form)
-        hashed_input = hashlib.sha256(password.encode()).hexdigest()
-        stored_password = result['password']
-
-        if hashed_input == stored_password:
-            #Clear session data to remove stale data, then fill in session data
-            session.clear()
-            session['username'] = result['username']
-            flash(f"Logged in as {session['username']}", "success")
-
-            return redirect(url_for('index'))
-        else:
-            flash("Incorrect password.", "error")
-
-    return render_template('login.html', form=form)
 
 @app.route('/logout')
 def logout():
@@ -150,43 +100,23 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
+    form = RegisterForm()
+
     if request.method == "GET" and 'username' in session:
             print("Already logged in")
             flash("Cannot register a new account while already logged in.", "error")   
             return redirect(url_for('index'))
     
-    form = RegisterForm()
-    
-    if form.validate_on_submit():  # If form passes validation rules
-        # Retrieve inputs from form
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-        password2 = form.password2.data
-        print("RegisterForm has been validated")
-        if password != password2:
-            flash("Passwords don't match!", "error")
-            return render_template('register.html', form=form)
-
-        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
-        cur.execute(query, (username, email))
-        existing_user = cur.fetchone()
-
-        if existing_user is None:
-            # Hash password and insert new user record
-            hashpass = hashlib.sha256(password.encode()).hexdigest()
-            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
-                        (username, email, hashpass))
-            db.commit()
-
-            flash("Registration Successful", "success")
-            session['username'] = username
-
+    if request.method == "POST":
+        if register_user(form): # Retrieve inputs from form
+            flash("Registration Successful", "success")          
             return redirect(url_for('index'))
-        else:
+        
+        else:    
             flash("Credentials already taken", "error")
             return redirect(url_for('register'))
-
+        
     return render_template('register.html', form=form)
 
 
@@ -199,31 +129,17 @@ def recovery():
     
     if request.method == "POST":
         if form.validate_on_submit():
-            
-            username = form.username.data
-            email = form.email.data
-        
-            print(f"A recovery attempt for account: {username} and email: {email} was attempted.")
-            
-            db = get_database()
-            cur = db.cursor()
-
-            query = f'SELECT * FROM Users WHERE username = ? AND email = ?'
-            cur.execute(query, (username, email))
-            existing_user = cur.fetchone()
-
-        if existing_user:
-            x = "1234"
-            flash(f"Recovery Email Sent, Valid for {x} Hours", "success")
-            token = generate_reset_token(email)
-            reset_url = url_for('recovery', token=token, _external=True)
-
+            recover_user(form)
             return redirect(url_for('index'))
-        else:
-            flash("Details incorrect", "error")
-            return redirect(url_for('recovery'))
-
+           
     return render_template('home.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    pass
+
+    
+
 
 #===================
 #Content
@@ -272,9 +188,7 @@ def profilePage(username):
 """
     if request.method == "PATCH" and logged_in_user == username:
         form = ProfileEditForm()
-    # Create db connection and cursor
-    db = get_database()
-    cur = db.cursor()
+        enter_db()
 
     if form.validate_on_submit():  # If form passes validation rules
         # Retrieve inputs from form
@@ -297,8 +211,6 @@ def profilePage(username):
 
         if existing_user:
 """
-
-
 
 @app.route('/report', methods=['POST'])
 def report():
@@ -345,8 +257,7 @@ def search():
         print("Min MMR:", min_mmr)
         print("Max MMR:", max_mmr)
 
-        db = get_database()
-        cur = db.cursor()
+        enter_database()
 
         #SQL
         query = ("")
