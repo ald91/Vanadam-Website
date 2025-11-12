@@ -1,27 +1,23 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Log In {% endblock %}
+{% block title %} Account Recovery {% endblock %}
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid d-flex justify-content-center align-items-center">
     <div>
-        <h2>Login</h2>
+        <h2>Account Recovery</h2>
         {% if error %}
         <p class="error">{{ error }}</p>
         {% endif %}
-        <form action="{{ url_for('login') }}" method="post">
+        <form action="{{ url_for('recovery') }}" method="post">
             {{ form.hidden_tag() }}
             {{ form.username.label }} {{ form.username() }}
-            {{ form.password.label }} {{ form.password() }}
+            {{ form.email.label }} {{ form.email() }}
             {{ form.submit(class="btn btn-primary") }}
         </form>
         <div class="register-button mt-3 text-center">
-            <span>Don’t have an account?</span>
-            <a href="{{ url_for('register') }}" class="btn btn-primary ms-2">Register here</a>
-            <span>Forgot Password?</span>
-            <a href="{{ url_for('recovery') }}" class="btn btn-primary ms-2">Recover Account</a>
         </div>
     </div>
 </div>

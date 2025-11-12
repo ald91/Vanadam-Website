@@ -2,6 +2,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
+from flask_mail import Mail
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 import dbconstructor
 from flask_session import Session
@@ -13,11 +15,14 @@ import sqlite3, os, hashlib, base64
 from dbconstructor import create_database
 
 from HaloData import HI_MAPS
-from formclasses import LoginForm, RegisterForm, SearchForm
+from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
+
+
 
 # Create a Flask application instance
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev_key_for_testing_only")
+app.security_password_salt = os.environ.get('SECURITY_PASSWORD_SALT')
 app.config.from_pyfile("config.py")
 
 # temp folder for storing session files (make SQL?)
@@ -27,6 +32,13 @@ os.makedirs(SESSION_DIR, exist_ok=True)
 #cross site protection
 csrf = CSRFProtect(app)
 Session(app)
+
+#password recovery serializer
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+#email functionality 
+mail = Mail(app)
+
 
 #hash object
 hash = hashlib.sha256()
@@ -48,6 +60,26 @@ def get_database():
 
         print("Connected to database!")
     return g.db
+
+#Pass reset email token
+def verify_reset_token(token, expiration=3600):
+    try:
+        email = serializer.loads(token, salt= app.security_password_salt , max_age=expiration)
+    except Exception:
+        return None
+    return email
+
+def send_recovery_email(email, username):
+    token = serializer.dumps(email, salt= app.security_password_salt)
+    reset_url = url_for('reset_password', token=token, _external=True)
+
+    msg = Message(
+        subject="Vanadam Halo - Password Reset Request",
+        sender="VanadamEsports@gmail.com",
+        recipients= email,
+    )
+    msg.body = render_template("email/password_reset.txt", username=username, reset_url=reset_url)
+    mail.send(msg)
 
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
@@ -123,12 +155,8 @@ def register():
             flash("Cannot register a new account while already logged in.", "error")   
             return redirect(url_for('index'))
     
-    print("RegisterForm has been sent to server")
     form = RegisterForm()
-    # Create db connection and cursor
-    db = get_database()
-    cur = db.cursor()
-
+    
     if form.validate_on_submit():  # If form passes validation rules
         # Retrieve inputs from form
         username = form.username.data
@@ -160,6 +188,43 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html', form=form)
+
+
+@app.route('/recovery', methods=['GET', 'POST'])
+def recovery():
+    form = RecoveryForm()
+
+    if request.method == "GET":  
+            return render_template('recovery.html', form=form)
+    
+    if request.method == "POST":
+        if form.validate_on_submit():
+            
+            username = form.username.data
+            email = form.email.data
+        
+            print(f"A recovery attempt for account: {username} and email: {email} was attempted.")
+            
+            db = get_database()
+            cur = db.cursor()
+
+            query = f'SELECT * FROM Users WHERE username = ? AND email = ?'
+            cur.execute(query, (username, email))
+            existing_user = cur.fetchone()
+
+        if existing_user:
+            x = "1234"
+            flash(f"Recovery Email Sent, Valid for {x} Hours", "success")
+            token = generate_reset_token(email)
+            reset_url = url_for('recovery', token=token, _external=True)
+
+            return redirect(url_for('index'))
+        else:
+            flash("Details incorrect", "error")
+            return redirect(url_for('recovery'))
+
+    return render_template('home.html')
+
 #===================
 #Content
 @app.route('/article', methods=['GET', 'PATCH', 'POST', 'DELETE'])
@@ -203,7 +268,8 @@ def profilePage(username):
         
         print(f"got request to load profile page for: {logged_in_user}")
         return render_template('profile.html', username=logged_in_user)
-    
+
+"""
     if request.method == "PATCH" and logged_in_user == username:
         form = ProfileEditForm()
     # Create db connection and cursor
@@ -226,19 +292,11 @@ def profilePage(username):
         existing_user = cur.fetchone()
 
         if existing_user is None:
-            # Hash password and insert new user record
-            hashpass = hashlib.sha256(password.encode()).hexdigest()
-            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
-                        (username, email, hashpass))
-            db.commit()
+            flash("An account with those details doesnt exist", "error")
+            return redirect(url_for('recovery'))
 
-            flash("Registration Successful", "success")
-            session['username'] = username
-
-            return redirect(url_for('index'))
-        else:
-            flash("Credentials already taken", "error")
-            return redirect(url_for('register'))
+        if existing_user:
+"""
 
 
 

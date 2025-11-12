@@ -56,6 +56,13 @@ class RegisterForm(FlaskForm):
 
     submit = SubmitField('Register')
 
+#users recover account using username and email
+#uses same validation as login
+class RecoveryForm(FlaskForm):
+    username = StringField('Username')
+    email = EmailField('Email')
+    submit = SubmitField('Recovery')
+
 #profile edit form for use in LFG and Forums later
 class ProfileEditForm(FlaskForm):
     #only editable by PATCH request from /profile/<username>
