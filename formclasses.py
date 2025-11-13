@@ -63,6 +63,15 @@ class RecoveryForm(FlaskForm):
     email = EmailField('Email')
     submit = SubmitField('Recovery')
 
+
+#password change form
+class PasswordResetForm(FlaskForm):
+    username = StringField('Username')
+    password = PasswordField('Password')
+    password2 = PasswordField('Password2')
+    submit = SubmitField('submit')
+    
+
 #profile edit form for use in LFG and Forums later
 class ProfileEditForm(FlaskForm):
     #only editable by PATCH request from /profile/<username>
