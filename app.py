@@ -24,27 +24,12 @@ from dbconstructor import create_database
 #internal imports
 #=================
 from extensions import app
-from auth import log_in_user, register_user, recover_user
+from auth import log_in_user, register_user, recover_user, password_change
 from HaloData import HI_MAPS
-from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
+from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm
 from db import *
 import dbconstructor
 
-
-#security and config
-app.security_password_salt = os.environ.get('SECURITY_PASSWORD_SALT')
-app.config.from_pyfile("config.py")
-
-# temp folder for storing session files (make SQL?)
-SESSION_DIR = './flask_session'
-os.makedirs(SESSION_DIR, exist_ok=True)
-
-#cross site protection
-csrf = CSRFProtect(app)
-Session(app)
-
-#hash object
-hash = hashlib.sha256()
 
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
@@ -134,10 +119,24 @@ def recovery():
            
     return render_template('home.html')
 
-@app.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    pass
 
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    
+    form = PasswordResetForm()
+
+    if request.method == 'GET':
+        return render_template('reset_password.html', token=token, form=form)
+    
+    elif request.method == 'POST':
+        if password_change(form):
+            log_in_user(form)
+            flash(f"password changed successfully. Logged in as {form.username.data}")
+            return redirect(url_for('index'))
+    else:
+        flash('A recovery error has occured', 'error')
+        return render_template('siteerror.html')
     
 
 

@@ -1,6 +1,6 @@
 #Flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
-from flask_mail import Mail
+from flask_mail import Mail, Message
 
 #Databases
 import sqlite3, os, hashlib, base64
@@ -12,7 +12,7 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 #internal imports
 #=================
-from extensions import app
+from extensions import app, mail, hash, csrf
 from db import get_database
 from auth import *
 from dbconstructor import *
@@ -21,9 +21,6 @@ from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
 
 #password recovery serializer
 serializer = URLSafeTimedSerializer(app.secret_key)
-
-#email functionality 
-mail = Mail(app)
 
 def log_in_user(form):
     if form.validate_on_submit():
@@ -101,17 +98,22 @@ def verify_reset_token(token, expiration=3600):
     return email
 
 def send_recovery_email(email, username):
-    token = serializer
-    reset_url = url_for('reset-password', token=token, _external=True)
+    token = serializer.dumps(email, salt=app.security_password_salt)
+    reset_url = url_for('reset_password', token=token, _external=True)
 
     msg = Message(
         subject="Vanadam Halo - Password Reset Request",
         sender="VanadamEsports@gmail.com",
-        recipients= email,
-    )
-    msg.body = render_template("email/password_reset.txt", username=username, reset_url=reset_url)
-    mail.send(msg)
+        recipients= [email],
+        body = render_template("emails/password_reset.txt", username=username, reset_url=reset_url))
 
+    if mail.send(msg):
+        print(f'message sent for {username} at {email}')
+        return True
+    else:
+        print('could not send recovery email, internal error')
+        return False
+    
 def recover_user(form):
     username = form.username.data
     email = form.email.data
@@ -124,11 +126,12 @@ def recover_user(form):
     query = 'SELECT * FROM Users WHERE username = ? COLLATE NOCASE AND email = ? COLLATE NOCASE'
     cur.execute(query, (username, email))
     existing_user = cur.fetchone()
+    print(existing_user)
 
     if existing_user:
-        x = "1234"
+        x = "3600 Seconds"
         send_recovery_email(email, username)
-        flash(f"Recovery Email Sent, Valid for {x} Hours", "success")
+        flash(f"Recovery Email Sent, Valid for {x}", "success")
 
         
         return redirect(url_for('index'))
@@ -136,4 +139,39 @@ def recover_user(form):
         flash("Details incorrect", "error")
         return redirect(url_for('recovery'))
 
+def password_change(form):
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data 
+        password2 = form.password2.data
+        print(f'{username}, {password}, {password2}')
 
+        if password == password2:
+            print('password match attempting to hash')
+            hashpass = hashlib.sha256(password.encode()).hexdigest() #prep password
+            
+            print('accessing database')
+            db = get_database()
+            cur = db.cursor()
+
+        # Check if user exists
+            cur.execute("SELECT username FROM Users WHERE username = ?", (username,))
+            print(f'username: {username} found in db')
+            user = cur.fetchone()
+
+        if user:
+            cur.execute("""
+                UPDATE Users
+                SET password = ?
+                WHERE username = ?
+            """, (hashpass, username))
+            db.commit()
+
+            print(f"✅ Password updated for user '{username}' with '{hashpass}")
+            return form
+        else:
+            print(f"⚠️ No user found with username: {username}")
+            return False
+    
+    flash("password change aborted", "error")
+    return redirect(url_for('index'))
