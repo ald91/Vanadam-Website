@@ -59,22 +59,44 @@
         </div>
         <!--Row 2-->
         <!-- more a href needed-->
-        <!--updated dynamically based on maps with ranked arena = "true" in HI maps (final way not decided)-->
         <div class="row my-auto mx-auto p-0 mapback">
-            {% for row_key, row in HI_MAPS.items() %}
-                {% if row["ranked arena"] %}
-                    <a href="mapPage/{{ row_key }}" class="col-6 col-md-3 mx-auto p-0">
-                        <div id="{{ row_key }}" class="align-content-center overflow-hidden mapbox">
-                            <p class="text-center my-auto">{{ row_key }}</p>
-                        </div>
-                    </a>
-                {% endif %}
-            {% endfor %}
-            <a href="mapPage" class="col-6 col-md-3 mx-auto p-0">
-                <div id="allmaps" class=" align-content-center mapbox">
-                    <p class="text-center my-auto">All Maps</p>
-                </div>
-            </a>
+            <a href="mapPage/aquarius" style ="all: unset"><div id="aquarius" class="col-6 col-md-3 mx-auto mapbox align-content-center overflow-hidden">
+                <p class="text-center my-auto">Aquarius</p></a>
+
+            </div>
+            <div id="empyrean" class="col-6 col-md-3 mx-auto align-content-center mapbox ">
+                <p class="text-center my-auto ">Empyrean</p>
+            </div>
+            <div id="forbidden" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Forbidden</p>
+            </div>
+            <div id="fortress" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Fortress</p>
+            </div>
+            <div id="lattice" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Lattice</p>
+            </div>
+            <div id="livefire" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Live Fire</p>
+            </div>
+            <div id="origin" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Origin</p>
+            </div>
+            <div id="recharge" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Recharge</p>
+            </div>
+            <div id="serenity" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Serenity</p>
+            </div>
+            <div id="solitude" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Solitude</p>
+            </div>
+            <div id="streets" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">Streets</p>
+            </div>
+            <div id="allmaps" class="col-6 col-md-3 mx-auto align-content-center mapbox">
+                <p class="text-center my-auto">All Maps</p>
+            </div>
         </div>
     </div>
     <!-- Right side column-->
