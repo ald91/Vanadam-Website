@@ -12,6 +12,7 @@ HI_MAPS = {
     "Aquarius": {
         "name": "Aquarius",
         "description": "Aquarius Terraforming Solutions: Industry leader in returning life to barren worlds.",
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -19,6 +20,7 @@ HI_MAPS = {
     "Bazaar": {
         "name": "Bazaar",
         "description": "Dusty streets and double doors.",
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -26,6 +28,7 @@ HI_MAPS = {
     "Livefire": {
         "name": "Live Fire",
         "description": "Instructors at the Avery J. Johnson Academy of Military Science ensure their Spartans are prepared for any challenge.",
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -34,6 +37,7 @@ HI_MAPS = {
     "Recharge": {
         "name": "Recharge",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -41,6 +45,7 @@ HI_MAPS = {
     "Forbidden": {
         "name": "Recharge",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -48,6 +53,7 @@ HI_MAPS = {
     "Empyrean": {
         "name": "Empyrean",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -55,6 +61,7 @@ HI_MAPS = {
     "Lattice": {
         "name": "lattice",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -62,6 +69,7 @@ HI_MAPS = {
     "Origin": {
         "name": "Origin",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -69,6 +77,7 @@ HI_MAPS = {
     "Serenity": {
         "name": "Serenity",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -76,6 +85,7 @@ HI_MAPS = {
     "Solitude": {
         "name": "Solitude",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },
@@ -83,6 +93,7 @@ HI_MAPS = {
     "Streets": {
         "name": "Streets",
         "description": None,
+        "ranked arena" : True,
         "MM modes": None,
         "HCS modes": None
     },

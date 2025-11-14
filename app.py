@@ -48,7 +48,7 @@ def index():
     if not session.get("name"):
         print(session)
     print(session)
-    return render_template('home.html', title="Vanadam Halo")
+    return render_template('home.html', title="Vanadam Halo", HI_MAPS=HI_MAPS)
 
 
 #Registration & Validation
