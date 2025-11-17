@@ -78,7 +78,7 @@ HALO_INFINITE_DATA = {
         },
 
         "Forbidden": {
-            "name": "Recharge",
+            "name": "Forbidden",
             "description": "These halls hide history of both triumph and terror.",
             "ranked arena" : True,
             "MM modes": "3",
