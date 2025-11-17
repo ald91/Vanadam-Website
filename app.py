@@ -51,6 +51,12 @@ def index():
     return render_template('home.html', title="Vanadam Halo", HI_MAPS=HI_MAPS)
 
 
+# Admin dashboard
+#===================
+@app.route('/staff/<admintoken>')
+def staff_login(admintoken):
+    pass 
+
 #Registration & Validation
 #===================
 @app.route('/login', methods=['GET', 'POST'])
@@ -256,7 +262,8 @@ def search():
         print("Min MMR:", min_mmr)
         print("Max MMR:", max_mmr)
 
-        enter_database()
+        db = get_database()
+        cur = db.cursor()
 
         #SQL
         query = ("")

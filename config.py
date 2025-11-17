@@ -7,7 +7,7 @@ import os
 # =========================
 
 #flask_sessions
-SESSION_COOKIE_NAME = "vanadam"  # optional custom cookie name
+SESSION_COOKIE_NAME = "Vanadam Halo"  # optional custom cookie name
 SESSION_DIR = './flask_session'      # directory for session files
 SESSION_PERMANENT = False #session persistance
 SESSION_USE_SIGNER = True            # sign session ID for security

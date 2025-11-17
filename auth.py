@@ -54,7 +54,7 @@ def log_in_user(form):
         else:
             return False
 
-
+# Sends email on registration
 def register_user(form):
         if form.validate_on_submit():  # If form passes validation rules
             username = form.username.data
@@ -82,6 +82,15 @@ def register_user(form):
                 db.commit()
                 session['username'] = username
                 
+                msg = Message(
+                    subject= f"Account Creation - Welcome to Vanadam Halo, {username}",
+                    sender="VanadamEsports@gmail.com",
+                    recipients= [email],
+                    body = render_template("emails/register.txt", username=username))
+
+                if mail.send(msg):
+                    print(f'message sent for {username} at {email}')
+
 
                 return session['username']
             else:
@@ -89,7 +98,7 @@ def register_user(form):
 
         return redirect(url_for('register'))
 
-#Pass reset email token
+#Account Recovery Methods
 def verify_reset_token(token, expiration=3600):
     try:
         email = serializer.loads(token, salt= app.security_password_salt , max_age=expiration)
