@@ -10,13 +10,11 @@
  <span> Halo: Infinite </span>
  <div class="row my-auto mx-auto p-0 mapback">
             {% for map_key, map_data in HALO_INFINITE_DATA["Maps"].items()%}
-                {% if map_data["ranked arena"] %}
-                    <a href="mapPage/{{ map_key }}" class="col-6 col-md-3 mx-auto p-0" style="text-decoration: none;">
+                <a href="mapPage/{{ map_key }}" class="col-6 col-md-3 mx-auto p-0" style="text-decoration: none;">
                         <div id="{{ map_key }}" class="align-content-center overflow-hidden mapbox">
                             <p class="text-center my-auto">{{ map_key }}</p>
                         </div>
                     </a>
-                {% endif %}
             {% endfor %}
 
 {% endblock %}
