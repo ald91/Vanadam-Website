@@ -25,7 +25,7 @@ from dbconstructor import create_database
 #=================
 from extensions import app
 from auth import log_in_user, register_user, recover_user, password_change
-from HaloData import HI_MAPS
+from HaloData import HALO_INFINITE_DATA
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm
 from db import *
 import dbconstructor
@@ -48,7 +48,7 @@ def index():
     if not session.get("name"):
         print(session)
     print(session)
-    return render_template('home.html', title="Vanadam Halo", HI_MAPS=HI_MAPS)
+    return render_template('home.html', title="Vanadam Halo", HALO_INFINITE_DATA=HALO_INFINITE_DATA)
 
 
 # Admin dashboard
@@ -165,13 +165,14 @@ def mapsAll():
 def mapPage(mapID):
     print(f'got request for: {mapID}')
     mapID = str(mapID).capitalize()
-    map_data = HI_MAPS.get(mapID)
-    if not map_data:
+    maps_dict = HALO_INFINITE_DATA["Maps"]
+    game_map = maps_dict.get(mapID)
+    if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
         return render_template('siteError.html')
     
-    print(map_data)
-    return render_template('map.html', map=map_data)
+    print(game_map)
+    return render_template('map.html', map=game_map, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):

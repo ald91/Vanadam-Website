@@ -7,11 +7,9 @@ from pathlib import Path
 import os
 
 #internal imports
-from keys import GOOGLE_API_V3
-from HaloData import HI_MAPS
+from HaloData import HALO_INFINITE_DATA
 
 
-API_KEY = GOOGLE_API_V3
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
 def initVideoLibaray():
@@ -57,7 +55,7 @@ def initVideoLibaray():
     
             video_rank = next((vr for vr in rank if vr.lower() in description), "NO RANK DETECTED") 
             video_gameMode = next((gm for gm in mode if gm.lower() in description), "NO GAMEMODE DETECTED")
-            video_map = next((m for m in HI_MAPS if m.lower() in description), "NO MAP DETECTED")
+            video_map = next((m for m in HALO_INFINITE_DATA.get("maps") if m.lower() in description), "NO MAP DETECTED")
 
             #not yet implemented (unsure of logic)
             video_category = None
