@@ -159,7 +159,7 @@ def infoPages(infoType):
 
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
-    return render_template('maps.html')
+    return render_template('allmaps.html', HALO_INFINITE_DATA=HALO_INFINITE_DATA)
 
 @app.route('/mapPage/<mapID>', methods=['GET'])
 def mapPage(mapID):
