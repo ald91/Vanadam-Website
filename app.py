@@ -221,6 +221,8 @@ def profilePage(username):
 def report():
     pass
 
+
+# TAG FILTERING WILL NEED REWORKING, Maybe use JSON
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchForm()
@@ -234,13 +236,16 @@ def search():
         date_selector = form.date_selector.data #Determines wether to search for posts before, after or on given date
 
         tags = form.tags.data #Array of tags
+
         #Blog filters
         original_poster = form.original_poster.data
+
         #Video Filters
         vid_type = form.vid_type.data
         selected_games = form.games.data #Array of games
         selected_maps = form.maps.data #Array of maps
         gamemode = form.gamemode.data
+        
         min_mmr = form.min_mmr.data
         if min_mmr is None:
             min_mmr = 0
@@ -266,24 +271,75 @@ def search():
         cur = db.cursor()
 
         #SQL
-        query = ("")
+        query = "SELECT * FROM Posts"
+        conditions = []
         params = []
-        if date_selector == 'On':
-            query += ("SELECT * FROM Posts WHERE date = ?")
-            params.append(date)
-        elif date_selector == 'Before':
-            query += ("SELECT * FROM Posts WHERE date < ?")
-            params.append(date)
-        elif date_selector == 'After':
-            query += ("SELECT * FROM Posts WHERE date > ?")
-            params.append(date)
-        print(query)
 
-        if tags is not None:
-            query += ("AND tags = ?")
+        # DATE FILTERS
+        if date_selector == 'On':
+            conditions.append("date = ?")
+            params.append(date)
+
+        elif date_selector == 'Before':
+            conditions.append("date < ?")
+            params.append(date)
+
+        elif date_selector == 'After':
+            conditions.append("date > ?")
+            params.append(date)
+
+        # TAGS WILL NEED REWORKING, JSONIFY?
+        if tags:
+            conditions.append("tags = ?")
             params.append(tags)
 
+        # ORIGINAL POSTER
+        if original_poster:
+            conditions.append("original_poster = ?")
+            params.append(original_poster)
+
+        # VIDEO TYPE
+        if vid_type:
+            conditions.append("video_type = ?")
+            params.append(vid_type)
+
+        # SELECTED GAMES (list)
+        if selected_games:
+            placeholders = ",".join("?" for _ in selected_games)
+            conditions.append(f"game IN ({placeholders})")
+            params.extend(selected_games)
+
+        # SELECTED MAPS (list)
+        if selected_maps:
+            placeholders = ",".join("?" for _ in selected_maps)
+            conditions.append(f"map IN ({placeholders})")
+            params.extend(selected_maps)
+
+        # GAME MODE
+        if gamemode:
+            conditions.append("gamemode = ?")
+            params.append(gamemode)
+
+        # MMR RANGE
+        if min_mmr is not None:
+            conditions.append("mmr >= ?")
+            params.append(min_mmr)
+
+        if max_mmr is not None:
+            conditions.append("mmr <= ?")
+            params.append(max_mmr)
+
+        # Combine WHERE if any conditions exist
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        print("Final Query:", query)
+        print("Params:", params)
+
+        # Execute
+        cur.execute(query, params)
         result = cur.fetchall()
+
 
 
 
