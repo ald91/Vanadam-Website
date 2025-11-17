@@ -114,7 +114,7 @@ class SearchForm(FlaskForm):
     maps = SelectMultipleField(
         'Maps',
         choices=[
-            ('Aquarius', 'Aquarius'),
+           ('Aquarius', 'Aquarius'),
             ('Empyrean', 'Empyrean'),
             ('Forbidden', 'Forbidden'),
             ('Fortress', 'Fortress'),
@@ -125,8 +125,12 @@ class SearchForm(FlaskForm):
             ('Serenity', 'Serenity'),
             ('Solitude', 'Solitude'),
             ('Streets', 'Streets'),
+            ('Interference', 'Interference'),
+            ('Starboard','Starboard'),
+            ('Inquisitor','Inquisitor'),
             ('All Maps', 'All Maps')
         ],
+
         option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
         validators=[Optional()]

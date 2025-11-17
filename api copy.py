@@ -8,8 +8,7 @@ import os
 
 #internal imports
 from HaloData import HALO_INFINITE_DATA
-#KEY = os.getenv("GOOGLE_API_KEY", )
-KEY = "AIzaSyBwPMJ76HqdOP9YOj1R_dkiRaYmx2KPorE"
+KEY = os.getenv("GOOGLE_API_KEY")
 
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
@@ -23,22 +22,24 @@ def initVideoLibaray():
         "key": KEY
     }
 
-    next_page_token = None
-
-    while True:
-
-        if next_page_token:
-            params["pageToken"] = next_page_token
-        else:
-            params.pop("pageToken", None)
+    next_page_token = params["pageToken"]
+    print(next_page_token)
 
 
-        response = requests.get(url, params=params)
+    response = requests.get(url, params=params)
 
-        #note -> python imports JSON as dict!!!
-        data = response.json()
-        print(data.get("pageInfo"))
+    #note -> python imports JSON as dict!!!
+    data = response.json()
+
+    
+    videos.append(data)
+    with open ('videosTest.json', 'w', encoding="utf-8") as file:
+        json.dump(videos, file, indent=4, ensure_ascii=False)
         
+
+
+
+"""
         for item in data.get("items", []):
             snippet = item["snippet"]
 
@@ -66,9 +67,7 @@ def initVideoLibaray():
     
             video_rank = next((vr for vr in rank if vr.lower() in description), "NO RANK DETECTED") 
             video_gameMode = next((gm for gm in mode if gm.lower() in description), "NO GAMEMODE DETECTED")
-            video_map = None
-            
-            #next((m for m in HALO_INFINITE_DATA.get("maps") if m.lower() in description), "NO MAP DETECTED")
+            video_map = next((m for m in HALO_INFINITE_DATA.get("maps") if m.lower() in description), "NO MAP DETECTED")
 
             #not yet implemented (unsure of logic)
             video_category = None
@@ -105,52 +104,51 @@ def initVideoLibaray():
 
         #video type calculation because Youtube API sucks and 2 calls have to be made as playlist doesnt give video length
         #build dictionary of IDs from earlier
-    
-    video_lookup = {video["id"]: video for video in videos}
-    
-    url = "https://www.googleapis.com/youtube/v3/videos"
-    params = {
-        "part": "snippet,contentDetails,liveStreamingDetails",
-        "id": ",".join(video_lookup.keys()),
-        "key": KEY
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-
-
-    for item in data.get("items", []):
-        vid_id = item["id"]
-        video = video_lookup[vid_id] 
-        description = item.get("snippet", {}).get("description", "").lower()
-
-
-        #duration checks
-        if "contentDetails" in item:
-            duration_ISO = item["contentDetails"]["duration"]
-            video["duration seconds"] = int(isodate.parse_duration(duration_ISO).total_seconds())
-        else:
-            video["duration seconds"] = None
-
-        #check if the video is or was a livestream, livestreams that have happened always have a finish time in the snippet[""]
-        if "this was a livestream" in description.lower():
-            video["video type"] = "livestream"
-            video["rank"] = None
-            video["subrank"] = None
-
-        elif type( video["duration seconds"]) == int and  video["duration seconds"] <= 60:
-            video["video type"] = "shortform"
-
-        elif type( video["duration seconds"]) == int and  video["duration seconds"] >= 61:
-            video["video type"] = "longform"
+        video_lookup = {video["id"]: video for video in videos}
         
-        else:
-            video["video type"] = None
+        url = "https://www.googleapis.com/youtube/v3/videos"
+        params = {
+            "part": "snippet,contentDetails,liveStreamingDetails",
+            "id": ",".join(video_lookup.keys()),
+            "key": API_KEY
+        }
 
-    if "nextPageToken" in data:
-        params["pageToken"] = data["nextPageToken"]
-    else:
-        pass
+        response = requests.get(url, params=params)
+        data = response.json()
+
+
+        for item in data.get("items", []):
+            vid_id = item["id"]
+            video = video_lookup[vid_id] 
+            description = item.get("snippet", {}).get("description", "").lower()
+
+
+            #duration checks
+            if "contentDetails" in item:
+                duration_ISO = item["contentDetails"]["duration"]
+                video["duration seconds"] = int(isodate.parse_duration(duration_ISO).total_seconds())
+            else:
+                video["duration seconds"] = None
+
+            #check if the video is or was a livestream, livestreams that have happened always have a finish time in the snippet[""]
+            if "this was a livestream" in description.lower():
+                video["video type"] = "livestream"
+                video["rank"] = None
+                video["subrank"] = None
+
+            elif type( video["duration seconds"]) == int and  video["duration seconds"] <= 60:
+                video["video type"] = "shortform"
+
+            elif type( video["duration seconds"]) == int and  video["duration seconds"] >= 61:
+                video["video type"] = "longform"
+            
+            else:
+                video["video type"] = None
+
+        if "nextPageToken" in data:
+            params["pageToken"] = data["nextPageToken"]
+        else:
+            break
 
 
 
@@ -178,17 +176,17 @@ def initThumnailLibrary():
                     print(f"thumbnail for {video_id} already exists, skipping.")
                     continue
                 
-                with open(f"static/assets/videothumbs/{video_id}.jpeg", "wb") as file:
+                with open(f"assets/thumbnails/{video_id}.jpeg", "wb") as file:
                     file.write(response.content)
             
             else:
                 print(f"failed to get thumbail for video: {video_id}")
                 errornails.append(video_id)
-                with open("errors/thumbnailerrors.txt", "wb") as file:
+                with open(f"assets/errorlogs/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
-
+"""
 initVideoLibaray()
 print ("successfully initialised Video Library JSON")
 
-initThumnailLibrary()
-print ("successfully initialised thumbnail Library JPEGS")
+#initThumnailLibrary()
+#print ("successfully initialised thumbnail Library JPEGS")
