@@ -8,8 +8,7 @@ import os
 
 #internal imports
 from HaloData import HALO_INFINITE_DATA
-#KEY = os.getenv("GOOGLE_API_KEY", )
-KEY = "AIzaSyBwPMJ76HqdOP9YOj1R_dkiRaYmx2KPorE"
+KEY = os.getenv("GOOGLE_API_KEY", )
 
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
