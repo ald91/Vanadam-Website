@@ -7,16 +7,8 @@
 {% block content %}
 
 <!-- Halo infinite Content -->
- <span> Halo: Infinite </span>
- <div class="row my-auto mx-auto p-0 mapback">
-            {% for row_key, row in HALO_INFINITE_DATA.items() %}
-                {% if row["maps"] %}
-                    <a href="mapPage/{{ row_key }}" class="col-6 col-md-3 mx-auto p-0">
-                        <div id="{{ row_key }}" class="align-content-center overflow-hidden mapbox">
-                            <p class="text-center my-auto">{{ row_key }}</p>
-                        </div>
-                    </a>
-                {% endif %}
-            {% endfor %}
+<p> map data from dict"</p> 
+<p> {{ map }} </p>
+
 
 {% endblock %}
