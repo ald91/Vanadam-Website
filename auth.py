@@ -75,6 +75,7 @@ def register_user(form):
             existing_user = cur.fetchone()
 
             if existing_user is None:
+                
                 # Hash password and insert new user record
                 hashpass = hashlib.sha256(password.encode()).hexdigest()
                 cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
@@ -90,7 +91,6 @@ def register_user(form):
 
                 if mail.send(msg):
                     print(f'message sent for {username} at {email}')
-
 
                 return session['username']
             else:
@@ -116,10 +116,11 @@ def send_recovery_email(email, username):
         recipients= [email],
         body = render_template("emails/password_reset.txt", username=username, reset_url=reset_url))
 
-    if mail.send(msg):
+    try:
+        mail.send(msg)
         print(f'message sent for {username} at {email}')
         return True
-    else:
+    except:
         print('could not send recovery email, internal error')
         return False
     
