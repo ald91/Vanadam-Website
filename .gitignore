@@ -3,6 +3,7 @@
 errors_to_look_at/*
 flask_session/*
 __pycache__/*
+static/assets/videothumbs/*
 /.idea
 
 #specific files
