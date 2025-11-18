@@ -11,7 +11,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #internal imports
+from extensions import app
 from HaloData import HALO_INFINITE_DATA
+from db import *
 
 # constants
 KEY = os.getenv("GOOGLE_API_KEY", "ERROR")
@@ -59,11 +61,48 @@ def Calculate_Video_MMR(videoData):
     "hcs": "HCS"
     }
 
+    infiniteCSR = {
+        "Bronze 1": 0,
+        "Bronze 2": 60,
+        "Bronze 3": 120,
+        "Bronze 4": 180,
+        "Bronze 5": 240,
+
+        "Silver 1": 300,
+        "Silver 2": 360,
+        "Silver 3": 420,
+        "Silver 4": 480,
+        "Silver 5": 540,
+
+        "Gold 1": 600,
+        "Gold 2": 660,
+        "Gold 3": 720,
+        "Gold 4": 780,
+        "Gold 5": 840,
+
+        "Platinum 1": 900,
+        "Platinum 2": 960,
+        "Platinum 3": 1020,
+        "Platinum 4": 1080,
+        "Platinum 5": 1140,
+        "Platinum 6": 1200,
+
+        "Diamond 1": 1200,
+        "Diamond 2": 1260,
+        "Diamond 3": 1320,
+        "Diamond 4": 1380,
+        "Diamond 5": 1440,
+        "Diamond 6": 1500,
+
+        "Onyx": 1500
+    }
+
     Dtext = videoData.lower()
 
     for subrank in rank: 
         if subrank.lower() in Dtext:
-            subrank = rankStandardize.get(subrank, subrank)            
+            subrank = rankStandardize.get(subrank, subrank)   
+            subrank = infiniteCSR.get(subrank, subrank)        
             return subrank
 
     return None
@@ -330,11 +369,101 @@ def Google_API_V3_Write_Thumbnails():
                 errornails.append(video_id)
                 with open("errors/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
-             
-Google_API_V3_PULL_Video_Info(extracted)
-Google_API_V3_Pull_Durations(extracted)
-Google_API_V3_Clean_Data(extracted)
-Google_API_V3_Write_JSON(extracted, "clean")
-modified = Google_API_V3_Modify_Values()
-Google_API_V3_Write_JSON(modified, "dbReady")
+
+
+def Commit_to_DB():
+    with open("videoDbReady.json", "r", encoding="utf-8") as file:
+        videos = json.load(file)
+
+    db = get_database()
+    cur = db.cursor()
+
+    for video in videos:
+        vidID = video["videoId"]
+        title = video["title"]
+        duration = video["duration"]
+        published = video["publishedAt"]
+        description = video["description"]
+
+        thumbnailsdefault = video["thumbnails"]["default"]
+        thumbnailsmedium = video["thumbnails"]["medium"]
+        thumbnailshigh = video["thumbnails"]["high"]
+        thumbnailsmax = video["thumbnails"]["maxres"]
+
+        kind = video["kind"]
+        channelid = video["channelId"] 
+        csr = video["csr"]
+        gameMap = video["map"]
+        gamemode = video["gameMode"]
+        videotype = video["type"]
+        videocategory = video["category"]
+        etag = video["etag"]
+        
+        cur.execute("SELECT etag FROM Videos WHERE vidId = ?", (vidID,))
+        result = cur.fetchone()
+
+        if result is None:
+            print(f"new video. modifying {vidID}")
+
+            insert_query = """
+            INSERT INTO Videos (
+                vidID, title, duration, published, description,
+                thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
+                kind, channelid, csr, map, gameMode, videotype, videocategory, etag
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+
+            cur.execute(insert_query, (
+                vidID, title, duration, published, description,
+                thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
+                kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag
+            ))
+
+            db.commit()
+
+        elif  result[0] != etag:
+            print(f"upating video. modifying {vidID}")
+            update_query = """
+                UPDATE Videos
+                    SET title = ?, duration = ?, published = ?, description = ?,
+                    thumbnailsdefault = ?, thumbnailsmedium = ?, thumbnailshigh = ?, thumbnailsmax = ?,
+                    kind = ?, channelid = ?, csr = ?, map = ?, gameMode = ?, videotype = ?, videocategory = ?, etag = ?
+                    WHERE vidID = ?
+                """
+
+            cur.execute(update_query, (
+                    title, duration, published, description,
+                    thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
+                    kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag,
+                    vidID
+                ))
+
+        else:
+            print(f"skipping video ({vidID}) record is already up to date.")
+
+    db.commit()
+    db.close()  
+    return f"db updated"
+
+
+
+    db.commit()
+    print("Database commit complete.")
+
+
+
+
+
+
+
+
+#Google_API_V3_PULL_Video_Info(extracted)
+#Google_API_V3_Pull_Durations(extracted)
+#Google_API_V3_Clean_Data(extracted)
+#Google_API_V3_Write_JSON(extracted, "clean")
+#modified = Google_API_V3_Modify_Values()
+#Google_API_V3_Write_JSON(modified, "dbReady")
 #Google_API_V3_Write_Thumbnails()
+with app.app_context():
+    Commit_to_DB()

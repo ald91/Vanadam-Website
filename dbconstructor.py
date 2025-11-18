@@ -22,12 +22,23 @@ def create_database(db_path="database.db"):
     # === VIDEOS ===
     cursor.execute("""
     CREATE TABLE Videos (
-        vidID INTEGER PRIMARY KEY AUTOINCREMENT,
-        vidType TEXT,
-        game TEXT,
-        mmr INTEGER,
+        vidID TEXT PRIMARY KEY,
+        title TEXT,
+        duration INTEGER,
+        published TEXT,          
+        description TEXT,
+        thumbnailsdefault TEXT,
+        thumbnailsmedium TEXT,
+        thumbnailshigh TEXT,
+        thumbnailsmax TEXT,
+        kind TEXT,
+        channelid TEXT,           
+        csr INTEGER,
         map TEXT,
-        mode TEXT
+        gamemode TEXT,
+        videotype TEXT,
+        videocategory TEXT,
+        etag TEXT
     );
     """)
 
@@ -38,7 +49,7 @@ def create_database(db_path="database.db"):
         boardID INTEGER,
         username TEXT NOT NULL,
         datetime TEXT,
-        FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE
+        FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE,
         FOREIGN KEY (boardID) REFERENCES Forums(boardID) ON DELETE CASCADE
     );
     """)
@@ -64,7 +75,7 @@ def create_database(db_path="database.db"):
     cursor.execute("""
     CREATE TABLE Forums (
         forumID INTEGER PRIMARY KEY AUTOINCREMENT,
-        originalPoster TEXT,
+        originalPoster TEXT
     );
     """)
 
