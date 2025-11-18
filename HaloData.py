@@ -58,7 +58,7 @@ HALO_INFINITE_DATA = {
             "EHL modes": "0"
         },
 
-        "Livefire": {
+        "Live fire": {
             "name": "Live Fire",
             "description": "Instructors at the Avery J. Johnson Academy of Military Science ensure their Spartans are prepared for any challenge.",
             "ranked arena" : True,

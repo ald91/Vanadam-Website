@@ -4,6 +4,7 @@ import requests
 import json
 import isodate
 from pathlib import Path
+from datetime import datetime
 import os
 
 from dotenv import load_dotenv
@@ -11,162 +12,297 @@ load_dotenv()
 
 #internal imports
 from HaloData import HALO_INFINITE_DATA
+
+# constants
 KEY = os.getenv("GOOGLE_API_KEY", "ERROR")
 DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(DIR, "API_SCRAPE.JSON")
-
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
-def initVideoLibaray():
-    videos = []
-    url = "https://www.googleapis.com/youtube/v3/playlistItems"
-    params = {
-        "part": "snippet",
-        "playlistId": UPLOADS_PLAYLIST_ID,
-        "maxResults": 50,
-        "key": KEY
+#global list for API pulls
+extracted = []
+
+#helper functions
+def Calculate_Video_MMR(videoData):
+    rank = ["Bronze 1", "Bronze 2", "Bronze 3", "Bronze 4", "Bronze 5", "Silver 1", "Silver 2", "Silver 3", "Silver 4", "Silver 5", "Gold 1", "Gold 2", "Gold 3", "Gold 4", "Gold 5", "Platinum 1", "Platinum 2", "Platinum 3", "Platinum 4", "Platinum 5", "Platinum 6", "Diamond 1", "Diamond 2", "Diamond 3", "Diamond 4", "Diamond 5", "Diamond 6","b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
+
+    rankStandardize = { 
+    "b1": "Bronze 1",
+    "b2": "Bronze 2",
+    "b3": "Bronze 3",
+    "b4": "Bronze 4",
+    "b5": "Bronze 5",
+    "s1": "Silver 1",
+    "s2": "Silver 2",
+    "s3": "Silver 3",
+    "s4": "Silver 4",
+    "s5": "Silver 5",
+    "g1": "Gold 1",
+    "g2": "Gold 2",
+    "g3": "Gold 3",
+    "g4": "Gold 4",
+    "g5": "Gold 5",
+    "p1": "Platinum 1",
+    "p2": "Platinum 2",
+    "p3": "Platinum 3",
+    "p4": "Platinum 4",
+    "p5": "Platinum 5",
+    "p6": "Platinum 6",
+    "d1": "Diamond 1",
+    "d2": "Diamond 2",
+    "d3": "Diamond 3",
+    "d4": "Diamond 4",
+    "d5": "Diamond 5",
+    "d6": "Diamond 6",
+    "onyx": "Onyx",
+    "ehl": "EHL",
+    "hcs": "HCS"
     }
 
-    next_page_token = None
+    Dtext = videoData.lower()
 
-    while True:
+    for subrank in rank: 
+        if subrank.lower() in Dtext:
+            subrank = rankStandardize.get(subrank, subrank)            
+            return subrank
 
-        if next_page_token:
-            params["pageToken"] = next_page_token
-        else:
-            params.pop("pageToken", None)
+    return None
 
+def Calculate_Video_Map(videoDesc, videoTitle):
+    maps = HALO_INFINITE_DATA["Maps"].keys()
+    Dtext = videoDesc.lower()
+    Ttext = videoTitle.lower()
 
-        response = requests.get(url, params=params)
-
-        #note -> python imports JSON as dict!!!
-        data = response.json()
-        print(data.get("pageInfo"))
+    for map_name in maps:
+        if map_name.lower() in Dtext or map_name.lower() in Ttext:
+            return map_name
         
-        for item in data.get("items", []):
-            snippet = item["snippet"]
+    return None
 
-            #sometimes videos dont have IDs due to specific criteria... it's a little esoteric tbh.
-            resource = snippet.get("resourceId")
-            if not resource or "videoId" not in resource:
-                continue
-            
-            video_id = resource["videoId"]
-            description = snippet.get("description", "")
-            thumbnail = snippet.get("thumbnails", {})
-            thumbnail_url = thumbnail.get("high", {}).get("url", "")
-            
-            #format video title correctly / Vanadam videos contain section in the title split by |. 1st segment is always title. 2nd is generic | 3rd is usually season of upload
+def Calculate_Video_Gamemode(videoDesc, videoTitle):
+    modes = ["king of the hill", "koth", "slayer", "oddball", "assault", "ctf", "capture the flag"]
+    Dtext = videoDesc.lower()
+    Ttext = videoTitle.lower()
 
-            raw_title = snippet["title"].split("|")
-            title = raw_title[0].strip()
+    for gamemode in modes:
+        if gamemode in Dtext or gamemode in Ttext:
+            return gamemode.capitalize()
 
-            #format description
-            rank = ["b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
-            mode = ["king of the hill", "koth", "slayer", "oddball", "assault", "ctf", "capture the flag"]
-            #maps?
-            
-            words = description.lower().split(" ")
-            desc = description.lower()
+    return None
 
-            video_rank = next((vr for vr in rank if vr.lower() in words), "NO RANK DETECTED") 
-            video_gameMode = next((gm for gm in mode if gm in words), "NO GAMEMODE DETECTED")
-            video_map = next((m for m in HALO_INFINITE_DATA.get("Maps", {}).keys() if m.lower() in desc), "NO MAP DETECTED")
+def Calculate_Video_Type(description, duration):
+    #only allow these types "Shortform", "Livestream", "Longform"
 
-            #not yet implemented (unsure of logic)
-            video_category = None
-
-            videos.append({
-                "id": video_id,
-                "category": video_category, 
-                "title": title,
-                "rank": video_rank[0],
-                "subrank": video_rank[1],
-                "mode": video_gameMode,
-                "map": video_map,
-                "url": f"http://youtu.be/{video_id}",
-                "thumbnail": thumbnail_url,
-                #handled later
-                "type": None,
-                "duration seconds": None,
-                "category": None,
-                "description": description
-                })
-            
-        next_page_token = data.get("nextPageToken")
-
-        if next_page_token:
-            params["pageToken"] = next_page_token
-            print(f"Fetched {len(videos)} videos so far...")
-
-        else:
-            print("2")
-            break
-
-        print(f"Fetched {len(videos)} base records from playlist.")
-        
-        #handle remaining "None" fields as the Youtube API cant deliver all info needed in 1 call from "videos" playlist
-        #this second request sends the ID of all videos as a list and gets back their duration to determine type
-
-        #video type calculation because Youtube API sucks and 2 calls have to be made as playlist doesnt give video length
-        #build dictionary of IDs from earlier
+    if duration == 0:
+        return "Livestream" #it hasnt happend yet
     
-    video_lookup = {video["id"]: video for video in videos}
-    video_ids = list(video_lookup.keys())
+    elif duration <= 60 and duration > 0:
+        return "Shortform"
 
-    for i in range(0,len(video_ids),50):
-        chunk = video_ids[i:i+50]
+    elif duration >= 61 and "This was a Livestream" in description:
+        return "Livestream"
+    
+    else:
+        return "Longform"
+    
+
+def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc):
+    videoCategory = [ "vod review", "map guide", "reaction", "livesteam", "other", "pro breakdown", "stream highlight", "discussion", "macro tips"]
+    Dtext = videoDesc.lower()
+
+    if videoType == "Livestream":
+        return "Livestream"
+
+    for category in videoCategory:
+        if category in Dtext:
+            return category.capitalize()
+
+
+#build video dump file for other functions to use -- prevents API call spam
+def Google_API_V3_PULL_Video_Info(extracted):
         
-        url = "https://www.googleapis.com/youtube/v3/videos"
+    try:
+        url = "https://www.googleapis.com/youtube/v3/playlistItems"
         params = {
-            "part": "snippet,contentDetails,liveStreamingDetails",
-            "id": ",".join(chunk),
+            "part": "snippet",
+            "playlistId": UPLOADS_PLAYLIST_ID,
+            "maxResults": 50,
             "key": KEY
         }
 
-        response = requests.get(url, params=params)
-        data = response.json()
-
-
-        for item in data.get("items", []):
-            vid_id = item["id"]
-            video = video_lookup[vid_id] 
-            description = item.get("snippet", {}).get("description", "").lower()
-
-
-            #duration checks
-            if "contentDetails" in item:
-                duration_ISO = item["contentDetails"]["duration"]
-                video["duration seconds"] = int(isodate.parse_duration(duration_ISO).total_seconds())
-            else:
-                video["duration seconds"] = None
-
-            #check if the video is or was a livestream, livestreams that have happened always have a finish time in the snippet[""]
-            if "this was a livestream" in description.lower():
-                video["video type"] = "livestream"
-                video["rank"] = None
-                video["subrank"] = None
-                video["map"] = None
-
-            elif type( video["duration seconds"]) == int and  video["duration seconds"] <= 60:
-                video["video type"] = "shortform"
-
-            elif type( video["duration seconds"]) == int and  video["duration seconds"] >= 61:
-                video["video type"] = "longform"
+        #obtains basic video information
+        while True:
             
+            #get this set of max 50 of n videos
+            response = requests.get(url, params=params)
+            data = response.json()
+
+            next_page_token = data.get("nextPageToken")
+
+            if next_page_token:
+                params["pageToken"] = next_page_token
             else:
-                video["video type"] = None
+                params.pop("pageToken", None)
+        
 
-    if "nextPageToken" in data:
-        params["pageToken"] = data["nextPageToken"]
-    else:
-        pass
+            videos = data.get("items")
 
-    with open ('videos.json', 'w', encoding="utf-8") as file:
-        json.dump(videos, file, indent=4, ensure_ascii=False)
+            for video in videos:
+                extracted.append(video)
 
-def initThumnailLibrary():
-    with open("videos.json", "r", encoding="utf-8") as file:
+            if next_page_token:
+                params["pageToken"] = next_page_token
+                print(f"Fetched {len(extracted)} videos so far...")
+            else:
+                break
+
+    except Exception as e:
+        print(f"API contact error with API key: {KEY}, {e}")
+
+    return extracted
+
+#inputted data must be a list containing API call with video IDs (should be extrated, which is type = list)
+def Google_API_V3_Pull_Durations(extracted):
+    try:
+
+        #obtains video duration information
+        video_duration_lookup_ids = []
+        next_page_token = None
+
+        for item in extracted:
+            video_id = item["snippet"]["resourceId"]["videoId"]
+            video_duration_lookup_ids.append(video_id)
+        
+        print(f"got {len(video_duration_lookup_ids)} video Ids")
+        
+        for i in range(0,len(video_duration_lookup_ids),50):
+            chunk = video_duration_lookup_ids[i:i+50]
+            
+            url = "https://www.googleapis.com/youtube/v3/videos"
+            params = {
+                "part": "snippet,contentDetails,liveStreamingDetails",
+                "id": ",".join(chunk),
+                "key": KEY
+            }
+            
+            while True:
+
+                if next_page_token:
+                    params["pageToken"] = next_page_token
+                else:
+                    params.pop("pageToken", None)
+
+                response = requests.get(url, params=params)
+                data = response.json()
+
+                for item in data["items"]:
+                        cross_ref_video_id = item["id"]
+                        duration_ISO = item["contentDetails"]["duration"]
+                        
+                        video = next((video for video in extracted if video["snippet"]["resourceId"]["videoId"] == cross_ref_video_id ))
+                        video["snippet"]["duration"] = int(isodate.parse_duration(duration_ISO).total_seconds())
+
+                if next_page_token:
+                    params["pageToken"] = next_page_token
+                else:
+                    break
+    
+    except Exception as e:
+        print(f"API contact or list editing error, {e}")
+
+    return extracted
+
+#cleans unwanted data from the list
+def Google_API_V3_Clean_Data(extracted):
+    for video in extracted:
+        video.pop("kind")
+        video.pop("id")
+
+        inner_info = video["snippet"]
+        thumbnails = inner_info["thumbnails"]
+
+        video["videoId"] = inner_info["resourceId"]["videoId"]
+        video["title"] = inner_info["title"]
+        video["duration"] = inner_info["duration"]
+        video["publishedAt"] = inner_info["publishedAt"]
+        video["description"] = inner_info["description"]
+        video["thumbnails"] = inner_info["thumbnails"] = {
+                                                            "default" : thumbnails["default"]["url"],
+                                                            "standard" : thumbnails["standard"]["url"],
+                                                            "medium" : thumbnails["medium"]["url"],
+                                                            "high" : thumbnails["high"]["url"],
+                                                            "maxres" : thumbnails["maxres"]["url"],
+                                                         }
+        video["kind"] = inner_info["resourceId"]["kind"]
+        video["channelId"] = inner_info["channelId"]
+        
+        #remove extrated useless info
+        video.pop("snippet", None)
+
+    return extracted
+
+#write completed list "extrated" to videoDump.Json
+def Google_API_V3_Write_JSON(data, where):
+
+    try:
+        if where == "clean":
+            with open ('videoDump.json', 'w', encoding="utf-8") as file:
+                json.dump(data, file, indent=4, ensure_ascii=False)
+        
+        elif where == "dbReady":
+            with open ('videoDbReady.json', 'w', encoding="utf-8") as file:
+                json.dump(data, file, indent=4, ensure_ascii=False)
+
+    except Exception as e:
+        print(f"there was a problem writing the file", {e})
+
+    return
+
+
+#loads file and modifys values stored to be compatible with db system and website
+def Google_API_V3_Modify_Values():
+    modified = []
+    with open ('videoDump.Json', 'r', encoding="utf-8") as file:
+            extracted = json.load(file)
+
+    for video in extracted:
+    #existing keys
+        description = video.get("description")
+        duration = video.get("duration")
+
+        #title formatting
+        videoTitle = video["title"].split("|")
+        videoTitle = videoTitle[0].strip()
+        video["title"] = videoTitle
+
+        #new keys  
+        video["csr"] = Calculate_Video_MMR(description)
+        video["map"] = Calculate_Video_Map(description, videoTitle)
+        video["gameMode"] = Calculate_Video_Gamemode(description, videoTitle)
+        video["type"] = Calculate_Video_Type(description, duration)
+        video["category"] = Calculate_Video_Category(video["csr"], video["map"], video["gameMode"], video["type"], description)
+
+        # Modifications to keep typing consistant
+        if video["type"] == "Livestream":
+            video["csr"] = None
+
+        if video["category"] == "Other":
+            video["csr"] == None
+            video["map"] == None
+            video["gameMode"] == None
+
+        if video["gameMode"] == None:
+            video["csr"] == None
+            
+
+        
+        modified.append(video)
+
+    return modified
+
+#finally, load in the thumbnails of all assets listed on the site
+def Google_API_V3_Write_Thumbnails():
+    with open("videoDbReady.json", "r", encoding="utf-8") as file:
         videos = json.load(file)
 
     os.makedirs("static/assets/videothumbs", exist_ok=True)
@@ -174,8 +310,8 @@ def initThumnailLibrary():
     errornails = []
 
     for video in videos:
-        thumb_url = video.get("thumbnail")
-        video_id = video.get("id")
+        thumb_url = video["thumbnails"]["maxres"]
+        video_id = video["videoId"]
 
         if thumb_url:
             response = requests.get(thumb_url)
@@ -194,9 +330,11 @@ def initThumnailLibrary():
                 errornails.append(video_id)
                 with open("errors/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
-
-initVideoLibaray()
-print ("successfully initialised Video Library JSON")
-
-#initThumnailLibrary()
-print ("successfully initialised thumbnail Library JPEGS")
+             
+Google_API_V3_PULL_Video_Info(extracted)
+Google_API_V3_Pull_Durations(extracted)
+Google_API_V3_Clean_Data(extracted)
+Google_API_V3_Write_JSON(extracted, "clean")
+modified = Google_API_V3_Modify_Values()
+Google_API_V3_Write_JSON(modified, "dbReady")
+#Google_API_V3_Write_Thumbnails()
