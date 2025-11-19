@@ -39,8 +39,16 @@
                     <li class="nav-item">
                         <a class="nav-link disabled" href="/articles">Articles</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="/mapPage">Maps</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/mapPage" role="button"
+                            aria-expanded="false">Maps</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/mapPage"><b>Halo infinite</b></a></li>
+                            <div class="dropdown-divider"></div>
+                            {% for map_key, map_data in HALO_INFINITE_DATA["Maps"].items() %}
+                            <li><a class="dropdown-item" href="/mapPage/{{ map_key }}">{{ map_key }}</a></li>
+                            {% endfor %}
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" href="/info/coaching">Coaching</a>

@@ -9,46 +9,90 @@
 <!-- Halo infinite Content -->
 <div class="row">
     <h1 style="text-align: center;">{{ map.name }}</h1>
-    <div class="col-md-12 col-xl-6">
-        <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}" style="max-width: 100%;">
+    <h3 style="text-align: center;">"{{ map["description"] }}"</h3>
+    <div class="col-md-12 col-xl-6 d-flex justify-content-center">
+        <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}"
+            style="max-width: 100%; ">
     </div>
     <div class="col-md-12 col-xl-6">
-    <!--map data from Jinja2-->
-        <div class="d-flex-column">
-            
-                <h3>"{{ map["description"] }}"</h3>
-                <div>
-                    <p>Ranked Arena Modes</p>
+        <!--map data from Jinja2-->
+        <div class="d-flex flex-column justify-content-evenly h-100">
 
-                </div>
 
-                <div>
-                    <p>Halo Championship Series Modes</p>
-                    
-                    {% set hcs_modes = map["HCS modes"].split() %}
+            <div>
+                <h4> <img src="../static/assets/icons/Halo.png" style="width: 20px; display: inline;"> Ranked Arena Modes</h4>
+                {% set MM_modes = map["MM modes"].split() %}
+                {% for mode in GAME_MODES.keys() %}
 
-                    {% for mode in GAME_MODES.keys() %}
-                        {% if mode|string in hcs_modes %}
-        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}" style="max-width: 30px">
-                        {% endif %}
-                    {% endfor %}
+                {% if mode | string == "0" and mode|string in MM_modes %}
+                <h6>map is not in rotation</h6>
+                {%endif %}
 
-                    {% for mode in GAME_MODES.keys() %}
-                        {% if mode in map["HCS Modes"] %}
-                            <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}">
-                        {% endif %}
-                    {% endfor %}
+                {% if mode|string in MM_modes and mode|string != "0"  %}
+                
+                <a href="gamemode/{{ GAME_MODES[mode] }}" style="text-decoration: none;">
+                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                </a>
 
-                    <p></p>
-                </div>
+                {% endif %}
+                {% endfor %}
 
-                <div>
-                    <p>European Halo League Modes</p>
-                </div>
+            </div>
+            <br>
+            <div>
+                
+                <h4> <img src="../static/assets/icons/HCS.png" style="width: 20px; display: inline;"> Halo Championship Series Modes</h4>
+
+                {% set hcs_modes = map["HCS modes"].split() %}
+
+                {% for mode in GAME_MODES.keys() %}
+
+                {% if mode | string == "0" and mode|string in hcs_modes %}
+                <h6>map is not in rotation</h6>
+                {%endif %}
+
+                {% if mode|string in hcs_modes and mode|string != "0" %}
+                <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
+                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                </a>
+                {% if mode | string == "0" %}
+                <span>map is not in rotation</span>
+                {%endif %}
+                {% endif %}
+                {% endfor %}
+
+
+            </div>
+            <br>
+            <div>
+                <h4> <img src="../static/assets/icons/EHL.png" style="width: 20px; display: inline;"> European Halo League Modes</h4>
+
+                {% set EHL_modes = map["EHL modes"].split() %}
+
+                {% for mode in GAME_MODES.keys() %}
+
+                {% if mode|string in  EHL_modes and mode|string == "0" %}
+                <h6>map is not in rotation</h6>
+                {%endif %}
+
+                {% if mode|string in EHL_modes and mode|string != "0"  %}
+                <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
+                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                </a>
+                {% if mode | string == "0" %}
+                <span>map is not in rotation</span>
+                {%endif %}
+                {% endif %}
+                {% endfor %}
+
+            </div>
         </div>
     </div>
 </div>
-<p> map data from dict"</p> 
+<p> map data from dict"</p>
 <p> {{ map }} </p>
 </div>
 
