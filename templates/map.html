@@ -7,8 +7,49 @@
 {% block content %}
 
 <!-- Halo infinite Content -->
+<div class="row">
+    <h1 style="text-align: center;">{{ map.name }}</h1>
+    <div class="col-md-12 col-xl-6">
+        <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}" style="max-width: 100%;">
+    </div>
+    <div class="col-md-12 col-xl-6">
+    <!--map data from Jinja2-->
+        <div class="d-flex-column">
+            
+                <h3>"{{ map["description"] }}"</h3>
+                <div>
+                    <p>Ranked Arena Modes</p>
+
+                </div>
+
+                <div>
+                    <p>Halo Championship Series Modes</p>
+                    
+                    {% set hcs_modes = map["HCS modes"].split() %}
+
+                    {% for mode in GAME_MODES.keys() %}
+                        {% if mode|string in hcs_modes %}
+        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}" style="max-width: 30px">
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for mode in GAME_MODES.keys() %}
+                        {% if mode in map["HCS Modes"] %}
+                            <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}">
+                        {% endif %}
+                    {% endfor %}
+
+                    <p></p>
+                </div>
+
+                <div>
+                    <p>European Halo League Modes</p>
+                </div>
+        </div>
+    </div>
+</div>
 <p> map data from dict"</p> 
 <p> {{ map }} </p>
-
+</div>
 
 {% endblock %}
