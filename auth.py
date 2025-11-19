@@ -9,6 +9,7 @@ from dbconstructor import create_database
 
 #Security
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from werkzeug.security import generate_password_hash, check_password_hash
 
 #internal imports
 #=================
@@ -34,18 +35,15 @@ def log_in_user(form):
         cur.execute(query, (username,))
         result = cur.fetchone()
 
-        form = LoginForm()
-
         if result is None:
             print("User not found")
             flash("Incorrect username or password.", "error")
             return render_template('login.html', form=form)
-        hashed_input = hashlib.sha256(password.encode()).hexdigest()
         stored_password = result['password']
 
 
 
-        if hashed_input == stored_password:
+        if check_password_hash(stored_password, password):
             #Clear session data to remove stale data, then fill in session data
             session.clear()
             session['username'] = result['username']
@@ -77,7 +75,7 @@ def register_user(form):
             if existing_user is None:
                 
                 # Hash password and insert new user record
-                hashpass = hashlib.sha256(password.encode()).hexdigest()
+                hashpass = generate_password_hash(password)
                 cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
                             (username, email, hashpass))
                 db.commit()

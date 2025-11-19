@@ -61,24 +61,24 @@ def staff_login(admintoken):
 #===================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     form = LoginForm()
-        
-    if request.method == "GET" and 'username' in session:
-            print("Already logged in")
-            flash("Cannot log in while already logged in.", "error")   
+
+    # If already logged in, do not show login page (commented out request.method =="GET" and)
+    if 'username' in session:
+        flash("Cannot log in while already logged in.", "error")
+        return redirect(url_for('index'))
+
+    # Handle Login
+    if request.method == "POST":
+        if log_in_user(form):
+            flash(f"Logged in as {session['username']}", "success")
             return redirect(url_for('index'))
-    
-    elif request.method == "GET":
-        return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
-    
-    elif request.method == "POST":
-            if log_in_user(form):
-                flash(f"Logged in as {session['username']}", "success")
-                return redirect(url_for('index'))
-    else:
-        flash("Incorrect password.", "error")
-        return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+        else:
+            flash("Incorrect username or password.", "error")
+            return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+
+    return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+
 
 
 @app.route('/logout')
