@@ -7,7 +7,7 @@ def Build_Halo_Data(form, credentials):
     pass
 
 # modify JSON (CLASS???)
-def Modify_Hall_Data(form, credentials):
+def Modify_Halo_Data(form, credentials):
     pass
 
 
@@ -67,23 +67,13 @@ HALO_INFINITE_DATA = {
             "EHL modes": "0"
         },
 
-        "Live fire": {
-            "name": "Live Fire",
-            "description": "Instructors at the Avery J. Johnson Academy of Military Science ensure their Spartans are prepared for any challenge.",
+        "Empyrean": {
+            "name": "Empyrean",
+            "description": "Sleepless nights, timeless fights.",
             "ranked arena" : True,
-            "MM modes": "1 2 4 5",
-            "HCS modes": "1 2 4 5",
-            "EHL modes": "1 2 4 5"
-        },
-
-        
-        "Recharge": {
-            "name": "Recharge",
-            "description": "Power still courses through the walls of this neglected Axys facility.",
-            "ranked arena" : True,
-            "MM modes": "1 2 4 5",
-            "HCS modes": "1 2 4 5",
-            "EHL modes": "1 2 4 5"
+            "MM modes": "5",
+            "HCS modes": " 0 ",
+            "EHL modes": " 0 "
         },
 
         "Forbidden": {
@@ -93,8 +83,8 @@ HALO_INFINITE_DATA = {
             "MM modes": "3",
             "HCS modes": "3",
             "EHL modes": "3"
-            
         },
+
         "Fortress": {
             "name": "Fortress",
             "description": "Battles of long ago echo throughout the valley.",
@@ -105,22 +95,41 @@ HALO_INFINITE_DATA = {
             
         },
 
-        "Empyrean": {
-            "name": "Empyrean",
-            "description": "Sleepless nights, timeless fights.",
-            "ranked arena" : True,
-            "MM modes": "5",
+        "Inquisitor" : {
+            "name": "Inquisitor",
+            "description" : "Don't let its luxury fool you the Pious Inquisitor is one of the fastest ships in the Covenant fleet.",
+            "ranked arena" : False,
+            "MM modes": " 0",
             "HCS modes": " 0 ",
             "EHL modes": " 0 "
         },
-        
+
+        "Interference": {
+            "name" : "Interference",
+            "description": "Reimagination of the Halo 5's map The Rig with a snowy theme. Upscaled to accommodate Infinite's mechanics",
+            "ranked arena" : False,
+            "MM modes": " 0 ",
+            "HCS modes": " 0 ",
+            "EHL modes": " 0 "
+        },
+
+        "Live fire": {
+            "name": "Live Fire",
+            "description": "Instructors at the Avery J. Johnson Academy of Military Science ensure their Spartans are prepared for any challenge.",
+            "ranked arena" : True,
+            "MM modes": "1 2 4 5",
+            "HCS modes": "1 2 4 5",
+            "EHL modes": "1 2 4 5"
+        },
+
         "Lattice": {
             "name": "Lattice",
             "description": "This abandoned hydroelectric facility holds secrets once buried under the ice.",
             "ranked arena" : True,
             "MM modes": "1 2 4 5",
-            "HCS modes": "1 2 4 5"
-        },
+            "HCS modes": "1 2 4 5",
+            "EHL modes" : "1 2 4 5"
+        },        
 
         "Origin": {
             "name": "Origin",
@@ -131,6 +140,24 @@ HALO_INFINITE_DATA = {
             "EHL modes": "3 5"
         },
 
+        "Recharge": {
+            "name": "Recharge",
+            "description": "Power still courses through the walls of this neglected Axys facility.",
+            "ranked arena" : True,
+            "MM modes": "1 2 4 5",
+            "HCS modes": "1 2 4 5",
+            "EHL modes": "1 2 4 5"
+        },
+
+        "Starboard": {
+            "name" : "Starboard",
+            "description": "General quarters, general quarters. All hands man your battle stations.",
+            "ranked arena" : False,
+            "MM modes": " 0",
+            "HCS modes": " 0 ",
+            "EHL modes": " 0 "
+        },
+     
         "Serenity": {
             "name": "Serenity",
             "description": "Amidst ancient ruins, tranquil waters flow through a symmetrical landscape. This Sanctuary, once sacred, now echoes with battle cries",
@@ -158,31 +185,13 @@ HALO_INFINITE_DATA = {
             "EHL modes": " 4 5 "
         },
 
-        "Interference": {
-            "name" : "Interferance",
-            "description": "Reimagination of the Halo 5's map The Rig with a snowy theme. Upscaled to accommodate Infinite's mechanics",
-            "ranked arena" : False,
-            "MM modes": " 0 ",
-            "HCS modes": " 0 ",
-            "EHL modes": " 0 "
-        },
-
-        "Starboard": {
-            "name" : "Starboard",
-            "description": "General quarters, general quarters. All hands man your battle stations.",
-            "ranked arena" : False,
-            "MM modes": " 0",
-            "HCS modes": " 0 ",
-            "EHL modes": " 0 "
-        },
-
-        "Inquisitor" : {
-            "name": "inquisitor",
-            "description" : "Don't let its luxury fool you the Pious Inquisitor is one of the fastest ships in the Covenant fleet.",
-            "ranked arena" : False,
-            "MM modes": " 0",
+        "Vacancy" : {
+            "name" : "Vacancy",
+            "description" : "You can check out any time you like, but you can never leave.",
+            "ranked arena" : True,
+            "MM modes" : " 5 ",
             "HCS modes": " 0 ",
             "EHL modes": " 0 "
         }
-    },
+    }
 }

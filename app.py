@@ -70,7 +70,7 @@ def login():
             return redirect(url_for('index'))
     
     elif request.method == "GET":
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
     
     elif request.method == "POST":
             if log_in_user(form):
@@ -78,7 +78,7 @@ def login():
                 return redirect(url_for('index'))
     else:
         flash("Incorrect password.", "error")
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
 
 
 @app.route('/logout')
@@ -190,7 +190,7 @@ def profilePage(username):
             return redirect(url_for('index'))
         
         print(f"got request to load profile page for: {logged_in_user}")
-        return render_template('profile.html', username=logged_in_user)
+        return render_template('profile.html', username=logged_in_user, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
 
 """
     if request.method == "PATCH" and logged_in_user == username:
