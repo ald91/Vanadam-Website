@@ -25,7 +25,7 @@ from dbconstructor import create_database
 #=================
 from extensions import app
 from auth import log_in_user, register_user, recover_user, password_change
-from HaloData import HALO_INFINITE_DATA
+from HaloData import *
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm
 from db import *
 import dbconstructor
@@ -159,7 +159,7 @@ def infoPages(infoType):
 
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
-    return render_template('allmaps.html', HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+    return render_template('allmaps.html', HALO_INFINITE_DATA=HALO_INFINITE_DATA, HALO_3_DATA=HALO_3_DATA, GAME_MODES=GAME_MODES)
 
 @app.route('/mapPage/<mapID>', methods=['GET'])
 def mapPage(mapID):
@@ -172,7 +172,8 @@ def mapPage(mapID):
         return render_template('siteError.html')
     
     print(game_map)
-    return render_template('map.html', map=game_map, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+    return render_template('map.html', map=game_map, HALO_INFINITE_DATA=HALO_INFINITE_DATA,
+                            GAME_MODES=GAME_MODES)
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):

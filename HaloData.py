@@ -14,19 +14,19 @@ def Modify_Hall_Data(form, credentials):
 #Data stored by game
 #can edit using admin panel
 
-HI_MODES = {
+GAME_MODES = {
     0 : "Not in rotation",
     1 : "Strongholds",
-    2 : "King Of The Hill",
-    3 : "Capture the Flag",
+    2 : "KOTH",
+    3 : "CTF",
     4 : "Oddball",
     5 : "Slayer",
     6 : "Assault"
 }
 
 HALO_3_DATA = {
-    "game" : "Halo 3",
-    "maps" : { 
+    "Game" : "Halo 3",
+    "Maps" : { 
         "placeholder": {
             "name": None,
             "description": None,
@@ -47,6 +47,15 @@ HALO_INFINITE_DATA = {
             "MM modes": "3 5 6",
             "HCS modes": "3 5 6",
             "EHL modes": "3 5 6"
+        },
+        
+        "Argyle": {
+            "name": "Argyle",
+            "description": "An incredible feat of engineering.",
+            "ranked arena" : False,
+            "MM modes": "0",
+            "HCS modes": "0",
+            "EHL modes": "0"
         },
         
         "Bazaar": {
