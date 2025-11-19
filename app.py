@@ -272,7 +272,8 @@ def search():
         db = get_database()
         cur = db.cursor()
 
-        #SQL
+        #SQL, filters are applied as needed, with conditions and parameters being put into respective lists and
+        #concatenated into query
         query = "SELECT * FROM Posts"
         conditions = []
         params = []
@@ -307,8 +308,8 @@ def search():
 
         # SELECTED GAMES (list)
         if selected_games:
-            placeholders = ",".join("?" for _ in selected_games)
-            conditions.append(f"game IN ({placeholders})")
+            placeholders = ",".join("?" for _ in selected_games) #iterate through selected_games list, join them. comma-seperated
+            conditions.append(f"game IN ({placeholders})")       #
             params.extend(selected_games)
 
         # SELECTED MAPS (list)
@@ -341,10 +342,6 @@ def search():
         # Execute
         cur.execute(query, params)
         result = cur.fetchall()
-
-
-
-
     return render_template('search.html', form=form)
 
 @app.route('/videos/<videoID>', methods=['GET'])
