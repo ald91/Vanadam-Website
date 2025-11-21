@@ -144,7 +144,6 @@ def Calculate_Video_Type(description, duration):
     else:
         return "Longform"
     
-
 def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc):
     videoCategory = [ "vod review", "map guide", "reaction", "livesteam", "other", "pro breakdown", "stream highlight", "discussion", "macro tips"]
     Dtext = videoDesc.lower()
@@ -155,7 +154,6 @@ def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc)
     for category in videoCategory:
         if category in Dtext:
             return category.capitalize()
-
 
 #build video dump file for other functions to use -- prevents API call spam
 def Google_API_V3_PULL_Video_Info(extracted):
@@ -297,7 +295,6 @@ def Google_API_V3_Write_JSON(data, where):
 
     return
 
-
 #loads file and modifys values stored to be compatible with db system and website
 def Google_API_V3_Modify_Values():
     modified = []
@@ -369,7 +366,6 @@ def Google_API_V3_Write_Thumbnails():
                 errornails.append(video_id)
                 with open("errors/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
-
 
 def Commit_to_DB():
     with open("videoDbReady.json", "r", encoding="utf-8") as file:
@@ -453,17 +449,20 @@ def Commit_to_DB():
 
 
 
+##############################################
+
+def Update_Video_Database_Full():
+    Google_API_V3_PULL_Video_Info(extracted)
+    Google_API_V3_Pull_Durations(extracted)
+    Google_API_V3_Clean_Data(extracted)
+    Google_API_V3_Write_JSON(extracted, "clean")
+    modified = Google_API_V3_Modify_Values()
+    Google_API_V3_Write_JSON(modified, "dbReady")
+    Google_API_V3_Write_Thumbnails()
+    with app.app_context():
+        Commit_to_DB()
+
+    return f"successfully carried out full video DB update including thumbnails"
 
 
-
-
-
-#Google_API_V3_PULL_Video_Info(extracted)
-#Google_API_V3_Pull_Durations(extracted)
-#Google_API_V3_Clean_Data(extracted)
-#Google_API_V3_Write_JSON(extracted, "clean")
-#modified = Google_API_V3_Modify_Values()
-#Google_API_V3_Write_JSON(modified, "dbReady")
-#Google_API_V3_Write_Thumbnails()
-with app.app_context():
-    Commit_to_DB()
+Update_Video_Database_Full()

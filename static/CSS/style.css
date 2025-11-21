@@ -69,9 +69,9 @@ div.mapbox {
     text-shadow: #2B2E2E 3px 3px;
 }
 
-section>div {
-        background-color: #1B1D27;
-        border: 1px solid #191F32;
+section#mapPage div {
+    background-color: #191F32 !important;
+    border: 1px solid #454A65!important; 
 }
 
 article>div, div.card, .carousel, div.mapback, button, #seasonContainer, #pageMain, #rightColumn {
