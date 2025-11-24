@@ -167,6 +167,28 @@ def mapPage(mapID):
     mapID = str(mapID).capitalize()
     maps_dict = HALO_INFINITE_DATA["Maps"]
     game_map = maps_dict.get(mapID)
+
+
+    db = get_database()
+    cur = db.cursor()
+
+    #run query for allmap resources
+    map_query =  """ 
+    SELECT * FROM Videos WHERE map = ?
+ 
+    """
+    cur.execute(map_query, (mapID,))
+    map_results = cur.fetchall()
+    print(map_results)
+    
+    article_query = """
+
+    """
+
+
+
+
+
     if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
         return render_template('siteError.html')

@@ -442,13 +442,6 @@ def Commit_to_DB():
     db.close()  
     return f"db updated"
 
-
-
-    db.commit()
-    print("Database commit complete.")
-
-
-
 ##############################################
 
 def Update_Video_Database_Full():
