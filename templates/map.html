@@ -18,7 +18,7 @@
                 style="max-width: 100%; ">
         </div>
         <div class="col-md-11 col-xl-5 p-2 m-2 flex-fill p-2 m-2">
-            
+
             <!--map data from Jinja2-->
             <div class="d-flex flex-column justify-content-evenly flex-fill h-100 p-2 m-2">
 
@@ -102,6 +102,30 @@
 </section>
 <p> map data from dict"</p>
 <p> {{ map }} </p>
+<!-- SQLite query results-->
+<section id="DbResults">
+    <div class="d-flex flex-column">
+
+        {% for result in map_results %}
+ <div class="row mb-1">
+                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
+                    <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" height="180px" />
+                </div>
+                <div class="col-6 col-md-9">
+                    <h2>{{ result.title }}</h2>
+                    <h3></h3>
+                    <p class="article-text text-truncate wrap">{{ result.description }}</p>
+                </div>
+            </div>
+    
+            
+        {% endfor %}
+    </div>
+
+
+</section>
+
+
 </div>
 
 {% endblock %}

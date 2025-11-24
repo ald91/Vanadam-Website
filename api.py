@@ -451,7 +451,7 @@ def Update_Video_Database_Full():
     Google_API_V3_Write_JSON(extracted, "clean")
     modified = Google_API_V3_Modify_Values()
     Google_API_V3_Write_JSON(modified, "dbReady")
-    Google_API_V3_Write_Thumbnails()
+    #Google_API_V3_Write_Thumbnails()
     with app.app_context():
         Commit_to_DB()
 

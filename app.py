@@ -203,27 +203,19 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT * FROM Videos WHERE map = ?
+    SELECT vidId, title, description, published, thumbnailsmax, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
  
     """
     cur.execute(map_query, (mapID,))
     map_results = cur.fetchall()
-    print(map_results)
+    map_results = [dict(row) for row in map_results] #formats for JINJA2
     
-    article_query = """
-
-    """
-
-
-
-
-
     if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
         return render_template('siteError.html')
     
     print(game_map)
-    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES)
+    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results)
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):
