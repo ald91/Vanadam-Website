@@ -12,7 +12,7 @@ load_dotenv()
 
 #internal imports
 from extensions import app
-from HaloData import HALO_INFINITE_DATA
+from HaloData import HALO_INFINITE_DATA, infiniteCSR
 from db import *
 
 # constants
@@ -59,42 +59,6 @@ def Calculate_Video_MMR(videoData):
     "onyx": "Onyx",
     "ehl": "EHL",
     "hcs": "HCS"
-    }
-
-    infiniteCSR = {
-        "Bronze 1": 0,
-        "Bronze 2": 60,
-        "Bronze 3": 120,
-        "Bronze 4": 180,
-        "Bronze 5": 240,
-
-        "Silver 1": 300,
-        "Silver 2": 360,
-        "Silver 3": 420,
-        "Silver 4": 480,
-        "Silver 5": 540,
-
-        "Gold 1": 600,
-        "Gold 2": 660,
-        "Gold 3": 720,
-        "Gold 4": 780,
-        "Gold 5": 840,
-
-        "Platinum 1": 900,
-        "Platinum 2": 960,
-        "Platinum 3": 1020,
-        "Platinum 4": 1080,
-        "Platinum 5": 1140,
-        "Platinum 6": 1200,
-
-        "Diamond 1": 1200,
-        "Diamond 2": 1260,
-        "Diamond 3": 1320,
-        "Diamond 4": 1380,
-        "Diamond 5": 1440,
-        "Diamond 6": 1500,
-
-        "Onyx": 1500
     }
 
     Dtext = videoData.lower()

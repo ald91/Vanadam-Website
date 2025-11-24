@@ -1,7 +1,3 @@
-# ADAM
-#================================================
-#im working on the recovery email in auth.py :) don't hate me for refactoring please x
-
 #Flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
 from flask_bcrypt import Bcrypt
@@ -203,7 +199,7 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT vidId, title, description, published, thumbnailsmax, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
+    SELECT vidId, title, published, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
  
     """
     cur.execute(map_query, (mapID,))
@@ -215,7 +211,7 @@ def mapPage(mapID):
         return render_template('siteError.html')
     
     print(game_map)
-    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results)
+    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results, infiniteCSR_Lookup=infiniteCSR_Lookup)
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):

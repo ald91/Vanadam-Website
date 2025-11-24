@@ -13,14 +13,14 @@
             <h1 style="text-align: center;">{{ map.name }}</h1>
             <h3 style="text-align: center;">"{{ map["description"] }}"</h3>
         </div>
-        <div class="col-md-11 col-xl-5 d-flex justify-content-center mx-auto my-auto">
+        <div class="col-md-11 col-xl-5 d-flex justify-content-center m-2 p-0">
             <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}"
-                style="max-width: 100%; ">
+                style="max-width: 110%; overflow: hidden;">
         </div>
         <div class="col-md-11 col-xl-5 p-2 m-2 flex-fill p-2 m-2">
 
             <!--map data from Jinja2-->
-            <div class="d-flex flex-column justify-content-evenly flex-fill h-100 p-2 m-2">
+            <div class="d-flex flex-column justify-content-evenly flex-fill h-100 my-auto py-auto">
 
 
                 <div>
@@ -99,33 +99,47 @@
             </div>
         </div>
     </div>
-</section>
-<p> map data from dict"</p>
-<p> {{ map }} </p>
-<!-- SQLite query results-->
-<section id="DbResults">
-    <div class="d-flex flex-column">
 
-        {% for result in map_results %}
- <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" height="180px" />
-                </div>
-                <div class="col-6 col-md-9">
-                    <h2>{{ result.title }}</h2>
-                    <h3></h3>
-                    <p class="article-text text-truncate wrap">{{ result.description }}</p>
-                </div>
-            </div>
-    
-            
+    <p> map data from dict"</p>
+    <p> {{ map }} </p>
+
+
+    <!-- SQLite query results-->
+    <!-- SHORTFORM RESULTS-->
+    <div class="d-flex flex-wrap align-content-around">
+        {% for result in map_results%}
+        {% if result["videotype"] == "Shortform" %}
+        <div>
+            <a href="/video/{{result.vidID}}"><img class="rounded-start-2" src="{{ result.thumbnailshigh }}"
+                    style="height: 100px" /></a>
+        </div>
+        {% endif %}
         {% endfor %}
     </div>
 
+    <br>
 
+    <!-- LONGFORM RESULTS-->
+    <div class="container">
+        {% for result in map_results %}
+        {% if result["videotype"] == "Longform" %}
+        <article class="m-1 p-1">
+            <div class="row">
+                <div class="col-6 col-md-auto overflow-hidden p-0" style="border-radius: 0px">
+                    <img class="rounded-start-2 " src="{{ result.thumbnailsmax }}" width="250px" />
+                </div>
+
+                <div class="col-6 flex-fill border-radius p-0">
+                    <h2>{{ result.title }}</h2>
+                    <h3>{{ result.csr }} or {{ infiniteCSR_Lookup[result.csr] }}</h3>
+                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ result.gamemode ~ '_100x100.png') }}"
+                        style="max-width: 30px" alt="{{ result.gamemode }}">
+                </div>
+            </div>
+        </article>
+
+        {% endif %}
+        {% endfor %}
+    </div>
 </section>
-
-
-</div>
-
 {% endblock %}
