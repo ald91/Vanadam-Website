@@ -1,6 +1,6 @@
 # ADAM
 #================================================
-#im working on the recovery email in auth.py :) dont hate me for refactoring please x
+#im working on the recovery email in auth.py :) don't hate me for refactoring please x
 
 #Flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
@@ -19,17 +19,16 @@ from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Opt
 
 #Databases
 import sqlite3, os, hashlib, base64
-from dbconstructor import create_database
+from db import create_database
 
 #internal imports
 #=================
 from extensions import app
 from auth import log_in_user, register_user, recover_user, password_change
 from HaloData import *
-from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm
+from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm, ArticleForm
 from db import *
-import dbconstructor
-
+import db
 
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
@@ -37,6 +36,13 @@ def close_db(exception):
     db = g.pop('db', None)
     if db is not None:
         db.close()
+
+#Inject required data for navbar
+@app.context_processor
+def inject_nav_data():
+    return {
+        "HALO_INFINITE_DATA": HALO_INFINITE_DATA
+    }
 
 
 # Routes
@@ -48,7 +54,7 @@ def index():
     if not session.get("name"):
         print(session)
     print(session)
-    return render_template('home.html', title="Vanadam Halo", HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+    return render_template('home.html', title="Vanadam Halo")
 
 
 # Admin dashboard
@@ -75,9 +81,9 @@ def login():
             return redirect(url_for('index'))
         else:
             flash("Incorrect username or password.", "error")
-            return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+            return render_template('login.html', form=form)
 
-    return render_template('login.html', form=form, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+    return render_template('login.html', form=form)
 
 
 
@@ -152,6 +158,29 @@ def reset_password(token):
 def article():
     pass
 
+@app.route('/article/create', methods=['GET', 'POST'])
+def article_create():
+    form = ArticleForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        tags = form.tags.data
+
+        db = get_database()
+        cur = db.cursor()
+
+        query = "INSERT INTO Articles (title, content, tags) VALUES (?, ?, ?)"
+        cur.execute(query, (title, content, tags))
+        db.commit()
+
+        print("Article Created")
+    return render_template('article_create.html')
+
+@app.route('/article/<id>/edit', methods=['GET', 'PATCH', 'POST', 'DELETE'])
+def article_edit():
+    form = ArticleForm()
+    return render_template('article_edit.html')
+
 @app.route('/info/<infoType>', methods=['GET'])
 def infoPages(infoType):
     # coaching, get involved, etc. not sure if should all have endpoints... (discuss?)
@@ -159,7 +188,7 @@ def infoPages(infoType):
 
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
-    return render_template('allmaps.html', HALO_INFINITE_DATA=HALO_INFINITE_DATA, HALO_3_DATA=HALO_3_DATA, GAME_MODES=GAME_MODES)
+    return render_template('allmaps.html', HALO_3_DATA=HALO_3_DATA, GAME_MODES=GAME_MODES)
 
 @app.route('/mapPage/<mapID>', methods=['GET'])
 def mapPage(mapID):
@@ -194,8 +223,7 @@ def mapPage(mapID):
         return render_template('siteError.html')
     
     print(game_map)
-    return render_template('map.html', map=game_map, HALO_INFINITE_DATA=HALO_INFINITE_DATA,
-                            GAME_MODES=GAME_MODES)
+    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES)
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):
@@ -212,7 +240,7 @@ def profilePage(username):
             return redirect(url_for('index'))
         
         print(f"got request to load profile page for: {logged_in_user}")
-        return render_template('profile.html', username=logged_in_user, HALO_INFINITE_DATA=HALO_INFINITE_DATA)
+        return render_template('profile.html', username=logged_in_user)
 
 """
     if request.method == "PATCH" and logged_in_user == username:
