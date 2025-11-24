@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, StringField, SelectMultipleField, SelectField, SubmitField, IntegerField, widgets
+from wtforms import EmailField, PasswordField, StringField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets
 from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
@@ -190,3 +190,32 @@ class SearchForm(FlaskForm):
     )
 
     submit = SubmitField('Search')
+
+class ArticleForm(FlaskForm):
+    title = StringField(
+        'Title',
+        validators=[
+            DataRequired(message="Title is required."),
+            Length(min=3, max=200, message="Title must be between 3 and 200 characters.")
+        ]
+    )
+
+    content = TextAreaField(
+        'Content',
+        validators=[
+            DataRequired(message="Content cannot be empty.")
+        ]
+    )
+
+    tags = StringField(
+        'Tags',
+        validators=[
+            Length(max=120, message="Tags cannot exceed 120 characters."),
+            Regexp(
+                r'^[A-Za-z0-9,\s\-]*$',
+                message="Tags may contain letters, numbers, spaces, commas, and hyphens."
+            )
+        ]
+    )
+
+    submit = SubmitField('Save Article')
