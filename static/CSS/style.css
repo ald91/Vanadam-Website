@@ -69,9 +69,9 @@ div.mapbox {
     text-shadow: #2B2E2E 3px 3px;
 }
 
-section>div {
-        background-color: #1B1D27;
-        border: 1px solid #191F32;
+section#mapPage div {
+    background-color: #191F32 !important;
+    border: 1px solid #454A65!important; 
 }
 
 article>div, div.card, .carousel, div.mapback, button, #seasonContainer, #pageMain, #rightColumn {
@@ -157,53 +157,4 @@ ul.dropdown-menu, a.dropdown-item {
 
 footer {
     border-top: 1px solid #D3A03B;
-}
-
-#aquarius {
-    background-image: url(../Assets/Aquarius.png);
-    
-}
-
-#empyrean {
-    background-image: url(../Assets/Empyrean.jpg);
-}
-
-#forbidden {
-    background-image: url(../Assets/forbidden.jpg);
-}
-
-#fortress {
-    background-image: url(../Assets/Fortress.jpg);
-}
-
-#lattice {
-    background-image: url(../Assets/Lattice.jpg);
-}
-
-#livefire {
-    background-image: url(../Assets/Live\ Fire.jpg);
-}
-
-#origin {
-    background-image: url(../Assets/Origin.jpg);
-}
-
-#recharge {
-    background-image: url(../Assets/Recharge.jpg);
-}
-
-#serenity {
-    background-image: url(../Assets/Serenity.jpg);
-}
-
-#solitude {
-    background-image: url(../Assets/Solitude.jpg);
-}
-
-#streets {
-    background-image: url(../Assets/Streets.png);
-}
-
-#allmaps {
-    background-image: url(../Assets/othermaps.jpg);
 }

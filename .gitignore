@@ -1,11 +1,15 @@
-.env
-.venv
-.vscode
-.git
-*.pptx
-*.docx
-
+#folders
+.venv/*
+errors_to_look_at/*
 flask_session/*
 __pycache__/*
+static/assets/videothumbs/*
 /.idea
-core.py
+
+#specific files
+.env
+.vscode
+.gitignore
+Keys.py
+database.db
+
