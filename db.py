@@ -8,7 +8,7 @@ def get_database():
     if 'db' not in g:
         dbpath = "database.db"
         if not os.path.exists(dbpath):
-
+            create_database()
         g.db = sqlite3.connect("database.db")
         g.db.row_factory = sqlite3.Row
 
