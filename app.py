@@ -17,6 +17,9 @@ from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Opt
 import sqlite3, os, hashlib, base64
 from db import create_database
 
+#API
+from api import *
+
 #internal imports
 #=================
 from extensions import app
@@ -146,8 +149,12 @@ def reset_password(token):
 
 # Content
 #===================
-@app.route('/article/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
+@app.route('/article')
 def article():
+    return redirect(url_for('article_create'))
+    #return render_template('article.html')
+@app.route('/article/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
+def article_view():
     pass
 
 @app.route('/article/create', methods=['GET', 'POST'])
@@ -395,6 +402,18 @@ def video(videoID):
     
     return render_template('video.html', videoInfo=videoInfo) 
 
+def Update_Video_Database_Full():
+    Google_API_V3_PULL_Video_Info(extracted)
+    Google_API_V3_Pull_Durations(extracted)
+    Google_API_V3_Clean_Data(extracted)
+    Google_API_V3_Write_JSON(extracted, "clean")
+    modified = Google_API_V3_Modify_Values()
+    Google_API_V3_Write_JSON(modified, "dbReady")
+    #Google_API_V3_Write_Thumbnails()
+    with app.app_context():
+        Commit_to_DB()
+
+    return f"successfully carried out full video DB update including thumbnails"
 # Run application
 #=========================================================
 # This code executes when the script is run directly.
