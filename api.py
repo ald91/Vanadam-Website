@@ -26,7 +26,7 @@ extracted = []
 
 #helper functions
 def Calculate_Video_MMR(videoData):
-    rank = ["Bronze 1", "Bronze 2", "Bronze 3", "Bronze 4", "Bronze 5", "Silver 1", "Silver 2", "Silver 3", "Silver 4", "Silver 5", "Gold 1", "Gold 2", "Gold 3", "Gold 4", "Gold 5", "Platinum 1", "Platinum 2", "Platinum 3", "Platinum 4", "Platinum 5", "Platinum 6", "Diamond 1", "Diamond 2", "Diamond 3", "Diamond 4", "Diamond 5", "Diamond 6","b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
+    rank = ["Bronze 1", "Bronze 2", "Bronze 3", "Bronze 4", "Bronze 5", "Silver 1", "Silver 2", "Silver 3", "Silver 4", "Silver 5", "Gold 1", "Gold 2", "Gold 3", "Gold 4", "Gold 5", "Gold 6", "Platinum 1", "Platinum 2", "Platinum 3", "Platinum 4", "Platinum 5", "Platinum 6", "Diamond 1", "Diamond 2", "Diamond 3", "Diamond 4", "Diamond 5", "Diamond 6","b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "g6", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
 
     rankStandardize = { 
     "b1": "Bronze 1",
@@ -34,16 +34,19 @@ def Calculate_Video_MMR(videoData):
     "b3": "Bronze 3",
     "b4": "Bronze 4",
     "b5": "Bronze 5",
+    "b6": "Bronze 6",
     "s1": "Silver 1",
     "s2": "Silver 2",
     "s3": "Silver 3",
     "s4": "Silver 4",
     "s5": "Silver 5",
+    "s6": "Silver 6",
     "g1": "Gold 1",
     "g2": "Gold 2",
     "g3": "Gold 3",
     "g4": "Gold 4",
     "g5": "Gold 5",
+    "g6": "Gold 6",
     "p1": "Platinum 1",
     "p2": "Platinum 2",
     "p3": "Platinum 3",
@@ -61,7 +64,9 @@ def Calculate_Video_MMR(videoData):
     "hcs": "HCS"
     }
 
-    Dtext = videoData.lower()
+    Dtext = videoData.split("https://",)
+    Dtext = Dtext[0]
+    Dtext = Dtext.lower()
 
     for subrank in rank: 
         if subrank.lower() in Dtext:

@@ -199,7 +199,7 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT vidId, title, published, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
+    SELECT vidId, title, published, description, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
  
     """
     cur.execute(map_query, (mapID,))

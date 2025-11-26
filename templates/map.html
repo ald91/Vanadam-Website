@@ -100,18 +100,17 @@
         </div>
     </div>
 
-    <p> map data from dict"</p>
-    <p> {{ map }} </p>
-
-
     <!-- SQLite query results-->
+
+    <h1>Shortform Videos for {{ map. name }}</h1>
     <!-- SHORTFORM RESULTS-->
     <div class="d-flex flex-wrap align-content-around">
-        {% for result in map_results%}
+        {% for result in map_results %}
         {% if result["videotype"] == "Shortform" %}
-        <div>
-            <a href="/video/{{result.vidID}}"><img class="rounded-start-2" src="{{ result.thumbnailshigh }}"
-                    style="height: 100px" /></a>
+        <div class="text-decoration-none text-wrap overflow-hidden">
+            <a href="/video/{{result.vidID}}" class="text-decoration-none">
+                <img class="rounded-start-2" src="{{ result.thumbnailshigh }}" style="height: 100px" />
+            </a>            
         </div>
         {% endif %}
         {% endfor %}
@@ -120,26 +119,35 @@
     <br>
 
     <!-- LONGFORM RESULTS-->
-    <div class="container">
+    <h1>Longform Videos for {{ map.name }}</h1>
+    <div class="row align-content-center mx-auto ps-2 pe-1 pb-2 my-auto">
+    <div class="d-flex flex-column">
         {% for result in map_results %}
         {% if result["videotype"] == "Longform" %}
-        <article class="m-1 p-1">
-            <div class="row">
-                <div class="col-6 col-md-auto overflow-hidden p-0" style="border-radius: 0px">
-                    <img class="rounded-start-2 " src="{{ result.thumbnailsmax }}" width="250px" />
+        <a href="{{ map.name }}/video/{{result.vidID}}" class="text-decoration-none">
+        <article>
+            <div class="row mb-1">
+                <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
+                    <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="300px" height="auto" />
                 </div>
-
-                <div class="col-6 flex-fill border-radius p-0">
-                    <h2>{{ result.title }}</h2>
-                    <h3>{{ result.csr }} or {{ infiniteCSR_Lookup[result.csr] }}</h3>
-                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ result.gamemode ~ '_100x100.png') }}"
-                        style="max-width: 30px" alt="{{ result.gamemode }}">
+                <div class="col-6 flex-fill">
+                     <h2>{{ result.title }}</h2>
+                    <h3>{{ infiniteCSR_Lookup[result.csr] }}</h3>
+                    <p class="article-text text-truncate">{{ result.videocategory }}</p>
+                </div>
+                <div class="col-md-2 col-auto d-flex align-content-center justify-content-center">
+                    {% set ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Onyx", "HCS", "EHL"] %}
+                    {% for rank in ranks %}
+                    {% if rank in infiniteCSR_Lookup[result.csr] %}
+                    <img src="{{'../static/assets/icons/haloinfiniteranked/Signum' ~ rank ~ '.png'}}" style="height: 150px;">
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </article>
-
+        </a>
         {% endif %}
         {% endfor %}
-    </div>
+
 </section>
 {% endblock %}

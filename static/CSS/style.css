@@ -98,20 +98,17 @@ button:hover {
     transition: 0.25s;
 }
 
-article>div.row:hover,
+article> .row:hover,
 div.mapbox:hover,
 div.card:hover,
 div.card-img-overlay:hover {
-    color: rgba(255, 255, 255, 1);
-    box-shadow: inset 10px 10px 50px rgba(210, 216, 244, .2);
-    transform: scale(1.02);
+    color: rgba(255, 255, 255, 1) !important;
+    box-shadow: inset 10px 10px 50px rgba(210, 216, 244, .2) !important;
+    transform: scale(1.02) !important;
     overflow: hidden;
     transition: 0.15s;
 
 }
-
-
-
 
 nav,footer {
 
