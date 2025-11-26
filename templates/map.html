@@ -104,14 +104,13 @@
 
     <h1>Shortform Videos for {{ map. name }}</h1>
     <!-- SHORTFORM RESULTS-->
-    <div class="d-flex flex-wrap align-content-around">
+    <div class="d-flex align-content-around overflow-auto">
         {% for result in map_results %}
         {% if result["videotype"] == "Shortform" %}
-        <div class="text-decoration-none text-wrap overflow-hidden">
-            <a href="/video/{{result.vidID}}" class="text-decoration-none">
-                <img class="rounded-start-2" src="{{ result.thumbnailshigh }}" style="height: 100px" />
-            </a>            
-        </div>
+
+<iframe width="207" height="280" src="https://www.youtube.com/embed/{{ result.vidID }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+</iframe>
+
         {% endif %}
         {% endfor %}
     </div>
@@ -124,11 +123,13 @@
     <div class="d-flex flex-column">
         {% for result in map_results %}
         {% if result["videotype"] == "Longform" %}
-        <a href="{{ map.name }}/video/{{result.vidID}}" class="text-decoration-none">
+        <a href="/videos/{{result.vidID}}" class="text-decoration-none">
         <article>
             <div class="row mb-1">
                 <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                    <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="300px" height="auto" />
+                   <!-- <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="300px" height="auto" /> -->
+                    <iframe width="auto" height="170px" src="https://www.youtube.com/embed/{{ result.vidID }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
                 </div>
                 <div class="col-6 flex-fill">
                      <h2>{{ result.title }}</h2>

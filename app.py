@@ -27,7 +27,7 @@ from db import *
 import db
 
 #Apply config settings from our file
-app.config.from_file('config.py')
+app.config.from_object('config')
 
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
@@ -209,6 +209,8 @@ def mapPage(mapID):
     print(game_map)
     return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results, infiniteCSR_Lookup=infiniteCSR_Lookup)
 
+
+
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):
     if request.method == "GET":
@@ -379,7 +381,19 @@ def search():
 
 @app.route('/videos/<videoID>', methods=['GET'])
 def video(videoID):
-    pass
+    
+    db = get_database()
+    cur = db.cursor()
+
+    #run query for video resources
+    video_query =  """ 
+    SELECT vidID, title, published, description, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE vidID = ?
+ 
+    """
+    cur.execute(video_query, (videoID,))
+    videoInfo = dict(cur.fetchone())
+    
+    return render_template('video.html', videoInfo=videoInfo) 
 
 # Run application
 #=========================================================
