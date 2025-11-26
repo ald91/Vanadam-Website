@@ -4,7 +4,7 @@ from flask_mail import Mail, Message
 
 #Databases
 import sqlite3, os, hashlib, base64
-from dbconstructor import create_database
+from db import create_database
 
 
 #Security
@@ -16,7 +16,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import app, mail, hash, csrf
 from db import get_database
 from auth import *
-from dbconstructor import *
+from db import *
 from HaloData import *
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
 

@@ -7,9 +7,12 @@ static/assets/videothumbs/*
 /.idea
 
 #specific files
+
 .env
 .vscode
 .gitignore
 Keys.py
 database.db
 
+database.db
+core.py

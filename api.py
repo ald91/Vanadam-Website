@@ -12,7 +12,7 @@ load_dotenv()
 
 #internal imports
 from extensions import app
-from HaloData import HALO_INFINITE_DATA
+from HaloData import HALO_INFINITE_DATA, infiniteCSR
 from db import *
 
 # constants
@@ -59,42 +59,6 @@ def Calculate_Video_MMR(videoData):
     "onyx": "Onyx",
     "ehl": "EHL",
     "hcs": "HCS"
-    }
-
-    infiniteCSR = {
-        "Bronze 1": 0,
-        "Bronze 2": 60,
-        "Bronze 3": 120,
-        "Bronze 4": 180,
-        "Bronze 5": 240,
-
-        "Silver 1": 300,
-        "Silver 2": 360,
-        "Silver 3": 420,
-        "Silver 4": 480,
-        "Silver 5": 540,
-
-        "Gold 1": 600,
-        "Gold 2": 660,
-        "Gold 3": 720,
-        "Gold 4": 780,
-        "Gold 5": 840,
-
-        "Platinum 1": 900,
-        "Platinum 2": 960,
-        "Platinum 3": 1020,
-        "Platinum 4": 1080,
-        "Platinum 5": 1140,
-        "Platinum 6": 1200,
-
-        "Diamond 1": 1200,
-        "Diamond 2": 1260,
-        "Diamond 3": 1320,
-        "Diamond 4": 1380,
-        "Diamond 5": 1440,
-        "Diamond 6": 1500,
-
-        "Onyx": 1500
     }
 
     Dtext = videoData.lower()
@@ -144,7 +108,6 @@ def Calculate_Video_Type(description, duration):
     else:
         return "Longform"
     
-
 def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc):
     videoCategory = [ "vod review", "map guide", "reaction", "livesteam", "other", "pro breakdown", "stream highlight", "discussion", "macro tips"]
     Dtext = videoDesc.lower()
@@ -155,7 +118,6 @@ def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc)
     for category in videoCategory:
         if category in Dtext:
             return category.capitalize()
-
 
 #build video dump file for other functions to use -- prevents API call spam
 def Google_API_V3_PULL_Video_Info(extracted):
@@ -297,7 +259,6 @@ def Google_API_V3_Write_JSON(data, where):
 
     return
 
-
 #loads file and modifys values stored to be compatible with db system and website
 def Google_API_V3_Modify_Values():
     modified = []
@@ -369,7 +330,6 @@ def Google_API_V3_Write_Thumbnails():
                 errornails.append(video_id)
                 with open("errors/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
-
 
 def Commit_to_DB():
     with open("videoDbReady.json", "r", encoding="utf-8") as file:
@@ -446,24 +406,20 @@ def Commit_to_DB():
     db.close()  
     return f"db updated"
 
+##############################################
+
+def Update_Video_Database_Full():
+    Google_API_V3_PULL_Video_Info(extracted)
+    Google_API_V3_Pull_Durations(extracted)
+    Google_API_V3_Clean_Data(extracted)
+    Google_API_V3_Write_JSON(extracted, "clean")
+    modified = Google_API_V3_Modify_Values()
+    Google_API_V3_Write_JSON(modified, "dbReady")
+    #Google_API_V3_Write_Thumbnails()
+    with app.app_context():
+        Commit_to_DB()
+
+    return f"successfully carried out full video DB update including thumbnails"
 
 
-    db.commit()
-    print("Database commit complete.")
-
-
-
-
-
-
-
-
-#Google_API_V3_PULL_Video_Info(extracted)
-#Google_API_V3_Pull_Durations(extracted)
-#Google_API_V3_Clean_Data(extracted)
-#Google_API_V3_Write_JSON(extracted, "clean")
-#modified = Google_API_V3_Modify_Values()
-#Google_API_V3_Write_JSON(modified, "dbReady")
-#Google_API_V3_Write_Thumbnails()
-with app.app_context():
-    Commit_to_DB()
+Update_Video_Database_Full()

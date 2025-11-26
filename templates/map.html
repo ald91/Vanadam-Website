@@ -7,93 +7,139 @@
 {% block content %}
 
 <!-- Halo infinite Content -->
-<div class="row">
-    <h1 style="text-align: center;">{{ map.name }}</h1>
-    <h3 style="text-align: center;">"{{ map["description"] }}"</h3>
-    <div class="col-md-12 col-xl-6 d-flex justify-content-center">
-        <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}"
-            style="max-width: 100%; ">
-    </div>
-    <div class="col-md-12 col-xl-6">
-        <!--map data from Jinja2-->
-        <div class="d-flex flex-column justify-content-evenly h-100">
+<section id="mapPage">
+    <div class="row p-2 m-2">
+        <div class="col-12 p-2 m-2">
+            <h1 style="text-align: center;">{{ map.name }}</h1>
+            <h3 style="text-align: center;">"{{ map["description"] }}"</h3>
+        </div>
+        <div class="col-md-11 col-xl-5 d-flex justify-content-center m-2 p-0">
+            <img src="{{ url_for('static', filename='assets/Mapthumbs/HaloInfinite/' ~ map.name ~ '.jpg' ) }}"
+                style="max-width: 110%; overflow: hidden;">
+        </div>
+        <div class="col-md-11 col-xl-5 p-2 m-2 flex-fill p-2 m-2">
+
+            <!--map data from Jinja2-->
+            <div class="d-flex flex-column justify-content-evenly flex-fill h-100 my-auto py-auto">
 
 
-            <div>
-                <h4> <img src="../static/assets/icons/Halo.png" style="width: 20px; display: inline;"> Ranked Arena Modes</h4>
-                {% set MM_modes = map["MM modes"].split() %}
-                {% for mode in GAME_MODES.keys() %}
+                <div>
+                    <h4> <img src="../static/assets/icons/Halo.png" style="width: 20px; display: inline;"> Ranked Arena
+                        Modes</h4>
+                    {% set MM_modes = map["MM modes"].split() %}
+                    {% for mode in GAME_MODES.keys() %}
 
-                {% if mode | string == "0" and mode|string in MM_modes %}
-                <h6>map is not in rotation</h6>
-                {%endif %}
+                    {% if mode | string == "0" and mode|string in MM_modes %}
+                    <h6>map is not in rotation</h6>
+                    {%endif %}
 
-                {% if mode|string in MM_modes and mode|string != "0"  %}
-                
-                <a href="gamemode/{{ GAME_MODES[mode] }}" style="text-decoration: none;">
-                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
-                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
-                </a>
+                    {% if mode|string in MM_modes and mode|string != "0" %}
 
-                {% endif %}
-                {% endfor %}
+                    <a href="gamemode/{{ GAME_MODES[mode] }}" style="text-decoration: none;">
+                        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                            style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                    </a>
 
-            </div>
-            <br>
-            <div>
-                
-                <h4> <img src="../static/assets/icons/HCS.png" style="width: 20px; display: inline;"> Halo Championship Series Modes</h4>
+                    {% endif %}
+                    {% endfor %}
 
-                {% set hcs_modes = map["HCS modes"].split() %}
+                </div>
+                <br>
+                <div>
 
-                {% for mode in GAME_MODES.keys() %}
+                    <h4> <img src="../static/assets/icons/HCS.png" style="width: 20px; display: inline;"> Halo
+                        Championship Series Modes</h4>
 
-                {% if mode | string == "0" and mode|string in hcs_modes %}
-                <h6>map is not in rotation</h6>
-                {%endif %}
+                    {% set hcs_modes = map["HCS modes"].split() %}
 
-                {% if mode|string in hcs_modes and mode|string != "0" %}
-                <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
-                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
-                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
-                </a>
-                {% if mode | string == "0" %}
-                <span>map is not in rotation</span>
-                {%endif %}
-                {% endif %}
-                {% endfor %}
+                    {% for mode in GAME_MODES.keys() %}
+
+                    {% if mode | string == "0" and mode|string in hcs_modes %}
+                    <h6>map is not in rotation</h6>
+                    {%endif %}
+
+                    {% if mode|string in hcs_modes and mode|string != "0" %}
+                    <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
+                        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                            style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                    </a>
+                    {% if mode | string == "0" %}
+                    <span>map is not in rotation</span>
+                    {%endif %}
+                    {% endif %}
+                    {% endfor %}
 
 
-            </div>
-            <br>
-            <div>
-                <h4> <img src="../static/assets/icons/EHL.png" style="width: 20px; display: inline;"> European Halo League Modes</h4>
+                </div>
+                <br>
+                <div>
+                    <h4> <img src="../static/assets/icons/EHL.png" style="width: 20px; display: inline;"> European Halo
+                        League Modes</h4>
 
-                {% set EHL_modes = map["EHL modes"].split() %}
+                    {% set EHL_modes = map["EHL modes"].split() %}
 
-                {% for mode in GAME_MODES.keys() %}
+                    {% for mode in GAME_MODES.keys() %}
 
-                {% if mode|string in  EHL_modes and mode|string == "0" %}
-                <h6>map is not in rotation</h6>
-                {%endif %}
+                    {% if mode|string in EHL_modes and mode|string == "0" %}
+                    <h6>map is not in rotation</h6>
+                    {%endif %}
 
-                {% if mode|string in EHL_modes and mode|string != "0"  %}
-                <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
-                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
-                        style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
-                </a>
-                {% if mode | string == "0" %}
-                <span>map is not in rotation</span>
-                {%endif %}
-                {% endif %}
-                {% endfor %}
+                    {% if mode|string in EHL_modes and mode|string != "0" %}
+                    <a href="gamemode/{{ GAME_MODES[mode ]}}" style="text-decoration: none;">
+                        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ GAME_MODES[mode] ~ '_100x100.png') }}"
+                            style="max-width: 30px" alt="{{ GAME_MODES[mode] }}">
+                    </a>
+                    {% if mode | string == "0" %}
+                    <span>map is not in rotation</span>
+                    {%endif %}
+                    {% endif %}
+                    {% endfor %}
 
+                </div>
             </div>
         </div>
     </div>
-</div>
-<p> map data from dict"</p>
-<p> {{ map }} </p>
-</div>
 
+    <p> map data from dict"</p>
+    <p> {{ map }} </p>
+
+
+    <!-- SQLite query results-->
+    <!-- SHORTFORM RESULTS-->
+    <div class="d-flex flex-wrap align-content-around">
+        {% for result in map_results%}
+        {% if result["videotype"] == "Shortform" %}
+        <div>
+            <a href="/video/{{result.vidID}}"><img class="rounded-start-2" src="{{ result.thumbnailshigh }}"
+                    style="height: 100px" /></a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <br>
+
+    <!-- LONGFORM RESULTS-->
+    <div class="container">
+        {% for result in map_results %}
+        {% if result["videotype"] == "Longform" %}
+        <article class="m-1 p-1">
+            <div class="row">
+                <div class="col-6 col-md-auto overflow-hidden p-0" style="border-radius: 0px">
+                    <img class="rounded-start-2 " src="{{ result.thumbnailsmax }}" width="250px" />
+                </div>
+
+                <div class="col-6 flex-fill border-radius p-0">
+                    <h2>{{ result.title }}</h2>
+                    <h3>{{ result.csr }} or {{ infiniteCSR_Lookup[result.csr] }}</h3>
+                    <img src="{{ url_for('static', filename='assets/modethumbs/' ~ result.gamemode ~ '_100x100.png') }}"
+                        style="max-width: 30px" alt="{{ result.gamemode }}">
+                </div>
+            </div>
+        </article>
+
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}
