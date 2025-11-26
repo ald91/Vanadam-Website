@@ -84,7 +84,8 @@ def create_database(db_path="database.db"):
         articleID INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         content TEXT,
-        tags TEXT
+        tags TEXT,
+        image_filename TEXT
     );
     """)
 

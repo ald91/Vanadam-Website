@@ -1,5 +1,6 @@
 #Flask
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, g
+from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
 
@@ -28,6 +29,10 @@ from HaloData import *
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm, ArticleForm
 from db import *
 import db
+
+#Set upload location for article thumbnails
+UPLOAD_FOLDER = 'static/Assets/articleThumbs'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Apply config settings from our file
 app.config.from_object('config')
@@ -149,13 +154,42 @@ def reset_password(token):
 
 # Content
 #===================
+
+#RYAN TODO:
+#Image functionality to articles
+#Use pillow? convert all pics to jpg for standardisation
 @app.route('/article')
 def article():
+    db = get_database()
+    cur = db.cursor()
+
+    query = "SELECT * FROM articles"
+    cur.execute(query)
+
+    article_results = cur.fetchall()
+    article_results = [dict(row) for row in article_results]
+
+    print(article_results)
+
     return redirect(url_for('article_create'))
-    #return render_template('article.html')
+    #return render_template('article_view.html')
+
 @app.route('/article/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
-def article_view():
-    pass
+def article_view(id):
+    db = get_database()
+    cur = db.cursor()
+
+    query = "SELECT * FROM articles WHERE articleID = ?"
+    cur.execute(query, (id,))
+    row = cur.fetchone()
+
+    if row is None:
+        flash("Article does not exist", "error")
+        return render_template('siteerror.html')
+
+    article = dict(row)
+
+    return render_template("article_view.html", article=article)
 
 @app.route('/article/create', methods=['GET', 'POST'])
 def article_create():
@@ -165,20 +199,47 @@ def article_create():
         content = form.content.data
         tags = form.tags.data
 
+        if form.image.data:
+            file = form.image.data
+            filename = secure_filename(file.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(image_path)
+
         db = get_database()
         cur = db.cursor()
 
-        query = "INSERT INTO Articles (title, content, tags) VALUES (?, ?, ?)"
-        cur.execute(query, (title, content, tags))
+        query = "INSERT INTO Articles (title, content, tags, image_filename) VALUES (?, ?, ?, ?)"
+        cur.execute(query, (title, content, tags, filename))
         db.commit()
 
         print("Article Created")
-    return render_template('article_create.html')
+    return render_template('article_create.html', form=form)
 
 @app.route('/article/<id>/edit', methods=['GET', 'PATCH', 'POST', 'DELETE'])
-def article_edit():
+def article_edit(id):
+    db = get_database()
+    cur = db.cursor()
+
+    query = "SELECT * FROM articles WHERE articleID = ?"
+    cur.execute(query, (id,))
+    article = cur.fetchone()
     form = ArticleForm()
-    return render_template('article_edit.html')
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        tags = form.tags.data
+
+        db = get_database()
+        cur = db.cursor()
+
+        query = "UPDATE Articles SET title = ?, content = ?, tags = ? WHERE articleID = ?"
+        cur.execute(query, (title, content, tags, id))
+        db.commit()
+        print("Article Edited")
+        return redirect(url_for('article_view', id=id))
+
+    return render_template('article_edit.html', id=id, form=form, article=article)
 
 @app.route('/info/<infoType>', methods=['GET'])
 def infoPages(infoType):

@@ -1,9 +1,29 @@
-<form action="/article/{{ article.id }}/edit" method="POST">
-    <input type="text" name="title" value="{{ article.title }}" required>
+{% extends "base.html" %}
 
-    <textarea name="content" rows="20" cols="80">{{ article.content }}</textarea>
+{% block title %}Create Article{% endblock %}
 
-    <input type="text" name="tags" value="{{ article.tags }}">
+{% block content %}
+<div class="container mt-4">
 
-    <button type="submit">Save Changes</button>
-</form>
+    <h2>Edit Article</h2>
+
+    <form action="{{ url_for('article_edit', id=article.articleID) }}" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <label>Title</label><br>
+        {{ form.title(size=60) }}<br><br>
+
+        <label>Content</label><br>
+        {{ form.content(rows=20, cols=80) }}<br><br>
+
+        <label>Tags (comma-separated)</label><br>
+        {{ form.tags(size=60) }}<br><br>
+
+        <label>Image (Optional)</label><br>
+        {{ form.image() }}<br><br>
+
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, StringField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets
+from flask_wtf.file import FileAllowed
+from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets
 from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
@@ -217,5 +218,9 @@ class ArticleForm(FlaskForm):
             )
         ]
     )
+    image = FileField("Upload Image", validators=[
+        Optional(),
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
+    ])
 
     submit = SubmitField('Save Article')
