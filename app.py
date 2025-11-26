@@ -26,6 +26,9 @@ from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, Passw
 from db import *
 import db
 
+#Apply config settings from our file
+app.config.from_file('config.py')
+
 #This route is called at the end of a request, removing db connection from g, ready for the next request
 @app.teardown_appcontext
 def close_db(exception):
@@ -33,7 +36,7 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-#Inject required data for navbar
+#Inject required data for navbar for all routes
 @app.context_processor
 def inject_nav_data():
     return {
@@ -81,8 +84,6 @@ def login():
 
     return render_template('login.html', form=form)
 
-
-
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -112,7 +113,6 @@ def register():
         
     return render_template('register.html', form=form)
 
-
 @app.route('/recovery', methods=['GET', 'POST'])
 def recovery():
     form = RecoveryForm()
@@ -126,8 +126,6 @@ def recovery():
             return redirect(url_for('index'))
            
     return render_template('home.html')
-
-
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -145,12 +143,10 @@ def reset_password(token):
     else:
         flash('A recovery error has occured', 'error')
         return render_template('siteerror.html')
-    
 
-
+# Content
 #===================
-#Content
-@app.route('/article', methods=['GET', 'PATCH', 'POST', 'DELETE'])
+@app.route('/article/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
 def article():
     pass
 
@@ -260,7 +256,6 @@ def profilePage(username):
 @app.route('/report', methods=['POST'])
 def report():
     pass
-
 
 # TAG FILTERING WILL NEED REWORKING, Maybe use JSON
 @app.route('/search', methods=['GET', 'POST'])
