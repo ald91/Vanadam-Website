@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #internal imports
-from extensions import app
 from HaloData import HALO_INFINITE_DATA, infiniteCSR
 from db import *
 
@@ -88,7 +87,7 @@ def Calculate_Video_Map(videoDesc, videoTitle):
     return None
 
 def Calculate_Video_Gamemode(videoDesc, videoTitle):
-    modes = ["king of the hill", "koth", "slayer", "oddball", "assault", "ctf", "capture the flag"]
+    modes = ["king of the hill", "koth", "slayer", "oddball", "assault", "ctf", "capture the flag", "strongholds"]
     Dtext = videoDesc.lower()
     Ttext = videoTitle.lower()
 
@@ -298,9 +297,12 @@ def Google_API_V3_Modify_Values():
 
         if video["gameMode"] == None:
             video["csr"] == None
-            
 
-        
+        # map guides shouldnt have CSR or game modes
+        if video["type"] == "Map Guide":
+            video["csr"] = None
+            video["gameMode"] = None
+                    
         modified.append(video)
 
     return modified
@@ -410,8 +412,6 @@ def Commit_to_DB():
     db.commit()
     db.close()  
     return f"db updated"
-
-##############################################
 
 
 

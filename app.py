@@ -464,11 +464,15 @@ def video(videoID):
     return render_template('video.html', videoInfo=videoInfo) 
 
 def Update_Video_Database_Full():
+    print("attempting to contact Youtube API")
     Google_API_V3_PULL_Video_Info(extracted)
+    print("attempting to contact Youtube API part 2")
     Google_API_V3_Pull_Durations(extracted)
+    print("Attempting to clean JSON data for DB")
     Google_API_V3_Clean_Data(extracted)
     Google_API_V3_Write_JSON(extracted, "clean")
     modified = Google_API_V3_Modify_Values()
+    print("attempting to write to DB")
     Google_API_V3_Write_JSON(modified, "dbReady")
     #Google_API_V3_Write_Thumbnails()
     with app.app_context():
@@ -482,4 +486,5 @@ if __name__ == '__main__':
     print("Starting Flask application...")
     print("Open Your Application in Your Browser: http://localhost:81")
     # The app will run on port 81, accessible from any local IP address
+    Update_Video_Database_Full()
     app.run(host='0.0.0.0', port=81)

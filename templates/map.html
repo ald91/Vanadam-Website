@@ -101,8 +101,8 @@
     </div>
 
     <!-- SQLite query results-->
-
-    <h1>Shortform Videos for {{ map. name }}</h1>
+    <br>
+    <h1 class="text-center">Shortform Videos for {{ map. name }}</h1>
     <!-- SHORTFORM RESULTS-->
     <div class="d-flex align-content-around overflow-auto">
         {% for result in map_results %}
@@ -118,29 +118,33 @@
     <br>
 
     <!-- LONGFORM RESULTS-->
-    <h1>Longform Videos for {{ map.name }}</h1>
-    <div class="row align-content-center mx-auto ps-2 pe-1 pb-2 my-auto">
-    <div class="d-flex flex-column">
+    <h1 class="text-center">Longform Videos for {{ map.name }}</h1>
+    <div class="row align-content-center mx-auto ps-2 pe-1 pb-2 pt-2 my-auto">
+    <div class="d-flex flex-column m-0">
         {% for result in map_results %}
         {% if result["videotype"] == "Longform" %}
         <a href="/videos/{{result.vidID}}" class="text-decoration-none">
-        <article>
-            <div class="row mb-1">
+        <article id="{{ result.vidID }}" class="">
+            <div class="row">
                 <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                   <!-- <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="300px" height="auto" /> -->
-                    <iframe width="auto" height="170px" src="https://www.youtube.com/embed/{{ result.vidID }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                   <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="auto" height="170px" />
+                    <iframe class="d-none" width="auto" height="170px" src="https://www.youtube.com/embed/{{ result.vidID }}?enablejsapi=1&autoplay=0&modestbranding=1&rel=0&controls=1&iv_load_policy=3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
                     </iframe>
                 </div>
                 <div class="col-6 flex-fill">
-                     <h2>{{ result.title }}</h2>
+                    <h2>
+                        <img src="{{ url_for('static', filename='assets/modethumbs/' ~ result.gamemode ~ '_100x100.png') }}" height="30px" width="auto"/>
+                        {{ result.title }} 
+                    </h2>
                     <h3>{{ infiniteCSR_Lookup[result.csr] }}</h3>
-                    <p class="article-text text-truncate">{{ result.videocategory }}</p>
+                    <p> uploaded on {{ result.published }}</p>
+                    <p class="article-text text-truncate">{{ result.videocategory }} of game mode: {{ result.gamemode }}</p>
                 </div>
                 <div class="col-md-2 col-auto d-flex align-content-center justify-content-center">
                     {% set ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Onyx", "HCS", "EHL"] %}
                     {% for rank in ranks %}
                     {% if rank in infiniteCSR_Lookup[result.csr] %}
-                    <img src="{{'../static/assets/icons/haloinfiniteranked/Signum' ~ rank ~ '.png'}}" style="height: 150px;">
+                    <img src="{{'../static/assets/icons/haloinfiniteranked/Signum' ~ rank ~ '.png'}}" style="height: 150px;" />
                     {% endif %}
                     {% endfor %}
                 </div>
