@@ -10,20 +10,20 @@
         <form action="{{ url_for('article_create') }}" method="POST " enctype="multipart/form-data">
             {{ form.hidden_tag() }}
 
-            <label>Title</label><br>
+    <label>Title</label><br>
             {{ form.title(size=60) }}<br><br>
 
-            <label>Content</label><br>
+    <label>Content</label><br>
             {{ form.content(rows=20, cols=80) }}<br><br>
 
-            <label>Tags (comma-separated)</label><br>
+    <label>Tags (comma-separated)</label><br>
             {{ form.tags(size=60) }}<br><br>
 
                 <label>Image (Optional)</label><br>
                 {{ form.image() }}<br><br>
 
             {{ form.submit(class="btn btn-primary") }}
-        </form>
+</form>
 
     </div>
     {% endblock %}
