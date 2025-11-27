@@ -13,15 +13,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 #internal imports
 #=================
-from extensions import app, mail, hash, csrf
 from db import get_database
 from auth import *
 from db import *
 from HaloData import *
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm
 
-#password recovery serializer
-serializer = URLSafeTimedSerializer(app.secret_key)
+
 
 def log_in_user(form):
     if form.validate_on_submit():
@@ -105,7 +103,8 @@ def verify_reset_token(token, expiration=3600):
     return email
 
 def send_recovery_email(email, username):
-    token = serializer.dumps(email, salt=app.security_password_salt)
+    from app import mail, serializer, emailSalt
+    token = serializer.dumps(email, salt=emailSalt)
     reset_url = url_for('reset_password', token=token, _external=True)
 
     msg = Message(
