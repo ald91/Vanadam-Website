@@ -44,7 +44,7 @@ app = Flask(__name__)
 app.config.from_pyfile("config.py")
 app.secret_key = os.environ.get("SECRET_KEY", "dev_key_for_testing_only")
 app.security_password_salt = os.environ.get('SECURITY_PASSWORD_SALT')
-emailSalt = app.security_password_salt
+securitySalt = app.security_password_salt
 
 #password recovery serializer
 serializer = URLSafeTimedSerializer(app.secret_key)

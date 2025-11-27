@@ -52,59 +52,61 @@ def log_in_user(form):
 
 # Sends email on registration
 def register_user(form):
-        if form.validate_on_submit():  # If form passes validation rules
-            username = form.username.data
-            email = form.email.data
-            password = form.password.data
-            password2 = form.password2.data
-            print("RegisterForm has been validated")
+    from app import mail
+    if form.validate_on_submit():  # If form passes validation rules
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        password2 = form.password2.data
+        print("RegisterForm has been validated")
 
-            if password != password2:
-                flash("Passwords don't match!", "error")
-                return render_template('register.html', form=form)
+        if password != password2:
+            flash("Passwords don't match!", "error")
+            return render_template('register.html', form=form)
 
-            db = get_database()
-            cur = db.cursor()
+        db = get_database()
+        cur = db.cursor()
 
-            query = "SELECT * FROM Users WHERE username = ? OR email = ?"
-            cur.execute(query, (username, email))
-            existing_user = cur.fetchone()
+        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
+        cur.execute(query, (username, email))
+        existing_user = cur.fetchone()
 
-            if existing_user is None:
-                
-                # Hash password and insert new user record
-                hashpass = generate_password_hash(password)
-                cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
-                            (username, email, hashpass))
-                db.commit()
-                session['username'] = username
-                
-                msg = Message(
-                    subject= f"Account Creation - Welcome to Vanadam Halo, {username}",
-                    sender="VanadamEsports@gmail.com",
-                    recipients= [email],
-                    body = render_template("emails/register.txt", username=username))
+        if existing_user is None:
+            
+            # Hash password and insert new user record
+            hashpass = generate_password_hash(password)
+            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
+                        (username, email, hashpass))
+            db.commit()
+            session['username'] = username
+            
+            msg = Message(
+                subject= f"Account Creation - Welcome to Vanadam Halo, {username}",
+                sender="VanadamEsports@gmail.com",
+                recipients= [email],
+                body = render_template("emails/register.txt", username=username))
 
-                if mail.send(msg):
-                    print(f'message sent for {username} at {email}')
+            if mail.send(msg):
+                print(f'message sent for {username} at {email}')
 
-                return session['username']
-            else:
-                return False
+            return session['username']
+        else:
+            return False
 
         return redirect(url_for('register'))
 
 #Account Recovery Methods
 def verify_reset_token(token, expiration=3600):
+    from app import serializer, securitySalt
     try:
-        email = serializer.loads(token, salt= app.security_password_salt , max_age=expiration)
+        email = serializer.loads(token, salt=securitySalt , max_age=expiration)
     except Exception:
         return None
     return email
 
 def send_recovery_email(email, username):
-    from app import mail, serializer, emailSalt
-    token = serializer.dumps(email, salt=emailSalt)
+    from app import mail, serializer, securitySalt
+    token = serializer.dumps(email, salt=securitySalt) #salt token generated in app.py
     reset_url = url_for('reset_password', token=token, _external=True)
 
     msg = Message(
