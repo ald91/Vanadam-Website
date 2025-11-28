@@ -121,8 +121,8 @@
 
     <!-- LONGFORM RESULTS-->
     <h1 class="text-center">Longform Videos for {{ map.name }}</h1>
-    <div class="row align-content-center mx-auto p-2 my-auto"  style="background-color: black!important;">
-        <div class="d-flex flex-column"  style="background-color: black!important; border-style: none;">
+    <div class="row align-content-center mx-auto p-2 my-auto"  style="background-color: black!important; border-style: none!important;;">
+        <div class="d-flex flex-column"  style="background-color: black!important; border-style: none!important;">
             {% for result in map_results %}
             {% if result["videotype"] == "Longform" %}
             <a href="/videos/{{result.vidID}}" class="text-decoration-none">

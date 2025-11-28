@@ -56,6 +56,7 @@ load_dotenv()
 
 #Apply config settings from our file
 app.config.from_object('config')
+DEBUG_MODE = False
 
 #email functionality 
 mail = Mail(app)
@@ -66,6 +67,7 @@ app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False').lower() == 'true
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
 
 # temp folder for storing session files (make SQL?)
 SESSION_DIR = './flask_session'
@@ -94,7 +96,8 @@ def close_db(exception):
 @app.context_processor
 def inject_nav_data():
     return {
-        "HALO_INFINITE_DATA": HALO_INFINITE_DATA
+        "HALO_INFINITE_DATA": HALO_INFINITE_DATA,
+        "DEBUG_MODE" : DEBUG_MODE
     }
 
 
@@ -355,6 +358,7 @@ def mapPage(mapID):
     cur.execute(map_query, (mapID,))
     map_results = cur.fetchall()
     map_results = [dict(row) for row in map_results] #formats for JINJA2
+    format_date_from_ISO_DB(map_results)
     
     if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')

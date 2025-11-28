@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanadam Halo - {% block title %}Debug Title{% endblock %}</title>
+    <title>Vanadam Halo - {% block title %} {% endblock %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='Assets/Icons/favicon.png') }}">
 
@@ -100,12 +100,13 @@
 
     <section id="main-content" class="mt-5 pt-5">
       <div id="pageMain" class="container-sm mx-auto my-auto ps-2 pb-1 pt-2">
+    {% if DEBUG_MODE %}
     <p>DEBUG: username = {{ session.get('username') }}</p>
     <!-- Flash Messages: This will display any error/success/status messages to the user -->
     {% for category, message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ category }}">{{ message }}</div>
     {% endfor %}
-        
+    {% endif%}
         <!-- Main content -->
         {% block content %} {% endblock %}
 
