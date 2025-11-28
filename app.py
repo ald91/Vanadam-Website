@@ -3,6 +3,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from flask_wtf import FlaskForm, CSRFProtect
+from flask import Flask
+from flask_mail import Mail
+from flask_wtf import FlaskForm, CSRFProtect
+from flask_session import Session
+
 
 #Security
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
@@ -18,8 +23,8 @@ from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Opt
 import sqlite3, os, hashlib, base64
 from db import create_database
 
-#API
-from api import *
+import os, hashlib
+from dotenv import load_dotenv
 
 #internal imports
 #=================
@@ -29,15 +34,11 @@ from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, Passw
 from db import *
 import db
 
-from flask import Flask
-from flask_mail import Mail
-from flask_wtf import FlaskForm, CSRFProtect
-from flask_session import Session
+#helpers
+from utilities import format_date_from_ISO_DB
 
-import os, hashlib
-from dotenv import load_dotenv
-
-import os
+#API
+from api import *
 
 #security and config
 app = Flask(__name__)
@@ -106,14 +107,55 @@ def index():
     if not session.get("name"):
         print(session)
     print(session)
-    return render_template('home.html', title="Vanadam Halo")
+
+    db = get_database()
+    cur = db.cursor()
+
+    videosQuery= """
+    SELECT vidID, title, published, thumbnailsdefault
+    FROM Videos
+    WHERE videotype != 'Livestream'
+    ORDER BY published DESC
+    LIMIT 4; """
+
+    cur.execute(videosQuery)
+    videos = cur.fetchall()
+    videos = [dict(row) for row in videos]
+    format_date_from_ISO_DB(videos)
+
+    articles = None
+
+    return render_template('home.html', title="Vanadam Halo", videos=videos, articles=articles)
 
 
 # Admin dashboard
 #===================
-@app.route('/staff/<admintoken>')
-def staff_login(admintoken):
-    pass 
+@app.route('/admin', methods=["GET", "POST"])
+#uses actions to determine which action to use.
+def admin_actions():
+    if request.method == "GET":
+        return render_template('admin.html')
+
+    elif request.method == "POST":
+
+        #VIDEO DATABASE ACTIONS
+        if request.form.get("dbAction"):
+            action = request.form.get("dbAction")
+        
+            if action == "vdbUpdate":
+                Update_Video_Database_Full()
+                flash("Video Database Update Completed", "success")
+            
+            elif action == "vdbDelete":
+                dbpath = "database.db"
+                try:
+                    os.remove(dbpath)
+                    flash("Video Database delete attempted", "success")
+                    
+                except FileNotFoundError:
+                    flash("Could not delete database", "error")
+    
+    return redirect(url_for('admin_actions'))
 
 #Registration & Validation
 #===================
@@ -286,10 +328,9 @@ def article_edit(id):
 
     return render_template('article_edit.html', id=id, form=form, article=article)
 
-@app.route('/info/<infoType>', methods=['GET'])
-def infoPages(infoType):
-    # coaching, get involved, etc. not sure if should all have endpoints... (discuss?)
-    pass
+@app.route('/about', methods=['GET'])
+def about_page():
+    return render_template('about.html')
 
 @app.route('/mapPage', methods=['GET'])
 def mapsAll():
@@ -308,7 +349,7 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT vidId, title, published, description, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE map = ?
+    SELECT vidId, title, published, description, thumbnailsmax, thumbnailshigh, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE gamemap = ?
  
     """
     cur.execute(map_query, (mapID,))
@@ -494,21 +535,36 @@ def search():
 
 @app.route('/videos/<videoID>', methods=['GET'])
 def video(videoID):
+
+    print(f'got ({videoID}) from request')
     
+    videoID = videoID.strip()
     db = get_database()
     cur = db.cursor()
 
     #run query for video resources
-    video_query =  """ 
-    SELECT vidID, title, published, description, thumbnailsmax, thumbnailshigh, csr, map, gamemode, videotype, videocategory FROM Videos WHERE vidID = ?
- 
-    """
-    cur.execute(video_query, (videoID,))
+    videoInfo_query =  """  SELECT vidID, title, published, description, thumbnailsmax, thumbnailshigh, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE vidID = ? """
+    cur.execute(videoInfo_query, (videoID,))
     videoInfo = dict(cur.fetchone())
+    print(videoInfo["gamemap"],videoInfo["gamemode"],videoInfo["csr"])
+   
+
+    #find same map, mode and rank videos to suggest to use
+    videoSameMap_query = """ SELECT vidID, thumbnailsmedium, gamemap, videotype FROM Videos WHERE gamemap = ? AND vidID != ? AND videotype = 'Longform' """
+    cur.execute(videoSameMap_query, (videoInfo["gamemap"], videoID))
+    videoSameMap = cur.fetchall()
+    videoSameMap = [dict(row) for row in videoSameMap]
+
+    videoSameMode_query = """ SELECT vidID, thumbnailsmedium, gamemode, videotype FROM Videos WHERE gamemode = ? AND vidID != ? AND videotype = 'Longform' """
+    cur.execute(videoSameMode_query, (videoInfo["gamemode"], videoID))
+    videoSameMode = cur.fetchall()
+    videoSameMode = [dict(row) for row in videoSameMode]
+
     
-    return render_template('video.html', videoInfo=videoInfo) 
+    return render_template('video.html', videoInfo=videoInfo, videoSameMap=videoSameMap, videoSameMode=videoSameMode) 
 
 def Update_Video_Database_Full():
+    extracted = []
     print("attempting to contact Youtube API")
     Google_API_V3_PULL_Video_Info(extracted)
     print("attempting to contact Youtube API part 2")
@@ -519,9 +575,11 @@ def Update_Video_Database_Full():
     modified = Google_API_V3_Modify_Values()
     print("attempting to write to DB")
     Google_API_V3_Write_JSON(modified, "dbReady")
-    #Google_API_V3_Write_Thumbnails()
+    Google_API_V3_Write_Thumbnails()
     with app.app_context():
         Commit_to_DB()
+
+    extracted=None # resets field while Python still running
 
     return f"successfully carried out full video DB update including thumbnails"
 # Run application
@@ -531,5 +589,4 @@ if __name__ == '__main__':
     print("Starting Flask application...")
     print("Open Your Application in Your Browser: http://localhost:81")
     # The app will run on port 81, accessible from any local IP address
-    #Update_Video_Database_Full()
     app.run(host='0.0.0.0', port=81)

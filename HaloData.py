@@ -61,7 +61,17 @@ infiniteCSR_Lookup =  {
     1400: "Diamond 5",
     1450: "Diamond 6",
 
-    1500: "Onyx"
+    1500: "Onyx",
+    1550: "Onyx",
+    1600: "Onyx",
+    1650: "Onyx",
+    1700: "Onyx",
+    1750: "Onyx",
+    1800: "Onyx",
+    1850: "Onyx",
+
+    "HCS" : "HCS",
+    "EHL" : "EHL"
 }
 
 infiniteCSR = {

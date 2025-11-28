@@ -49,7 +49,7 @@ def create_database(db_path="database.db"):
         kind TEXT,
         channelid TEXT,           
         csr INTEGER,
-        map TEXT,
+        gamemap TEXT,
         gamemode TEXT,
         videotype TEXT,
         videocategory TEXT,

@@ -20,9 +20,6 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(DIR, "API_SCRAPE.JSON")
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
-#global list for API pulls
-extracted = []
-
 #helper functions
 def Calculate_Video_MMR(videoData):
     rank = ["Bronze 1", "Bronze 2", "Bronze 3", "Bronze 4", "Bronze 5", "Silver 1", "Silver 2", "Silver 3", "Silver 4", "Silver 5", "Gold 1", "Gold 2", "Gold 3", "Gold 4", "Gold 5", "Gold 6", "Platinum 1", "Platinum 2", "Platinum 3", "Platinum 4", "Platinum 5", "Platinum 6", "Diamond 1", "Diamond 2", "Diamond 3", "Diamond 4", "Diamond 5", "Diamond 6","b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "g6", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
@@ -77,8 +74,13 @@ def Calculate_Video_MMR(videoData):
 
 def Calculate_Video_Map(videoDesc, videoTitle):
     maps = HALO_INFINITE_DATA["Maps"].keys()
-    Dtext = videoDesc.lower()
+    Dtext = videoDesc.split("https://",)
+    Dtext = Dtext[0]
+    Dtext = Dtext.lower()
     Ttext = videoTitle.lower()
+
+    if "livefire" in Dtext or "live fire" in Dtext:
+        return "Live fire"
 
     for map_name in maps:
         if map_name.lower() in Dtext or map_name.lower() in Ttext:
@@ -91,9 +93,15 @@ def Calculate_Video_Gamemode(videoDesc, videoTitle):
     Dtext = videoDesc.lower()
     Ttext = videoTitle.lower()
 
+    if "king of the hill" in Dtext:
+        return "Koth"
+    
+    if "capture the flag" in Dtext:
+        return "ctf"
+
     for gamemode in modes:
         if gamemode in Dtext or gamemode in Ttext:
-            return gamemode.capitalize()
+            return gamemode.title()
 
     return None
 
@@ -114,14 +122,17 @@ def Calculate_Video_Type(description, duration):
     
 def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc):
     videoCategory = [ "vod review", "map guide", "reaction", "livesteam", "other", "pro breakdown", "stream highlight", "discussion", "macro tips"]
-    Dtext = videoDesc.lower()
-
+    
+    Dtext = videoDesc.split("https://",)
+    Dtext = Dtext[0]
+    Dtext = Dtext.lower()
+               
     if videoType == "Livestream":
         return "Livestream"
 
     for category in videoCategory:
         if category in Dtext:
-            return category.capitalize()
+            return category.title()
 
 #build video dump file for other functions to use -- prevents API call spam
 def Google_API_V3_PULL_Video_Info(extracted):
@@ -299,7 +310,7 @@ def Google_API_V3_Modify_Values():
             video["csr"] == None
 
         # map guides shouldnt have CSR or game modes
-        if video["type"] == "Map Guide":
+        if video["category"] == "Map Guide":
             video["csr"] = None
             video["gameMode"] = None
                     
@@ -316,14 +327,21 @@ def Google_API_V3_Write_Thumbnails():
     os.makedirs("errors", exist_ok=True)
     errornails = []
 
+    thumb_dir = Path("static/assets/videothumbs")
+    existing_files = {file.name for file in thumb_dir.iterdir() if file.is_file()}
+
     for video in videos:
         thumb_url = video["thumbnails"]["maxres"]
         video_id = video["videoId"]
+        video_etag = video["etag"]
+        thumb_file = f"{video_id}.jpeg"
 
-        if thumb_url:
+        #if thumbnail doesn't exist, make one
+        if thumb_file not in existing_files:
+            print("new thumbnail found for")
             response = requests.get(thumb_url)
             if response.ok:
-                thumbnail_path = f"static/assets/videothumbs/{video_id}.jpeg"
+                thumbnail_path = f"static/assets/videothumbs/{video_id}.jepg"
                 
                 if os.path.exists(thumbnail_path):
                     print(f"thumbnail for {video_id} already exists, skipping.")
@@ -337,6 +355,8 @@ def Google_API_V3_Write_Thumbnails():
                 errornails.append(video_id)
                 with open("errors/thumbnailerrors.txt", "wb") as file:
                     file.write("/n".join(errornails))
+        else:
+            continue
 
 def Commit_to_DB():
     with open("videoDbReady.json", "r", encoding="utf-8") as file:
@@ -344,6 +364,13 @@ def Commit_to_DB():
 
     db = get_database()
     cur = db.cursor()
+
+    cur.execute("SELECT vidID, etag from Videos")
+    existing = {row[0]:row[1] for row in cur.fetchall()}
+
+    newRecords = []
+    updatedRecords = []
+
 
     for video in videos:
         vidID = video["videoId"]
@@ -366,53 +393,64 @@ def Commit_to_DB():
         videocategory = video["category"]
         etag = video["etag"]
         
-        cur.execute("SELECT etag FROM Videos WHERE vidId = ?", (vidID,))
-        result = cur.fetchone()
+        # does video exist in DB
+        db_etag = existing.get(vidID)
 
-        if result is None:
-            print(f"new video. modifying {vidID}")
+        if db_etag is None:
+            print(f"new video. {vidID, title}")
 
-            insert_query = """
-            INSERT INTO Videos (
+            #inserts a tuple of the video into newRecords
+            newRecords.append((
                 vidID, title, duration, published, description,
                 thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                kind, channelid, csr, map, gameMode, videotype, videocategory, etag
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """
+                kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag
+            )) 
+            
+        elif db_etag != etag:
+            print(f"video {vidID, title} updated")
 
-            cur.execute(insert_query, (
+            #API signifying the video has had it's data changed since last scan
+            updatedRecords.append((
                 vidID, title, duration, published, description,
                 thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
                 kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag
             ))
 
-            db.commit()
-
-        elif  result[0] != etag:
-            print(f"upating video. modifying {vidID}")
-            update_query = """
-                UPDATE Videos
-                    SET title = ?, duration = ?, published = ?, description = ?,
-                    thumbnailsdefault = ?, thumbnailsmedium = ?, thumbnailshigh = ?, thumbnailsmax = ?,
-                    kind = ?, channelid = ?, csr = ?, map = ?, gameMode = ?, videotype = ?, videocategory = ?, etag = ?
-                    WHERE vidID = ?
-                """
-
-            cur.execute(update_query, (
-                    title, duration, published, description,
-                    thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                    kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag,
-                    vidID
-                ))
-
         else:
-            print(f"skipping video ({vidID}) record is already up to date.")
+            #the record exists and is idential
+            continue
+            
+
+
+    #inteserts videos that are new
+    if newRecords:
+        cur.executemany("""
+            INSERT INTO Videos (
+                vidID, title, duration, published, description,
+                thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
+                kind, channelid, csr, gameMap, gameMode, videotype, videocategory, etag
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, newRecords)
+
+
+    #insert videos that needed updating
+    if updatedRecords:
+        cur.executemany("""
+            UPDATE Videos
+            SET title = ?, duration = ?, published = ?, description = ?,
+                thumbnailsDefault = ?, thumbnailsMedium = ?, thumbnailsHigh = ?, thumbnailsMax = ?,
+                kind = ?, channelID = ?, csr = ?, gameMap = ?, gameMode = ?, videoType = ?, videoCategory = ?, etag = ?
+            WHERE vidID = ?
+        """, updatedRecords)
 
     db.commit()
     db.close()  
+    
+    #reset lists for next update
+    newRecords = [] 
+    updatedRecords = [] 
+    
     return f"db updated"
-
-
 
 

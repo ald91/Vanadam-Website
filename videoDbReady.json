@@ -129,7 +129,7 @@
         "map": "Aquarius",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Other"
+        "category": null
     },
     {
         "etag": "0cfNgCEQe4EOfrbvRrCCL-Nj_cY",
@@ -151,7 +151,7 @@
         "map": "Aquarius",
         "gameMode": "Assault",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "QxB_7klkqf-rl4RBqa8JMoIRfXI",
@@ -261,7 +261,7 @@
         "map": "Origin",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "keaCxEbxLzfzucV943Tx7yoH_QU",
@@ -327,7 +327,7 @@
         "map": "Lattice",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Other"
+        "category": null
     },
     {
         "etag": "7sxUvmcjViGejEpfg312PTI8QWA",
@@ -347,9 +347,9 @@
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 1300,
         "map": "Lattice",
-        "gameMode": "King of the hill",
+        "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "sgC20Han000tYd0fGYEZB5PyZeg",
@@ -393,7 +393,7 @@
         "map": "Fortress",
         "gameMode": "Assault",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "iKZ8Ov6d7D9NeZYE1Z9ivk9cV4A",
@@ -437,7 +437,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "r6i_Td0pkaHIA8wHn-tbj9KCr0s",
@@ -459,7 +459,7 @@
         "map": "Fortress",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Map Guide"
     },
     {
         "etag": "w9G0JLFiPXL4Sy36d8P7991vlqY",
@@ -481,7 +481,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
         "etag": "r1s5tUFmLDHKNjYfGIQUGYAK8_A",
@@ -569,7 +569,7 @@
         "map": "Interference",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "Kj71Lvn7tvoR5a-5Y4IuKndaTTk",
@@ -591,7 +591,7 @@
         "map": "Forbidden",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "TCz719ZKjuQT7Kisf9sSJm1zFLU",
@@ -635,7 +635,7 @@
         "map": "Solitude",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "QbjByuwE2NP8Bwqh_Wk9wejYbq4",
@@ -679,7 +679,7 @@
         "map": "Recharge",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "n3FWj0s5o3zwQIAsoIfA3HJ1a9k",
@@ -723,7 +723,7 @@
         "map": "Solitude",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "XIzukAqKVrnNcmjKN2at6rg6ppg",
@@ -745,7 +745,7 @@
         "map": "Interference",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "-uk2U4EnfsuMLesHuX0MEPf4-fI",
@@ -811,7 +811,7 @@
         "map": "Aquarius",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "WizXRa8s8Na5CEpfY-Xr6nP8pSE",
@@ -855,7 +855,7 @@
         "map": "Recharge",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "UZZy5m2p4QPZsmLgUJtqfxoNS60",
@@ -899,7 +899,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "33F0eq9f_Ej6BQNUQWVhJbxhMAE",
@@ -1031,7 +1031,7 @@
         "map": "Solitude",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "GYzMKIEwx-wP-8banUB3R1oiRzQ",
@@ -1119,7 +1119,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "q10i5LHrYC1sd-n-YxK8z-lUMpI",
@@ -1141,15 +1141,15 @@
         "map": "Recharge",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "8O3QYiSgVOPHgF1ylNX9n8n08IE",
+        "etag": "dE9mzzPZ8wCwNbiNLCB4hSDJDrA",
         "videoId": "SBM--yQEQ_o",
         "title": "HCS Pro LQGEND in Ranked Arena",
         "duration": 850,
         "publishedAt": "2023-08-04T18:30:09Z",
-        "description": "VoD Review Match of King of The Hill on Livefire\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "VoD Review Match of Onyx 1700+ king of The Hill on Livefire\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/SBM--yQEQ_o/default.jpg",
             "standard": "https://i.ytimg.com/vi/SBM--yQEQ_o/sddefault.jpg",
@@ -1159,11 +1159,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": null,
-        "map": null,
-        "gameMode": "King of the hill",
+        "csr": 1500,
+        "map": "Live fire",
+        "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "yV9BFjMf8Im6nyN58As7Ry-Qxd8",
@@ -1185,7 +1185,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "xmncFCxN8FqQ29qAEw9qK5S8hUs",
@@ -1207,7 +1207,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "OCtN9rErLOZPGUvBQ7LlQ_7Lxvs",
@@ -1229,7 +1229,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
         "etag": "IOIxmkIwWWRkWd-zfE4NvXmNA1o",
@@ -1251,7 +1251,7 @@
         "map": "Streets",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "gLrVWD5hq6mKaiBJIkefk37cqjc",
@@ -1273,7 +1273,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
         "etag": "k2owqnmOLV5NR4YO3IGFNlK1ezU",
@@ -1292,10 +1292,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 1100,
-        "map": null,
+        "map": "Live fire",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "NjOg69KRv8C5f6NZKa6JenjEM94",
@@ -1317,7 +1317,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "kYlrl_vJDo9tMUCLkVl4cL_zek0",
@@ -1339,15 +1339,15 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "UXyaIVXVx3HXp9kqAwJ-fxAhdTA",
+        "etag": "Em6ZJGJyLxosvCmAAFie_DDpfRY",
         "videoId": "UyqFTOpd2JY",
         "title": "How to Dominate in Platinum",
         "duration": 1200,
         "publishedAt": "2023-07-23T18:30:07Z",
-        "description": "VoD Review Match of Slayer on Empyrean (Ranked Slayer)\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nDiscord.gg/2vNBa2rSp9\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "VoD Review Match of an Onyx player in a lower ranked Slayer on Empyrean (Ranked Slayer)\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nDiscord.gg/2vNBa2rSp9\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/UyqFTOpd2JY/default.jpg",
             "standard": "https://i.ytimg.com/vi/UyqFTOpd2JY/sddefault.jpg",
@@ -1357,11 +1357,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": null,
+        "csr": 1500,
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "8sCzb4RfOqhukBPoYIvq819zWpQ",
@@ -1405,7 +1405,7 @@
         "map": "Starboard",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "LfTBGdm6FQ51SbafC_9JilKlJv4",
@@ -1427,7 +1427,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "kCoarRknaQVkuReUcxly-gXMhbQ",
@@ -1445,11 +1445,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 450,
+        "csr": null,
         "map": "Solitude",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "ubcndXgS6terwbiLq0JriAEwxTY",
@@ -1471,7 +1471,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
         "etag": "Wp3DQhGHfkXcN782st1AxJltmfo",
@@ -1493,7 +1493,7 @@
         "map": "Solitude",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "5qwTZ-8lI7pSDkl2dMRUcNlFn7M",
@@ -1515,7 +1515,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
         "etag": "RRV8tpLxo608v3GK5yIpDrneIE0",
@@ -1537,15 +1537,15 @@
         "map": null,
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "TlOLAbVQGqQIukWV8nOZxXP_XiQ",
+        "etag": "If_jL_DVHhJ8QC4v-09CDq5TsHc",
         "videoId": "6LGTUutj5-o",
         "title": "Dominate on Solitude",
         "duration": 465,
         "publishedAt": "2023-07-15T19:30:08Z",
-        "description": "Map Guide Learn how to play the map Solitude with this guide on META, positioning, strategy and trick jumps for koth, strongholds and slayer. aimed at all ranks but mainly those around low diamond.\n\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\n00:00 - introduction\n00:34 - Map layout & Callouts\n01:50 - Slayer Tips & Setups\n03:08 - KOTH & Strongholds Into\n03:25 - Strongholds setups and tips\n03:58 - KOTH setups and tips\n05:30 - Navigation and jump tips\n06:40 - Summary\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nDiagram from FranktheFlank\nhttps://www.reddit.com/r/CompetitiveHalo/comments/14nblol/i_made_a_callouts_map_for_plaza_based_on_the_h5/\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "Map Guide Learn how to play the map Solitude with this guide on META, positioning, strategy and trick jumps for all game modes. aimed at all ranks but mainly those around low diamond.\n\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\n00:00 - introduction\n00:34 - Map layout & Callouts\n01:50 - Slayer Tips & Setups\n03:08 - KOTH & Strongholds Into\n03:25 - Strongholds setups and tips\n03:58 - KOTH setups and tips\n05:30 - Navigation and jump tips\n06:40 - Summary\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nDiagram from FranktheFlank\nhttps://www.reddit.com/r/CompetitiveHalo/comments/14nblol/i_made_a_callouts_map_for_plaza_based_on_the_h5/\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/6LGTUutj5-o/default.jpg",
             "standard": "https://i.ytimg.com/vi/6LGTUutj5-o/sddefault.jpg",
@@ -1557,9 +1557,9 @@
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
         "map": "Solitude",
-        "gameMode": "Koth",
+        "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Map Guide"
     },
     {
         "etag": "14bXjjR-XWSnSp-ExXl1vf839Z0",
@@ -1581,7 +1581,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "Edf-J8boP-LgyTo4BPR6SnP_Kis",
@@ -1603,15 +1603,15 @@
         "map": "Empyrean",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Stream Highlight"
     },
     {
-        "etag": "mShziG0EHKn_WychxB9sSq3QQYc",
+        "etag": "vhioyj6hnGUPHTi2rLd2y0Py1OA",
         "videoId": "hoY4hvFmd5I",
         "title": "FaZe iTz so Frosty Analysis",
         "duration": 1382,
         "publishedAt": "2023-07-07T18:30:08Z",
-        "description": "VoD Review Match of CTF on Aquarius.\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "VoD Review Match of Onyx 1600 CTF on Aquarius.\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/hoY4hvFmd5I/default.jpg",
             "standard": "https://i.ytimg.com/vi/hoY4hvFmd5I/sddefault.jpg",
@@ -1621,11 +1621,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": null,
+        "csr": 1500,
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "j5zebPFZSOu1BxyGc6oqmFyC4g8",
@@ -1647,15 +1647,15 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "bGDTFNNEVTcy_bU15yu0svAOx4k",
+        "etag": "WL-_yekcx8Odi_caaHMNl1XD6qQ",
         "videoId": "t2f0Tg5v7Bc",
         "title": "The Secret to Winning on Starboard (GUIDE)",
         "duration": 666,
         "publishedAt": "2023-06-30T18:45:07Z",
-        "description": "Map Guide Learn how to play the map starboard with this guide on META, positioning, strategy and trick jumps for CTF and slayer. aimed at all ranks but mainly those around low diamond.\n\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "Map Guide Learn how to play the map starboard with this guide on META, positioning, strategy and trick jumps for all game modes. aimed at all ranks but mainly those around low diamond.\n\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/t2f0Tg5v7Bc/default.jpg",
             "standard": "https://i.ytimg.com/vi/t2f0Tg5v7Bc/sddefault.jpg",
@@ -1667,9 +1667,9 @@
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
         "map": "Starboard",
-        "gameMode": "Slayer",
+        "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Map Guide"
     },
     {
         "etag": "H_39hTosTt7-8nzjPzdZd3-kuEM",
@@ -1691,15 +1691,15 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "iMUVnvzdvT8JirG1H9-vxCfiyEU",
+        "etag": "fXcLH-iEmI-2BeTo9-rf1-boehE",
         "videoId": "OrrOpHronmA",
         "title": "Movement and Decision Making",
         "duration": 693,
         "publishedAt": "2023-06-23T18:30:08Z",
-        "description": "VoD Review Average MMR 1600 Match of CTF on Aquarius.\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
+        "description": "VoD Review an Onyx 1600 Match of CTF on Aquarius.\nSniper Aim Training -  https://youtu.be/l9snxvRaurg\nMy MnK Settings - https://youtu.be/BhU2RQrTAWY\nSend your VoDs to be featured: Vanadamesports@gmail.com\nMatch link - https://halotracker.com/halo-infinite/match/601eb80a-a375-4b5c-9edd-6f5a55958c71\n\nJoin the Discord Community for asking Qs, queueing with me & Coaching\nhttps://discord.gg/SsWANGRzav\n\nJoin Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks. These videos are intended to help players understand the dynamics of solo play in halo infinite to help them gain CSR and push to higher ranks. One of the biggest challenges of climbing in this game is understanding team dynamics in pick up groups and how your actions cause more things than you realse.\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg\n\nShot Call Website\nhttps://shotcall.app/",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/OrrOpHronmA/default.jpg",
             "standard": "https://i.ytimg.com/vi/OrrOpHronmA/sddefault.jpg",
@@ -1709,11 +1709,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": null,
+        "csr": 1500,
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "B91Va-M3nRuh8qrklomwkGX1oJU",
@@ -1735,7 +1735,7 @@
         "map": null,
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "R00fsgKhP7NAsb2re0OCOy13jco",
@@ -1757,7 +1757,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "1pOB_ExSLvSUU7H8S1vSoO3aHmg",
@@ -1779,7 +1779,7 @@
         "map": "Recharge",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "8vbZ42_Gg9-_mLVSMpFxmHWX6D4",
@@ -1801,7 +1801,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "xSwomcnjFHb5w9P0NPcKQXdYTpo",
@@ -1823,7 +1823,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "_o-kKqxOHEHu4ZAdkhJmPov2gxk",
@@ -1845,7 +1845,7 @@
         "map": null,
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "p4gfeqMjmCTWfl3O8BjSvR1BZTk",
@@ -1867,7 +1867,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "I69wy4y9pHO4-uIhJqZ1pvEyWZg",
@@ -1889,7 +1889,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "buRuNL_JMJ7YNbWynUkM5lWEN3k",
@@ -1911,7 +1911,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "wEh5rsL9jQ-ccBh3MZC7ZiS0TJ8",
@@ -1933,7 +1933,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "PDoDClj9vhY3UcFsiRTHICQTiUk",
@@ -1955,7 +1955,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "hI4h5YHBx9CRBjvqqIOmMT-y28E",
@@ -1977,7 +1977,7 @@
         "map": "Argyle",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "ukmkkNEcXAdWQTkqzIGIWdt-6e0",
@@ -1999,7 +1999,7 @@
         "map": "Streets",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "3Fb87zIjAvzYHbPlbAOS8K9oykQ",
@@ -2018,10 +2018,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 1300,
-        "map": null,
+        "map": "Live fire",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "lOSIcKo-OHrG2jjzZMEXt2EYvKs",
@@ -2043,7 +2043,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "V6ZI2eq1uhQ3QwL9-YqXjrKfN_E",
@@ -2065,7 +2065,7 @@
         "map": "Aquarius",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "0JlqjPRauFClFt-T62U9i967_qs",
@@ -2109,7 +2109,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "PmOx3uqq9XEvMMNh3J1RdhCWwZs",
@@ -2131,7 +2131,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": null
     },
     {
         "etag": "hRvJySced6CdHXG381nZNncdYZc",
@@ -2153,7 +2153,7 @@
         "map": "Argyle",
         "gameMode": "Ctf",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "oi5w37vAFlfftGI0aYcCt7nyahs",
@@ -2175,7 +2175,7 @@
         "map": "Argyle",
         "gameMode": "Ctf",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "Shue0Ra5yH69y1mgrn3rhu9xniQ",
@@ -2197,7 +2197,7 @@
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "G12fPJo6oVPvejtp55uG5m9i4XY",
@@ -2219,7 +2219,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "K6l2qLYVGk_aYeAg0IIci339e7g",
@@ -2241,7 +2241,7 @@
         "map": "Argyle",
         "gameMode": "Ctf",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "s0xgJ0oAadMKP0WyTe23HVzLVPQ",
@@ -2263,7 +2263,7 @@
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "kxiGADIW8bSXab_GXlSN_DzerBU",
@@ -2285,7 +2285,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "t4xM9k7TV4S5amOeBXljykS1V7U",
@@ -2307,7 +2307,7 @@
         "map": "Live fire",
         "gameMode": "Strongholds",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": "Pro Breakdown"
     },
     {
         "etag": "J-lXqJIkptX_ai7_mUrWMHRHPuU",
@@ -2326,10 +2326,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
-        "map": "Streets",
+        "map": null,
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": null
     },
     {
         "etag": "nmOIimAsgKXb-UQ2EiTmvfah2I0",
@@ -2351,7 +2351,7 @@
         "map": "Aquarius",
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "pIwPQfVooHBg7hbPu6qWU530ors",
@@ -2370,10 +2370,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
-        "map": "Streets",
+        "map": null,
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": null
     },
     {
         "etag": "mqU-Ce-eJjCf_mpL0fAs-X1OVko",
@@ -2395,7 +2395,7 @@
         "map": "Streets",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "0vBqicjjga_NkyWrHtgJ5DtqEGg",
@@ -2414,10 +2414,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
-        "map": "Empyrean",
+        "map": null,
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": null
     },
     {
         "etag": "if78rcf_ivBblv3yWI7R_3yffjM",
@@ -2436,10 +2436,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
-        "map": "Empyrean",
+        "map": null,
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Vod review"
+        "category": null
     },
     {
         "etag": "Hg1zEAKyhP4HoAc2-vBe6g6nogU",
@@ -2461,7 +2461,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "00CW3J14yE7L8sNQnCh6xlPKhcc",
@@ -2483,7 +2483,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "7UvnLqv4lYM54YjmIPedxdxaEpY",
@@ -2505,7 +2505,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "zKEn2wthZ2sGepbtmDWw_X_IJ18",
@@ -2527,7 +2527,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "PqHmwqq5xzmuYV5WWDjsk77VIng",
@@ -2571,7 +2571,7 @@
         "map": "Empyrean",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "nbFzWEE3Vnpwm9TeVDvse2gtpoA",
@@ -2593,7 +2593,7 @@
         "map": "Live fire",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "V96sdBFsUxYeAceS62aGO6WU18M",
@@ -2615,7 +2615,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "RNoYZdg80g6TprwAvpdfRqmS4Cc",
@@ -2637,7 +2637,7 @@
         "map": "Streets",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "GsBkxXkPGTHTE7BGz7Vy-WV6f7c",
@@ -2656,18 +2656,18 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 950,
-        "map": null,
+        "map": "Live fire",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "5T85k05LmeQ3vyijiLHpbhwAfkU",
+        "etag": "Nqc1zMLSZoafAeJAIV85cx0Q220",
         "videoId": "hE6A9qWiyRc",
         "title": "Viewer Matched HCS Pros (1900+ MMR) Coaching CTF Strats (Onyx Coaching Halo infinite Season 3)",
         "duration": 1536,
         "publishedAt": "2023-03-17T19:30:11Z",
-        "description": "VoD Review Join Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks.\n\nin this video we're looking at how to very high rank players play CTF on Aquarius focusing on momentum, spawn manipulation and positioning. this was recorded at 1750 MMR.\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin my Community\nhttps://discord.gg/EZSgNzQa\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
+        "description": "a 1900+ Onyx game of CTF on Aquarius\n\nVoD Review Join Vanadam as he coaches other halo players to help increase their rank in Halo: Infinite. Vanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks.\n\nin this video we're looking at how to very high rank players play CTF on Aquarius focusing on momentum, spawn manipulation and positioning. this was recorded at 1750 MMR.\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin my Community\nhttps://discord.gg/EZSgNzQa\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/hE6A9qWiyRc/default.jpg",
             "standard": "https://i.ytimg.com/vi/hE6A9qWiyRc/sddefault.jpg",
@@ -2681,7 +2681,7 @@
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "Qlu1-N06KhSY2ffNvU4ywETZOFw",
@@ -2703,7 +2703,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "gFRNcN2E6qI4ym8cQnovVa0mPao",
@@ -2721,11 +2721,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": null,
         "map": "Recharge",
-        "gameMode": "Strongholds",
+        "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "iW0W9Gv9kN0tjNksiYoqb1g8EgQ",
@@ -2743,11 +2743,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": null,
         "map": "Argyle",
-        "gameMode": "Ctf",
+        "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "uZ70OFix6OD4Fepg8cvy08x1QaQ",
@@ -2769,7 +2769,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Macro Tips"
     },
     {
         "etag": "KCnE8pVg46zU-sgeo46QXzJ3HFg",
@@ -2788,10 +2788,10 @@
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": null,
-        "map": "Live fire",
+        "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Pro breakdown"
+        "category": null
     },
     {
         "etag": "ztsMjsgHrmmHrfu_MR7mDBDUc_c",
@@ -2835,7 +2835,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Macro Tips"
     },
     {
         "etag": "WxCC9NVO_vcF-crKDZB8cI4Bo68",
@@ -2875,11 +2875,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": null,
         "map": "Argyle",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "w5SiRw5adDteWvMXZSz5DDXuLSk",
@@ -2901,7 +2901,7 @@
         "map": "Streets",
         "gameMode": "Koth",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "U11pQPskmIAM5VlvocSeTtqGqhk",
@@ -2919,19 +2919,19 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": null,
         "map": "Argyle",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
-        "etag": "Wo5WW5op6vx39WGDdJ39ok1ml2U",
+        "etag": "lQAc2T5PYoD9k7RarwyOlqcC3j0",
         "videoId": "ZUe8LTQu54I",
-        "title": "Conquer Plat CTF with set ups (Plat 2 - CTF on Aquarius) Halo infinite Season 3 Onyx Coaching",
+        "title": "Conquer CTF with set ups",
         "duration": 1269,
         "publishedAt": "2023-03-10T19:30:06Z",
-        "description": "VoD Review this week we look at a Plat 2 match  and getting Aquarius CTF locked in with flag pull set ups.\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin my Community\nhttps://discord.gg/xhuQjFD9Jw\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nShottcall website\nhttps://shotcall.app/\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
+        "description": "VoD Review this week we look at a Platinum 2 match and locking in to Aquarius CTF with flag pull set ups.\nSend your VoDs to be featured: Vanadamesports@gmail.com\n\nJoin my Community\nhttps://discord.gg/xhuQjFD9Jw\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nShottcall website\nhttps://shotcall.app/\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/ZUe8LTQu54I/default.jpg",
             "standard": "https://i.ytimg.com/vi/ZUe8LTQu54I/sddefault.jpg",
@@ -2941,11 +2941,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": null,
+        "csr": 950,
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "X1aryv3qgXyQOW5DtMFvss7rz0U",
@@ -2967,7 +2967,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "HfVrSa7pEcNzNzyboNCbVZnMglk",
@@ -2985,11 +2985,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": null,
         "map": "Argyle",
-        "gameMode": "Ctf",
+        "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "D3BkdLkVr-UejUwVki6oNlDGmFg",
@@ -3011,7 +3011,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Other"
     },
     {
         "etag": "7EKCT1R_HwRehTF9CqDopLl5BzU",
@@ -3033,7 +3033,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "ToTPfL51x8x5Vdcjwbo_jzJyGek",
@@ -3055,7 +3055,7 @@
         "map": "Streets",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "GWF05jqZ3yqMCKqHOYOCaeUhR4k",
@@ -3099,7 +3099,7 @@
         "map": "Empyrean",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "Z9T1yaGcqY9CZYuLcM2HVDwturQ",
@@ -3121,15 +3121,15 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Other"
     },
     {
-        "etag": "ksn0ZSJf_f0UAjdnGYgqWBxPGL0",
+        "etag": "TR5QKsjgs9t9R4O9SAFYSmqx1Lw",
         "videoId": "ewwIHZ0w05U",
         "title": "343 Make Changes Ranked Calculations (CSR BASED MM) Halo Infinite",
         "duration": 599,
         "publishedAt": "2023-03-05T20:00:08Z",
-        "description": "Discussion Video Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranke.\n\nVanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks.\n\nJoin my Discord Community\nhttps://discord.gg/JHtTVWXh\n\nOriginal Article\nhttps://www.halowaypoint.com/news/playlists-ranked-matchmaking-season-3\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nEthereal Esports (Esports Community)\nLooking for more people to play halo with? Join the community i'm part of.\nhttps://discord.gg/uk-gaming-esports-hub\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
+        "description": "Discussion Video Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranked.\n\nJoin my Discord Community\nhttps://discord.gg/JHtTVWXh\n\nOriginal Article\nhttps://www.halowaypoint.com/news/playlists-ranked-matchmaking-season-3\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nEthereal Esports (Esports Community)\nLooking for more people to play halo with? Join the community i'm part of.\nhttps://discord.gg/uk-gaming-esports-hub\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/ewwIHZ0w05U/default.jpg",
             "standard": "https://i.ytimg.com/vi/ewwIHZ0w05U/sddefault.jpg",
@@ -3139,11 +3139,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
-        "map": "Origin",
+        "csr": null,
+        "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "_FHY0ON28TUvW3oy8dD9HqtmDoA",
@@ -3165,7 +3165,7 @@
         "map": "Empyrean",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "x9PFBf6RSw46xlIztpVLT9l7tNw",
@@ -3187,15 +3187,15 @@
         "map": "Empyrean",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
-        "etag": "edyXlelqjqAqfZB7R2nUXj9mobI",
+        "etag": "Hd9HvuOUzifTz0M9cQt_kWYHimQ",
         "videoId": "QdfjrWtE8pU",
         "title": "Season 3 Sandbox Changes (IS IT ENOUGH?) Halo infinite Update",
         "duration": 692,
         "publishedAt": "2023-03-04T13:20:58Z",
-        "description": "Discussion Video Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranked and HCS play. \n\nVanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks.\n\nOriginal Article\nhttps://www.halowaypoint.com/news/sandbox-updates-season-3\n\nReddit Article\nhttps://www.reddit.com/r/halo/comments/uvvyr6/commando_ttk_full_auto_tap_fire_and_burst_fire/\n\nMy community\nhttps://discord.gg/BYyDebFN\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nEthereal Esports (Esports Community)\nLooking for more people to play halo with? Join the community i'm part of.\nhttps://discord.gg/uk-gaming-esports-hub\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
+        "description": "Discussion Video Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranked and HCS play. \n\nOriginal Article\nhttps://www.halowaypoint.com/news/sandbox-updates-season-3\n\nReddit Article\nhttps://www.reddit.com/r/halo/comments/uvvyr6/commando_ttk_full_auto_tap_fire_and_burst_fire/\n\nMy community\nhttps://discord.gg/BYyDebFN\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483\n\nEthereal Esports (Esports Community)\nLooking for more people to play halo with? Join the community i'm part of.\nhttps://discord.gg/uk-gaming-esports-hub\n\nVodon Pro Software (VoD Reviewing)\nHttps://Vodon.gg",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/QdfjrWtE8pU/default.jpg",
             "standard": "https://i.ytimg.com/vi/QdfjrWtE8pU/sddefault.jpg",
@@ -3205,11 +3205,11 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": "HCS",
         "map": "Origin",
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "YfvjFZa74Az9gG3cKk8GBdvt0mE",
@@ -3231,7 +3231,7 @@
         "map": "Empyrean",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "pcpyODa8nziylzZ9S32NkJWgTSs",
@@ -3253,7 +3253,7 @@
         "map": "Streets",
         "gameMode": "Oddball",
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "o1kJFUEdhD_VDrtanZxGCa7CXzI",
@@ -3275,7 +3275,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "EYCI6LngQRrc_QG04rj3k2h1CyI",
@@ -3297,7 +3297,7 @@
         "map": "Live fire",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "l__fz991mVAxUkbKR_LslaZ6ULs",
@@ -3319,7 +3319,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "hj2iJm2EUzexnDVI72Fdln3vkC4",
@@ -3341,7 +3341,7 @@
         "map": "Empyrean",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "mK7x0lP1jx95f8X0Wwf2cEmLZyo",
@@ -3363,7 +3363,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "B2Qw6Wz3EOSfQNovB9CUJ2qM_OM",
@@ -3407,7 +3407,7 @@
         "map": null,
         "gameMode": null,
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "cMYcKXR1K1R1bZXY5SB2770vJh4",
@@ -3429,7 +3429,7 @@
         "map": "Streets",
         "gameMode": "Slayer",
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "b_c5ejcFpHeQwmiawhDeQcUKX28",
@@ -3451,7 +3451,7 @@
         "map": "Streets",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "-oLwixZax9HtTAUecEd6BqO5Rzo",
@@ -3471,9 +3471,9 @@
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 1500,
         "map": "Recharge",
-        "gameMode": "King of the hill",
+        "gameMode": "Koth",
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "Bo7_Z7rMWh1m_nXs0ejYsq1_Mbg",
@@ -3495,7 +3495,7 @@
         "map": "Live fire",
         "gameMode": "Strongholds",
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "HjwnD_6AOlaO6IVDGEC0WbnSDEs",
@@ -3517,7 +3517,7 @@
         "map": null,
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "s-0zW4TNSXULldB-7yWwOwjbL4M",
@@ -3539,7 +3539,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "197iSEbvFMxNfdwbvnYsJeZBKxI",
@@ -3583,7 +3583,7 @@
         "map": "Streets",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "1orF46_sFuSO_lcqZvlKujWeMI8",
@@ -3605,7 +3605,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "xoB0RA7yeHSPOuJwa_9ba6mdVSI",
@@ -3649,7 +3649,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "hwmvONCcMk-0OJFjwYxq4IF53aQ",
@@ -3671,7 +3671,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "HRnUpalzDa9s08vK9dSueFqBb3E",
@@ -3693,7 +3693,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "27R-PriPfuC-ImMmpjjxcviDThA",
@@ -3715,7 +3715,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "Mff05HfvHIvkXwqsyiTyV7_k4sk",
@@ -3737,7 +3737,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "roiZ3CyGML3IVl259jXgraOYsiQ",
@@ -3759,7 +3759,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "gIBupYqqXKsyrYmU3mTvQs1WtLI",
@@ -3781,7 +3781,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Discussion"
     },
     {
         "etag": "I_53Wm8x_42Yeketmmin6WySoHs",
@@ -3803,7 +3803,7 @@
         "map": "Aquarius",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "fze8EYQr2_oDphoKLLVzX2ZW1M0",
@@ -3825,7 +3825,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "DY20PWcAwpKjiGd8GO_Z2wGGq1A",
@@ -3847,7 +3847,7 @@
         "map": "Live fire",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "zX9OMjmiL0ZLHlhUPaX8I35mapw",
@@ -3869,7 +3869,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "xC7qpG4kKBK6b2ykjaTKE3LWFvk",
@@ -3891,7 +3891,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "n2WjEFrav2hjl2mnfh5a_sloKDA",
@@ -3913,7 +3913,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "C02oKGrQnyWG5PM9tLnN6jYPRg4",
@@ -3957,7 +3957,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "KouC6OuatBJ0cF3C35J3EHukiA8",
@@ -3977,9 +3977,9 @@
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
         "csr": 1500,
         "map": "Live fire",
-        "gameMode": "King of the hill",
+        "gameMode": "Koth",
         "type": "Shortform",
-        "category": "Stream highlight"
+        "category": "Stream Highlight"
     },
     {
         "etag": "Mka5p70LQHa9V8_hkfS2PKIM-1E",
@@ -4001,7 +4001,7 @@
         "map": "Aquarius",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "ePFEYRpS9ajn27-dIyNF1JcBgUE",
@@ -4023,7 +4023,7 @@
         "map": "Streets",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "GC9Rl22TcQnXCt7Gtmbs6kF-IEI",
@@ -4045,7 +4045,7 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "EdQi0aLTmLduVqkCxOT32Nk7VtI",
@@ -4089,7 +4089,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Reaction"
+        "category": "Discussion"
     },
     {
         "etag": "G-Q1tA75iPh3lmjcFRmy84U0FMQ",
@@ -4133,7 +4133,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Macro tips"
+        "category": "Macro Tips"
     },
     {
         "etag": "b4r8_UWfFub_tZvAxfvQkot_8yo",
@@ -4177,7 +4177,7 @@
         "map": "Live fire",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "hHBdmw8a_80nrD0rjg0Tg4iEy9w",
@@ -4199,7 +4199,7 @@
         "map": "Streets",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "G1L2GlZXkWA8fpbByaJ7Ndc93Cg",
@@ -4221,15 +4221,15 @@
         "map": "Empyrean",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
-        "etag": "zproFC8lQdjgzv9zCZ3G0lG-fGE",
+        "etag": "KKJJsdirLNXGvwoujiurDsJfLGA",
         "videoId": "XhmVn9AMH78",
         "title": "343 Announce Season 2 & HCS Changes? DISCUSSION",
         "duration": 1062,
         "publishedAt": "2023-01-10T20:00:08Z",
-        "description": "Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranked and HCS play. \n\nVanadam has been Onyx rank in every halo game (Reach,5 and infinite) and reached very high ranks in Halo 2 and 3 solo queue. With over 14 years of insight I help players who want to improve reach higher ranks.\n\nVideoType = Discussion\n\nOriginal Article\nhttps://www.halowaypoint.com/news/hcs-year-2-maps-modes-and-settings\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483",
+        "description": "Join Vanadam as he discusses the recent changes announced to Halo Infinite for ranked and HCS play. \n\nVideoType = Discussion\n\nOriginal Article\nhttps://www.halowaypoint.com/news/hcs-year-2-maps-modes-and-settings\n\nfor transparency:\nhttps://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=ranked&playlist=edfef3ac-9cbe-4fa2-b949-8f29deafd483",
         "thumbnails": {
             "default": "https://i.ytimg.com/vi/XhmVn9AMH78/default.jpg",
             "standard": "https://i.ytimg.com/vi/XhmVn9AMH78/sddefault.jpg",
@@ -4239,7 +4239,7 @@
         },
         "kind": "youtube#video",
         "channelId": "UC4wPP_aSG0kR924KKE2OGWQ",
-        "csr": 1500,
+        "csr": "HCS",
         "map": "Origin",
         "gameMode": null,
         "type": "Longform",
@@ -4265,7 +4265,7 @@
         "map": "Empyrean",
         "gameMode": "Ctf",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "BfjFwnGLiPOPtqgEW7mKUtrog3c",
@@ -4287,7 +4287,7 @@
         "map": "Aquarius",
         "gameMode": "Slayer",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "7G718plN1-Cwn10OctQUSDN5zLk",
@@ -4309,7 +4309,7 @@
         "map": "Recharge",
         "gameMode": "Oddball",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "6_pq9yMp0YeR_kLEyPL-XLuyaKw",
@@ -4331,7 +4331,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "8pLhajinqo6sGO5xxkdlu06TgXQ",
@@ -4353,7 +4353,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "wQ5HXjrIIA7jtbWYEbbir2qqmNg",
@@ -4375,7 +4375,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "UN_CIH45A7ddT9YSDaHsPCgqC48",
@@ -4397,7 +4397,7 @@
         "map": "Streets",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "kvahPBsf8m6A2q3cvvL94Jc_I4U",
@@ -4419,7 +4419,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "UIDxELLxxs-slDuxQpLxth7QffM",
@@ -4441,7 +4441,7 @@
         "map": "Recharge",
         "gameMode": null,
         "type": "Shortform",
-        "category": "Map guide"
+        "category": "Map Guide"
     },
     {
         "etag": "RsArjlEPR-M-UL258SjEflVGKXw",
@@ -4463,7 +4463,7 @@
         "map": "Live fire",
         "gameMode": "Strongholds",
         "type": "Longform",
-        "category": "Vod review"
+        "category": "Vod Review"
     },
     {
         "etag": "AxtO9EAncVgzmdrFQS31Z5tWN5o",
@@ -4595,7 +4595,7 @@
         "map": null,
         "gameMode": null,
         "type": "Longform",
-        "category": "Other"
+        "category": null
     },
     {
         "etag": "bCjN0TrK7wakFftbu0y5mC3KUyg",
