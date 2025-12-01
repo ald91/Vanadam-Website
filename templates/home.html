@@ -96,7 +96,10 @@
                             <div class="card text-white border border-0 m-2" style="border-style: none!important;">
                                 <img src="{{ url_for('static', filename='assets/videothumbs/' ~ result.vidID ~ '.jpeg') }}"
                                     class="card-img" alt="{{ result.title }}">
-                                <p class="card-text mt-0 pt-0 text-decoration-none">Uploaded {{ result.published }}, {{ result.vidID }}</p>
+                                <p class="card-text mt-0 pt-0 text-decoration-none">Uploaded {{ result.published }} 
+                                    {% if DEBUG_MODE %} 
+                                        , {{ result.vidID }}
+                                    {% endif %}</p>
                             </div>
                         </div>
                     </a>

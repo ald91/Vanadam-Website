@@ -121,7 +121,7 @@
 
     <!-- LONGFORM RESULTS-->
     <h1 class="text-center">Longform Videos for {{ map.name }}</h1>
-    <div class="row align-content-center mx-auto p-2 my-auto"  style="background-color: black!important; border-style: none!important;;">
+    <div class="row align-content-center mx-auto p-2 my-auto"  style="background-color: black!important;">
         <div class="d-flex flex-column"  style="background-color: black!important; border-style: none!important;">
             {% for result in map_results %}
             {% if result["videotype"] == "Longform" %}
@@ -129,7 +129,7 @@
             <article id="{{ result.vidID }}" class="video-long">
                     <div class="row mb-1 video-long">
                         <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                            <img class="rounded-start-2" src="{{ result.thumbnailsmax }}" width="auto" height="170px" />
+                            <img class="rounded-start-2" src="{{ result.thumbnailsmax}}" width="auto" height="170px" />
                             <iframe class="d-none" width="auto" height="170px"
                                 src="https://www.youtube.com/embed/{{ result.vidID }}?enablejsapi=1&autoplay=0&modestbranding=1&rel=0&controls=1&iv_load_policy=3"
                                 title="YouTube video player" frameborder="0"

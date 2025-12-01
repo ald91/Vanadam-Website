@@ -278,7 +278,7 @@ HALO_INFINITE_DATA = {
             "name" : "Vacancy",
             "description" : "You can check out any time you like, but you can never leave.",
             "ranked arena" : True,
-            "MM modes" : " 5 ",
+            "MM modes" : " 1 2 5 ",
             "HCS modes": " 0 ",
             "EHL modes": " 0 "
         }

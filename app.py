@@ -32,10 +32,9 @@ from auth import log_in_user, register_user, recover_user, password_change
 from HaloData import *
 from formclasses import LoginForm, RegisterForm, SearchForm, RecoveryForm, PasswordResetForm, ArticleForm
 from db import *
-import db
 
 #helpers
-from utilities import format_date_from_ISO_DB
+from utilities import format_date_from_ISO_DB, checkTags
 
 #API
 from api import *
@@ -56,7 +55,7 @@ load_dotenv()
 
 #Apply config settings from our file
 app.config.from_object('config')
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 #email functionality 
 mail = Mail(app)
@@ -104,6 +103,7 @@ def inject_nav_data():
 # Routes
 
 # Home Page
+#TODO: look for any ARTICLE or VIDEO that is NOT a Livestream or VoD Review and list the most recent 8 chronologially
 #===================
 @app.route('/')
 def index():
@@ -120,6 +120,14 @@ def index():
     WHERE videotype != 'Livestream'
     ORDER BY published DESC
     LIMIT 4; """
+
+
+    bottomBarQuery= """
+    SELECT vidID, title, published, thumbnailsdefault
+    FROM Videos
+    WHERE videotype = 'Discussion'
+    ORDER BY published DESC
+    LIMIT 8; """
 
     cur.execute(videosQuery)
     videos = cur.fetchall()
@@ -153,6 +161,7 @@ def admin_actions():
                 dbpath = "database.db"
                 try:
                     os.remove(dbpath)
+                    create_database()
                     flash("Video Database delete attempted", "success")
                     
                 except FileNotFoundError:
@@ -289,6 +298,8 @@ def article_create():
         content = form.content.data
         tags = form.tags.data
 
+        checkTags("Article", tags)
+
         if form.image.data:
             file = form.image.data
             filename = secure_filename(file.filename)
@@ -299,7 +310,7 @@ def article_create():
         cur = db.cursor()
 
         query = "INSERT INTO Articles (title, content, tags, image_filename) VALUES (?, ?, ?, ?)"
-        cur.execute(query, (title, content, tags, filename))
+        cur.execute(query, (title, content, filename))
         db.commit()
 
         print("Article Created")
@@ -352,7 +363,7 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT vidId, title, published, description, thumbnailsmax, thumbnailshigh, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE gamemap = ?
+    SELECT vidId, title, published, description, thumbnailshigh, thumbnailsmax, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE gamemap = ?
  
     """
     cur.execute(map_query, (mapID,))
@@ -366,8 +377,6 @@ def mapPage(mapID):
     
     print(game_map)
     return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results, infiniteCSR_Lookup=infiniteCSR_Lookup)
-
-
 
 @app.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
 def profilePage(username):

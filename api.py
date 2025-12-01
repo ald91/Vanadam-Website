@@ -13,6 +13,7 @@ load_dotenv()
 #internal imports
 from HaloData import HALO_INFINITE_DATA, infiniteCSR
 from db import *
+from utilities import checkTags
 
 # constants
 KEY = os.getenv("GOOGLE_API_KEY", "ERROR")
@@ -277,6 +278,8 @@ def Google_API_V3_Write_JSON(data, where):
 #loads file and modifys values stored to be compatible with db system and website
 def Google_API_V3_Modify_Values():
     modified = []
+
+
     with open ('videoDump.Json', 'r', encoding="utf-8") as file:
             extracted = json.load(file)
 
@@ -292,25 +295,30 @@ def Google_API_V3_Modify_Values():
 
         #new keys  
         video["csr"] = Calculate_Video_MMR(description)
-        video["map"] = Calculate_Video_Map(description, videoTitle)
+        video["gameMap"] = Calculate_Video_Map(description, videoTitle)
         video["gameMode"] = Calculate_Video_Gamemode(description, videoTitle)
         video["type"] = Calculate_Video_Type(description, duration)
-        video["category"] = Calculate_Video_Category(video["csr"], video["map"], video["gameMode"], video["type"], description)
+        video["category"] = Calculate_Video_Category(video["csr"], video["gameMap"], video["gameMode"], video["type"], description)
 
         # Modifications to keep typing consistant
         if video["type"] == "Livestream":
             video["csr"] = None
 
         if video["category"] == "Other":
-            video["csr"] == None
-            video["map"] == None
-            video["gameMode"] == None
+            video["csr"] = None
+            video["gameMap"] = None
+            video["gameMode"] = None
 
         if video["gameMode"] == None:
-            video["csr"] == None
+            video["csr"] = None
 
         # map guides shouldnt have CSR or game modes
         if video["category"] == "Map Guide":
+            video["csr"] = None
+            video["gameMode"] = None
+
+        if video["category"] == "Discussion":
+            video["gameMap"] = None
             video["csr"] = None
             video["gameMode"] = None
                     
@@ -370,6 +378,7 @@ def Commit_to_DB():
 
     newRecords = []
     updatedRecords = []
+    newTags = []
 
 
     for video in videos:
@@ -387,7 +396,7 @@ def Commit_to_DB():
         kind = video["kind"]
         channelid = video["channelId"] 
         csr = video["csr"]
-        gameMap = video["map"]
+        gameMap = video["gameMap"]
         gamemode = video["gameMode"]
         videotype = video["type"]
         videocategory = video["category"]
@@ -396,6 +405,10 @@ def Commit_to_DB():
         # does video exist in DB
         db_etag = existing.get(vidID)
 
+        #prepare for check tags
+        tags = videocategory
+        checkTags("Video", tags)
+
         if db_etag is None:
             print(f"new video. {vidID, title}")
 
@@ -403,9 +416,14 @@ def Commit_to_DB():
             newRecords.append((
                 vidID, title, duration, published, description,
                 thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag
+                kind, channelid, csr, gameMap, gamemode, videotype, etag
             )) 
             
+            #prep for adding to postTags
+            videoToTag= [ vidID, "PostID", videocategory]
+            newTags.append(videoToTag)
+
+
         elif db_etag != etag:
             print(f"video {vidID, title} updated")
 
@@ -413,7 +431,7 @@ def Commit_to_DB():
             updatedRecords.append((
                 vidID, title, duration, published, description,
                 thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                kind, channelid, csr, gameMap, gamemode, videotype, videocategory, etag
+                kind, channelid, csr, gameMap, gamemode, videotype,  etag
             ))
 
         else:
@@ -428,11 +446,29 @@ def Commit_to_DB():
             INSERT INTO Videos (
                 vidID, title, duration, published, description,
                 thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                kind, channelid, csr, gameMap, gameMode, videotype, videocategory, etag
+                kind, channelid, csr, gameMap, gameMode, videotype, etag
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, newRecords)
 
+         #prep for adding to postTags
+        for item in newTags:
+            vidID = item[0]
+
+            cur.execute("SELECT postID FROM Videos WHERE vidID = ?", (vidID,))
+            row = cur.fetchone()
+            if item:
+                postID = row["postID"]
+                item[1] = postID  # replace placeholder with actual postID
+                del item[0] 
+
+        # if not then add it to postTags
+            cur.executemany("""
+            INSERT INTO PostTags (
+                postID, tagName
+            )
+            VALUES (?, ?)
+        """, newTags)
 
     #insert videos that needed updating
     if updatedRecords:
@@ -440,7 +476,7 @@ def Commit_to_DB():
             UPDATE Videos
             SET title = ?, duration = ?, published = ?, description = ?,
                 thumbnailsDefault = ?, thumbnailsMedium = ?, thumbnailsHigh = ?, thumbnailsMax = ?,
-                kind = ?, channelID = ?, csr = ?, gameMap = ?, gameMode = ?, videoType = ?, videoCategory = ?, etag = ?
+                kind = ?, channelID = ?, csr = ?, gameMap = ?, gameMode = ?, videoType = ?, etag = ?
             WHERE vidID = ?
         """, updatedRecords)
 

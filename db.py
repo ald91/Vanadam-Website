@@ -38,6 +38,7 @@ def create_database(db_path="database.db"):
     cursor.execute("""
     CREATE TABLE Videos (
         vidID TEXT PRIMARY KEY,
+        postID INTEGER UNIQUE,  -- link to Posts
         title TEXT,
         duration INTEGER,
         published TEXT,          
@@ -52,8 +53,8 @@ def create_database(db_path="database.db"):
         gamemap TEXT,
         gamemode TEXT,
         videotype TEXT,
-        videocategory TEXT,
-        etag TEXT
+        etag TEXT,
+        FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
     );
     """)
 
@@ -82,10 +83,11 @@ def create_database(db_path="database.db"):
     cursor.execute("""
     CREATE TABLE Articles (
         articleID INTEGER PRIMARY KEY AUTOINCREMENT,
+        postID INTEGER UNIQUE,
         title TEXT,
         content TEXT,
-        tags TEXT,
-        image_filename TEXT
+        image_filename TEXT,
+        FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
     );
     """)
 
@@ -93,7 +95,9 @@ def create_database(db_path="database.db"):
     cursor.execute("""
     CREATE TABLE Forums (
         forumID INTEGER PRIMARY KEY AUTOINCREMENT,
-        originalPoster TEXT
+        postID INTEGER UNIQUE,
+        originalPoster TEXT,
+        FOREIGN KEY(postID) REFERENCES Posts(postID)
     );
     """)
 
@@ -101,15 +105,84 @@ def create_database(db_path="database.db"):
     cursor.execute("""
     CREATE TABLE Posts (
         postID INTEGER PRIMARY KEY AUTOINCREMENT,
-        tags JSON,  -- store post tags as JSON
         date TEXT
     );
     """)
+
+        # Content Linking table for all articles / videos using preset tags
+    cursor.execute(""" 
+    CREATE TABLE Tags (
+        tagName STRING PRIMARY KEY
+        );
+    """)
+
+    cursor.execute("""
+        CREATE TABLE PostTags (
+        postID INTEGER,
+        tagName TEXT,
+        PRIMARY KEY (postID, tagName),
+        FOREIGN KEY (postID) REFERENCES Posts(postID) ON DELETE CASCADE,
+        FOREIGN KEY (tagName) REFERENCES Tags(tagName) ON DELETE CASCADE
+        ); 
+    """)
+
 
     # === RELATIONSHIPS ===
     # Messages.boardID → Posts.postID
     cursor.execute("""
     CREATE INDEX IF NOT EXISTS idx_messages_boardID ON Messages(boardID);
+    """)
+
+    # == Triggers ===
+    #video table row additions
+    cursor.execute("""
+        CREATE TRIGGER videos_post_insert
+        AFTER INSERT ON Videos
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO Posts(date)
+            VALUES (datetime('now'));
+            
+            -- Update the newly inserted video row to link to the post
+            UPDATE Videos
+            SET postID = (SELECT last_insert_rowid())
+            WHERE vidID = NEW.vidID;
+        END;
+                      
+    """)
+
+    #article table row additions
+    cursor.execute("""
+        CREATE TRIGGER articles_post_insert
+        AFTER INSERT ON Articles
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO Posts(date)
+            VALUES (datetime('now'));
+            
+            -- Update the newly inserted article row to link to the post
+            UPDATE Articles
+            SET postID = (SELECT last_insert_rowid())
+            WHERE articleID = NEW.articleID;
+        END;
+                      
+    """)
+
+    #article table row additions
+    cursor.execute("""
+        CREATE TRIGGER forum_post_insert
+        AFTER INSERT ON Forums
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO Posts(date)
+            VALUES (datetime('now'));
+            
+            -- Update the newly inserted article row to link to the post
+            UPDATE Articles
+            SET postID = (SELECT last_insert_rowid())
+            WHERE articleID = NEW.articleID;
+        END;
+                      
     """)
 
     conn.commit()
@@ -120,3 +193,4 @@ def create_database(db_path="database.db"):
 dbpath = "database.db"
 if not os.path.exists(dbpath):
     create_database()
+
