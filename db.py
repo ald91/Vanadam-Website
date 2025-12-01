@@ -85,6 +85,7 @@ def create_database(db_path="database.db"):
         articleID INTEGER PRIMARY KEY AUTOINCREMENT,
         postID INTEGER UNIQUE,
         title TEXT,
+        description TEXT,
         content TEXT,
         image_filename TEXT,
         FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
@@ -141,7 +142,7 @@ def create_database(db_path="database.db"):
         FOR EACH ROW
         BEGIN
             INSERT INTO Posts(date)
-            VALUES (datetime('now'));
+            VALUES (NEW.published);
             
             -- Update the newly inserted video row to link to the post
             UPDATE Videos

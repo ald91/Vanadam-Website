@@ -121,22 +121,38 @@ def index():
     ORDER BY published DESC
     LIMIT 4; """
 
-
-    bottomBarQuery= """
-    SELECT vidID, title, published, thumbnailsdefault
-    FROM Videos
-    WHERE videotype = 'Discussion'
-    ORDER BY published DESC
-    LIMIT 8; """
-
     cur.execute(videosQuery)
     videos = cur.fetchall()
     videos = [dict(row) for row in videos]
     format_date_from_ISO_DB(videos)
 
-    articles = None
+    newstags = ('Discussion', 'Map Guide', 'News')
+    newsquery = """
+    SELECT *
+    FROM (
+        SELECT 'Video' AS type, v.postID, v.title, v.thumbnailsmax, v.description, p.date
+        FROM Videos v
+        JOIN Posts p on v.postID = p.postID
+        JOIN PostTags pt ON v.postID = pt.postID
+        WHERE pt.tagName IN (?, ?, ?)
 
-    return render_template('home.html', title="Vanadam Halo", videos=videos, articles=articles)
+        UNION ALL
+
+        SELECT 'Article' AS type, a.postID, a.title, a.image_filename, a.description, p.date
+        FROM Articles a
+        JOIN Posts p on a.postID = p.postID
+        JOIN PostTags pt ON a.postID = pt.postID
+        WHERE pt.tagName IN (?, ?, ?)
+    )
+    ORDER BY date DESC
+    LIMIT 8;
+    """
+
+    cur.execute(newsquery, newstags + newstags)
+    news = cur.fetchall()
+    news = [dict(row) for row in news]
+
+    return render_template('home.html', title="Vanadam Halo", videos=videos, news=news)
 
 
 # Admin dashboard
@@ -363,7 +379,7 @@ def mapPage(mapID):
 
     #run query for allmap resources
     map_query =  """ 
-    SELECT vidId, title, published, description, thumbnailshigh, thumbnailsmax, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE gamemap = ?
+    SELECT vidId, title, published, description, thumbnailshigh, thumbnailsmax, csr, gamemap, gamemode, videotype FROM Videos WHERE gamemap = ?
  
     """
     cur.execute(map_query, (mapID,))
@@ -556,7 +572,7 @@ def video(videoID):
     cur = db.cursor()
 
     #run query for video resources
-    videoInfo_query =  """  SELECT vidID, title, published, description, thumbnailsmax, thumbnailshigh, csr, gamemap, gamemode, videotype, videocategory FROM Videos WHERE vidID = ? """
+    videoInfo_query =  """  SELECT vidID, title, published, description, thumbnailsmax, thumbnailshigh, csr, gamemap, gamemode, videotype FROM Videos WHERE vidID = ? """
     cur.execute(videoInfo_query, (videoID,))
     videoInfo = dict(cur.fetchone())
     print(videoInfo["gamemap"],videoInfo["gamemode"],videoInfo["csr"])

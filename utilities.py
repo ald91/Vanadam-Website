@@ -16,8 +16,6 @@ def checkTags(postType, tags):
 
     """ checks if posts has an unknown tag. if it does, adds the new tag to the Tags Table"""
 
-    print(tags)
-
     #for Articles (could have multiple)
     if postType == "Article":
         tags = tags.split(",")

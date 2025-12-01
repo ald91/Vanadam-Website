@@ -90,7 +90,6 @@
                 <div class="p-0 mx-auto cardContainer" style="border-style: none!important;">
                     <!-- Card Loop for Jinja2-->
                     {% for result in videos %}
-                    
                     <a class="text-decoration-none" href="/videos/{{ result.vidID }}">
                         <div class="card" style="border-style: none!important;">
                             <div class="card text-white border border-0 m-2" style="border-style: none!important;">
@@ -110,96 +109,39 @@
 </div>
 <div class="row align-content-center mx-auto ps-2 pe-1 pb-2 my-auto">
     <div class="d-flex flex-column">
-        <article id="article-1">
-            <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="./static/Assets/test/thumb1.png" height="180px" />
-                </div>
-                <div class="col-6 col-md-9 ">
-                    <h2>Title</h2>
-                    <h3>Sub-title</h3>
-                    <p class="article-text text-truncate">Lorem Ipsum is simply dummy text of the
-                        printing and
-                        typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-                        ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to
-                        make a type specimen book. It has survived not only five centuries</p>
-                </div>
-            </div>
-        </article>
-        <article id="article-2">
-            <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="./static/Assets/test/thumb2.png" height="180px" />
-                </div>
-                <div class="col-6 col-md-9 ">
-                    <h2>Title</h2>
-                    <h3>Sub-title</h3>
-                    <p class="article-text text-truncate">Lorem Ipsum is simply dummy text of the
-                        printing and
-                        typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-                        ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to
-                        make a type specimen book. It has survived not only five centuries</p>
-                </div>
-            </div>
-        </article>
-        <article id="article-3">
-            <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="./static/Assets/test/thumb3.png" height="180px" />
-                </div>
-                <div class="col-6 col-md-9 ">
-                    <h2>Title</h2>
-                    <h3>Sub-title</h3>
-                    <p class="article-text text-truncate">Lorem Ipsum is simply dummy text of the
-                        printing and
-                        typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-                        ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to
-                        make a type specimen book. It has survived not only five centuries</p>
-                </div>
-            </div>
-        </article>
-        <article id="article-4">
-            <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="./static/Assets/test/thumb4.png" height="180px" />
-                </div>
-                <div class="col-6 col-md-9">
-                    <h2>Title</h2>
-                    <h3>Sub-title</h3>
-                    <p class="article-text text-truncate">Lorem Ipsum is simply dummy text of the
-                        printing and
-                        typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-                        ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to
-                        make a type specimen book. It has survived not only five centuries</p>
-                </div>
-            </div>
-        </article>
-        <article id="article-5">
-            <div class="row mb-1">
-                <div class="col-6 col-md-3 p-0 m-0 overflow-hidden article-image" style="border-radius: 0px;">
-                    <img class="rounded-start-2" src="./static/Assets/test/thumb5.png" height="180px" />
-                </div>
-                <div class="col-6 col-md-9 ">
-                    <h2>Title</h2>
-                    <h3>Sub-title</h3>
-                    <p class="article-text text-truncate">Lorem Ipsum is simply dummy text of the
-                        printing and
-                        typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-                        ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to
-                        make a type specimen book. It has survived not only five centuries</p>
-                </div>
-            </div>
-        </article>
+        {% for item in news %}
+            {% if item.type == "Video" %}
+                <article id="article-{{ item.postID }}">
+                    <div class="row mb-1 align-content-around">
+                       
+                        <div class="col-md-3 p-0 m-0 article-image" style="border-radius: 0px;">
+                            <img class="rounded-start-2 img-fluid" src="{{ item.thumbnailsmax }}" />
+                            <h4 class="d-sm-block d-xs-block d-md-none text-center text-bg-dark">{{ item.title }}</h4>
+                        </div>
+                        <div class="col-9 col-md-9 ">
+                            <h2 class="d-none d-xs-block d-sm-block">{{ item.title }}</h2>
+                            <h4 class="d-none d-md-block">Published on {{ item.date }}</h4>
+                            <p class="d-none d-md-block article-text text-truncate">{{ item.description }}</p>
+                        </div>
+                    </div>
+                </article>
+            {% elif item.type == "Article" %}
+                            <article id="article-{{ item.postID }}">
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-3 p-0 m-0 overflow-hidden article-image img-fluid" style="border-radius: 0px;">
+                            <img class="rounded-start-2" src="{{ url_for('static', filename='assets/articlethumbs/' ~ item.postID ~ '.jpeg')}}" />
+                        </div>
+                        <div class="col-9 col-md-9 ">
+                            <h2>{{ item.title }}</h2>
+                            <h4>Published on {{ item.date }}</h4>
+                            <p class="article-text text-truncate">{{ item.description }}</p>
+                        </div>
+                    </div>
+                </article>
+            {% endif %}
+        <br class="d-md-none d-xs-block d-sm-block" > 
+        {% endfor %}
+ 
     </div>
 </div>
 {% endblock %}

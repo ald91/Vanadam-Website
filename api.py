@@ -379,13 +379,14 @@ def Commit_to_DB():
     newRecords = []
     updatedRecords = []
     newTags = []
+    cleanTags = []
 
 
     for video in videos:
         vidID = video["videoId"]
         title = video["title"]
         duration = video["duration"]
-        published = video["publishedAt"]
+        published = str(video["publishedAt"]).replace("T", " ").replace("Z", "")
         description = video["description"]
 
         thumbnailsdefault = video["thumbnails"]["default"]
@@ -434,6 +435,9 @@ def Commit_to_DB():
                 kind, channelid, csr, gameMap, gamemode, videotype,  etag
             ))
 
+            videoToTag = [vidID, "PostID", videocategory]
+            newTags.append(videoToTag)
+
         else:
             #the record exists and is idential
             continue
@@ -451,25 +455,6 @@ def Commit_to_DB():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, newRecords)
 
-         #prep for adding to postTags
-        for item in newTags:
-            vidID = item[0]
-
-            cur.execute("SELECT postID FROM Videos WHERE vidID = ?", (vidID,))
-            row = cur.fetchone()
-            if item:
-                postID = row["postID"]
-                item[1] = postID  # replace placeholder with actual postID
-                del item[0] 
-
-        # if not then add it to postTags
-            cur.executemany("""
-            INSERT INTO PostTags (
-                postID, tagName
-            )
-            VALUES (?, ?)
-        """, newTags)
-
     #insert videos that needed updating
     if updatedRecords:
         cur.executemany("""
@@ -480,12 +465,33 @@ def Commit_to_DB():
             WHERE vidID = ?
         """, updatedRecords)
 
+    #prep for adding to postTags
+    for item in newTags:
+        vidID = item[0]
+
+        cur.execute("SELECT postID FROM Videos WHERE vidID = ?", (vidID,))
+        row = cur.fetchone()
+        postID = row["postID"]
+
+        entry = [postID, item[2]]
+        cleanTags.append(entry)
+
+    # add it to postTags
+    cur.executemany("""
+    INSERT OR IGNORE INTO PostTags (
+        postID, tagName
+    )
+    VALUES (?, ?)
+""", cleanTags)
+        
     db.commit()
     db.close()  
     
     #reset lists for next update
     newRecords = [] 
     updatedRecords = [] 
+    newTags = []
+    cleanTags = []
     
     return f"db updated"
 
