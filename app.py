@@ -56,7 +56,7 @@ load_dotenv()
 
 #Apply config settings from our file
 app.config.from_object('config')
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 #email functionality 
 mail = Mail(app)
