@@ -6,7 +6,6 @@ from flask_wtf import FlaskForm, CSRFProtect
 from flask import Flask
 from flask_mail import Mail
 from flask_wtf import FlaskForm, CSRFProtect
-from flask_session import Session
 
 
 #Security
@@ -111,6 +110,8 @@ def index():
         print(session)
     print(session)
 
+
+#TODO: function fetch sidebar
     db = get_database()
     cur = db.cursor()
 
@@ -121,10 +122,14 @@ def index():
     ORDER BY published DESC
     LIMIT 4; """
 
+
+#TODO: function fetchnews
     cur.execute(videosQuery)
     videos = cur.fetchall()
     videos = [dict(row) for row in videos]
     format_date_from_ISO_DB(videos)
+
+
 
     newstags = ('Discussion', 'Map Guide', 'News')
     newsquery = """

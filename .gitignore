@@ -6,6 +6,9 @@ __pycache__/*
 static/assets/videothumbs/*
 /.idea
 
+#refactoring
+/app
+
 #specific files
 
 .env
@@ -15,4 +18,4 @@ Keys.py
 database.db
 
 database.db
-core.py
+run.py

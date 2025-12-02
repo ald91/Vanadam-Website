@@ -1,5 +1,5 @@
 
-
+#TODO: Make this better
 #easy modification of website data without pissing about with back end?
 
 #on boot from JSON
