@@ -40,7 +40,7 @@ def log_in_user(form):
         else:
             return False
 
-# Sends email on registration
+
 def register_user(form):
     from app import mail
     if form.validate_on_submit():  # If form passes validation rules
@@ -86,7 +86,7 @@ def register_user(form):
     else:
         return False
 
-#Account Recovery Methods
+
 def verify_reset_token(token, expiration=3600):
     from app import serializer, securitySalt
     try:
@@ -94,6 +94,7 @@ def verify_reset_token(token, expiration=3600):
     except Exception:
         return None
     return email
+
 
 def send_recovery_email(email, username):
     from app import mail, serializer, securitySalt
@@ -113,7 +114,8 @@ def send_recovery_email(email, username):
     except:
         print('could not send recovery email, internal error')
         return False
-    
+
+
 def recover_user(form):
     username = form.username.data
     email = form.email.data
@@ -140,6 +142,7 @@ def recover_user(form):
         flash("Details incorrect", "error")
 
         return redirect(url_for('recovery'))
+
 
 def password_change(form):
     if form.validate_on_submit():
