@@ -1,0 +1,71 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} {{ videoInfo.title }} {% endblock %}
+{% endblock %}
+
+
+{% block content %}
+
+<H2 class="text-center">{{ videoInfo.title }}</H2>
+
+<div class="container-fluid d-flex justify-content-center m-1 p-1">
+    {% if videoInfo.videotype == "Longform" %}
+    <iframe width="1020" height="574" src="https://www.youtube.com/embed/{{ videoInfo.vidID }}"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>
+    {% endif %}
+
+    {% if videoInfo.videotype == "Shortform" %}
+    <iframe width="323" height="560" src="https://www.youtube.com/embed/{{ videoInfo.vidID }}"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>
+    {% endif %}
+</div>
+
+<br>
+
+<!-- Same Map RESULTS-->
+ {% if videoInfo.gamemap != None %}
+ <h1 class="text-center">More {{ videoInfo.gamemap }} videos</h1>
+<div class="row align-content-center mx-auto my-auto">
+    <div class="d-flex flex-wrap justify-content-center mini-video mx-auto">
+        
+        {% for result in videoSameMap %}
+        <article class="{{result.vidID}} mini-video p-1 m-1" width="150px">
+            <a href="/videos/{{result.vidID}}" class="text-decoration-none">
+                <div class="p-1 m-0 d-flex justify-content-center" style="border-radius: 0px; width: 150px;">
+                    <img class="p-1 m-1" src="{{ result.thumbnailsmedium }}" width="150px" height="auto" />
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<br>
+
+
+<!-- same Mode Results-->
+ {% if videoInfo.gamemode != None %}
+<h1 class="text-center">More {{ videoInfo.gamemode }} videos</h1>
+<div class="row align-content-center mx-auto my-auto">
+    <div class="d-flex flex-wrap justify-content-center mini-video mx-auto">
+        {% for result in videoSameMode %}
+        <article class="{{result.vidID}} mini-video p-1 m-1" width="150px">
+            <a href="/videos/{{result.vidID}}" class="text-decoration-none">
+                <div class="p-1 m-0 d-flex justify-content-center" style="border-radius: 0px; width: 150px;">
+                    <img class="p-1 m-1" src="{{ result.thumbnailsmedium }}" width="150px" height="auto" />
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

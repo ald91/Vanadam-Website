@@ -1,5 +1,3 @@
-#TODO: remove flask functions from functions
-
 #Flask
 from flask import render_template, redirect, url_for, flash, session
 from flask_mail import Message
@@ -10,6 +8,7 @@ import hashlib
 
 #App Imports
 from db import get_database
+from app import mail
 
 def log_in_user(form):
     if form.validate_on_submit():
@@ -26,7 +25,8 @@ def log_in_user(form):
         if result is None:
             print("User not found")
             flash("Incorrect username or password.", "error")
-            return render_template('login.html', form=form)
+            return False
+        
         stored_password = result['password']
 
 
@@ -40,61 +40,15 @@ def log_in_user(form):
         else:
             return False
 
-
-def register_user(form):
-    from app import mail
-    if form.validate_on_submit():  # If form passes validation rules
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-        password2 = form.password2.data
-        print("RegisterForm has been validated")
-
-        if password != password2:
-            flash("Passwords don't match!", "error")
-            return render_template('register.html', form=form)
-
-        db = get_database()
-        cur = db.cursor()
-
-        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
-        cur.execute(query, (username, email))
-        existing_user = cur.fetchone()
-
-        if existing_user is None:
-            
-            # Hash password and insert new user record
-            hashpass = generate_password_hash(password)
-            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
-                        (username, email, hashpass))
-            db.commit()
-            session['username'] = username
-            
-            msg = Message(
+def send_registration_email(username,email):
+    msg = Message(
                 subject= f"Account Creation - Welcome to Vanadam Halo, {username}",
                 sender="VanadamEsports@gmail.com",
                 recipients= [email],
                 body = render_template("emails/register.txt", username=username))
 
-            if mail.send(msg):
-                print(f'message sent for {username} at {email}')
-
-            return session['username']
-        
-        else:
-            return False
-    else:
-        return False
-
-
-def verify_reset_token(token, expiration=3600):
-    from app import serializer, securitySalt
-    try:
-        email = serializer.loads(token, salt=securitySalt , max_age=expiration)
-    except Exception:
-        return None
-    return email
-
+    if mail.send(msg):
+        print(f'message sent for {username} at {email}')
 
 def send_recovery_email(email, username):
     from app import mail, serializer, securitySalt
@@ -114,7 +68,51 @@ def send_recovery_email(email, username):
     except:
         print('could not send recovery email, internal error')
         return False
+    
+def register_user(form):
+    if form.validate_on_submit():  # If form passes validation rules
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        password2 = form.password2.data
+        print("RegisterForm has been validated")
 
+        if password != password2:
+            flash("Passwords don't match!", "error")
+            return False
+
+        db = get_database()
+        cur = db.cursor()
+
+        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
+        cur.execute(query, (username, email))
+        existing_user = cur.fetchone()
+
+        if existing_user is None:
+            
+            # Hash password and insert new user record
+            hashpass = generate_password_hash(password)
+            cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
+                        (username, email, hashpass))
+            db.commit()
+            session['username'] = username
+            
+            send_registration_email(username, email)
+
+            return session['username']
+        
+        else:
+            return False
+    else:
+        return False
+
+def verify_reset_token(token, expiration=3600):
+    from app import serializer, securitySalt
+    try:
+        email = serializer.loads(token, salt=securitySalt , max_age=expiration)
+    except Exception:
+        return None
+    return email
 
 def recover_user(form):
     username = form.username.data
@@ -142,7 +140,6 @@ def recover_user(form):
         flash("Details incorrect", "error")
 
         return redirect(url_for('recovery'))
-
 
 def password_change(form):
     if form.validate_on_submit():

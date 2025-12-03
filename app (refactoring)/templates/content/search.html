@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Search Website {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="search-container">
+        <h1>Search Database</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="section">
+                <h2>Posts</h2>
+                {{ form.date.label }} {{ form.date() }}
+                {{ form.date_selector.label }} {{ form.date_selector() }}
+                {{ form.tags.label }} {{ form.tags() }}
+                {{ form.original_poster.label }} {{ form.original_poster() }}
+            </div>
+
+            <div class="section">
+                <h2>Videos</h2>
+                {{ form.vid_type.label }} {{ form.vid_type() }}
+                {{ form.games.label }} {{ form.games() }}
+                {{ form.maps.label }} {{ form.maps() }}
+                {{ form.gamemode.label }} {{ form.gamemode() }}
+                {{ form.min_mmr.label }} {{ form.min_mmr() }}
+                {{ form.max_mmr.label }} {{ form.max_mmr() }}
+            </div>
+
+            {{ form.submit() }}
+        </form>
+    </div>
+    {% endblock %}

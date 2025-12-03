@@ -1,22 +1,44 @@
-
 #external modules
-from flask import Blueprint, render_template, redirect, url_for, request
-
+from flask import render_template, redirect, url_for, flash, request
 
 #python modules
 from functools import wraps
 
-#set admin route
-admin = Blueprint("admin", __name__, template_folder="templates")
+#app
+from db import create_database
 
+#self module
+from . import admin
+from .services import *
 
 
 ##################
 #-----Routes-----#
 ##################
 
-#Admin dashboard
-@admin.route('/', methods=["GET", "POST"])
+#TODO: admin dash
+@admin.route('/dashboard', methods=["GET"])
 def dashboard():
     """ admin dashboard """
-    return render_template("")
+    if request.method == "GET":
+        return render_template('admin/dashboard.html')
+
+#TODO: admin videos
+@admin.route('/videos-management', methods=["GET", "PATCH"])
+def video_management():
+    """ video table related admin actions"""
+    pass
+
+
+#TODO: admin articles
+@admin.route('article-route')
+def article_management():
+    """ posts table related admin actions"""
+    pass
+
+
+#TODO: admin user management
+@admin.route('user-management')
+def user_management():
+    """ modify user data """
+    pass

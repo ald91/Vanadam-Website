@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from functools import wraps
 
 #set admin route
-forum = Blueprint("forum", __name__, template_folder="templates")
+forum = Blueprint("forum", __name__)
 
 
 
