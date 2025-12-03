@@ -1,0 +1,29 @@
+    {% extends "base.html" %}
+
+    {% block title %}Create Article{% endblock %}
+
+    {% block content %}
+    <div class="container mt-4">
+
+        <h2>Create New Article</h2>
+
+        <form action="{{ url_for('article_create') }}" method="POST " enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+    <label>Title</label><br>
+            {{ form.title(size=60) }}<br><br>
+
+    <label>Content</label><br>
+            {{ form.content(rows=20, cols=80) }}<br><br>
+
+    <label>Tags (comma-separated)</label><br>
+            {{ form.tags(size=60) }}<br><br>
+
+                <label>Image (Optional)</label><br>
+                {{ form.image() }}<br><br>
+
+            {{ form.submit(class="btn btn-primary") }}
+</form>
+
+    </div>
+    {% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} DEBUG {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Halo infinite Content -->
+ <h2> Halo: Infinite </h2>
+ <div class="row my-auto mx-auto p-0 mapback">
+            {% for map_key, map_data in HALO_INFINITE_DATA["Maps"].items()%}
+                <a href="mapPage/{{ map_key }}" class="col-6 col-md-3 mx-auto p-0" style="text-decoration: none;">
+                        <div id="{{ map_key }}" class="align-content-center overflow-hidden mapbox" style="background-image: url('../static/assets/Mapthumbs/HaloInfinite/{{ map_key }}.jpg');">
+                            <p class="text-center my-auto">{{ map_key }}</p>
+                        </div>
+                    </a>
+            {% endfor %}
+
+{% endblock %}

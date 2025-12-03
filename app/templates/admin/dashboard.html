@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Admin Control {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-3 col-sm-12">
+    <H2>Database Actions</H2>
+        <form class="d-flex justify-content-evenly" method="POST" action="/admin/dashboard">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h3> whole database actions</h3>
+
+        <button type="submit" name="dbAction" value="vdbDelete">Db delete</button>
+
+        <br>
+        <h3> video database actions</h3>
+        <button type="submit" name="dbAction" value="vdbUpdate">Db refresh</button>
+
+        <br>
+        <h3> article database actions</h3>
+        <button>placeholder</button>
+
+        </form>
+</div>
+
+{% endblock %}
+

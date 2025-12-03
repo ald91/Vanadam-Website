@@ -3,19 +3,16 @@
 errors_to_look_at/*
 flask_session/*
 __pycache__/*
-static/assets/videothumbs/*
+/*/__pycache__/*
+/*/*/__pycache__/*
+
+app/static/assets/videothumbs/*
 /.idea
 
-#refactoring
-/app
 
 #specific files
-
 .env
 .vscode
 .gitignore
-Keys.py
+config.py
 database.db
-
-database.db
-run.py
