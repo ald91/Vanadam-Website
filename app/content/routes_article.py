@@ -29,8 +29,8 @@ def article():
 
     print(article_results)
 
-    return redirect(url_for('article_create'))
-    #return render_template('article_view.html')
+    #return redirect(url_for('content.article_create'))
+    return render_template('content.article_view.html')
 
 @content.route('/articles/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
 def article_view(id):

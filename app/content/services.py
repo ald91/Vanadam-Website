@@ -1,8 +1,5 @@
 from ..db import get_database
 
-#TODO: function fetch sidebar
-#TODO: get this done
-
 def fetchSideBar():
 
     results = (4,)

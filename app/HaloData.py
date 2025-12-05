@@ -128,6 +128,92 @@ HALO_3_DATA = {
 
 HALO_INFINITE_DATA = {
     "Game" : "Halo:Infinite",
+    "Ranks":  {
+                "Bronze 1": 0,
+                "Bronze 2": 50,
+                "Bronze 3": 100,
+                "Bronze 4": 150,
+                "Bronze 5": 200,
+                "Bronze 6": 250,
+
+                "Silver 1": 300,
+                "Silver 2": 350,
+                "Silver 3": 400,
+                "Silver 4": 450,
+                "Silver 5": 500,
+                "Silver 6": 550,
+
+                "Gold 1": 600,
+                "Gold 2": 650,
+                "Gold 3": 700,
+                "Gold 4": 750,
+                "Gold 5": 800,
+                "Gold 6": 850,
+
+                "Platinum 1": 900,
+                "Platinum 2": 950,
+                "Platinum 3": 1000,
+                "Platinum 4": 1050,
+                "Platinum 5": 1100,
+                "Platinum 6": 1150,
+
+                "Diamond 1": 1200,
+                "Diamond 2": 1250,
+                "Diamond 3": 1300,
+                "Diamond 4": 1350,
+                "Diamond 5": 1400,
+                "Diamond 6": 1450,
+
+                 "Onyx": 1500 
+    },
+    "RankLookUp" : {
+        0: "Bronze 1",
+        50: "Bronze 2",
+        100: "Bronze 3",
+        150: "Bronze 4",
+        200: "Bronze 5",
+        250: "Bronze 6",
+
+        300: "Silver 1",
+        350: "Silver 2",
+        400: "Silver 3",
+        450: "Silver 4",
+        500: "Silver 5",
+        550: "Silver 6",
+
+        600: "Gold 1",
+        650: "Gold 2",
+        700: "Gold 3",
+        750: "Gold 4",
+        800: "Gold 5",
+        850: "Gold 6",
+
+        900: "Platinum 1",
+        950: "Platinum 2",
+        1000: "Platinum 3",
+        1050: "Platinum 4",
+        1100: "Platinum 5",
+        1150: "Platinum 6",
+
+        1200: "Diamond 1",
+        1250: "Diamond 2",
+        1300: "Diamond 3",
+        1350: "Diamond 4",
+        1400: "Diamond 5",
+        1450: "Diamond 6",
+
+        1500: "Onyx",
+        1550: "Onyx",
+        1600: "Onyx",
+        1650: "Onyx",
+        1700: "Onyx",
+        1750: "Onyx",
+        1800: "Onyx",
+        1850: "Onyx",
+
+        "HCS" : "HCS",
+        "EHL" : "EHL"
+    },
     "Maps" :  {
         "Aquarius": {
             "name": "Aquarius",
@@ -282,5 +368,15 @@ HALO_INFINITE_DATA = {
             "HCS modes": " 0 ",
             "EHL modes": " 0 "
         }
+    },
+    "GameModes" : {
+        0 : "Not in rotation",
+        1 : "Strongholds",
+        2 : "KOTH",
+        3 : "CTF",
+        4 : "Oddball",
+        5 : "Slayer",
+        6 : "Assault"
     }
 }
+

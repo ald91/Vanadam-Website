@@ -16,7 +16,11 @@ forum = Blueprint("forum", __name__)
 ##################
 
 #Admin dashboard
-@forum.route('/', methods=["GET"])
+@forum.route('/LFG', methods=["GET", "POST"])
 def forum():
     """ forum entry point """
-    return render_template("")
+    if request.method == "GET":
+        return render_template("forum.html")
+    
+    elif request.method == "POST":
+        pass

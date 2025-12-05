@@ -265,11 +265,11 @@ def Google_API_V3_Write_JSON(data, where):
 
     try:
         if where == "clean":
-            with open ('videoDump.json', 'w', encoding="utf-8") as file:
+            with open ('app/data/videoDump.json', 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
         
         elif where == "dbReady":
-            with open ('videoDbReady.json', 'w', encoding="utf-8") as file:
+            with open ('app/data/videoDbReady.json', 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
 
     except Exception as e:
@@ -282,7 +282,7 @@ def Google_API_V3_Modify_Values():
     modified = []
 
 
-    with open ('videoDump.Json', 'r', encoding="utf-8") as file:
+    with open ('app/data/videoDump.Json', 'r', encoding="utf-8") as file:
             extracted = json.load(file)
 
     for video in extracted:
@@ -330,7 +330,7 @@ def Google_API_V3_Modify_Values():
 
 #finally, load in the thumbnails of all assets listed on the site
 def Google_API_V3_Write_Thumbnails():
-    with open("videoDbReady.json", "r", encoding="utf-8") as file:
+    with open("app/data/videoDbReady.json", "r", encoding="utf-8") as file:
         videos = json.load(file)
 
     errornails = []
@@ -496,8 +496,10 @@ def Commit_to_DB():
     print("db updated")
     return
 
-
+# full commit loop of database
 def Update_Video_Database_Full():
+    """ performs a full update of the video databse from API to JSON to DB commit"""
+
     extracted = []
     print("attempting to contact Youtube API")
     Google_API_V3_PULL_Video_Info(extracted)
@@ -512,3 +514,26 @@ def Update_Video_Database_Full():
     Google_API_V3_Write_Thumbnails()
     with current_app.app_context():
         Commit_to_DB()
+
+def Full_Video_Management_Query():
+    """fetches all video records with Post tags and Post ID"""
+
+    db = get_database()
+    cur = db.cursor()
+    query = """
+        SELECT 
+        'Video' AS type, v.postID, v.vidID, v.title, v.csr, v.thumbnailsmax, v.gamemap, v.gamemode, v.videotype, p.date,
+        GROUP_CONCAT(pt.tagname) AS tags
+        FROM Videos v
+        
+        LEFT JOIN Posts p ON v.postID = p.postID
+        LEFT JOIN PostTags pt ON v.postID = pt.postID
+        
+        GROUP BY v.postID;  
+    """
+
+    cur.execute(query)
+    videos = cur.fetchall()
+    videos = [dict(row) for row in videos]
+
+    return videos

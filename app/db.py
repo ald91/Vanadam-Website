@@ -110,7 +110,52 @@ def create_database(db_path="database.db"):
     );
     """)
 
-        # Content Linking table for all articles / videos using preset tags
+
+    # === MAPS ===
+    cursor.execute("""
+    CREATE TABLE Maps (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        mapName TEXT NOT NULL UNIQUE,
+        description TEXT,
+        ranked_arena BOOLEAN DEFAULT 0
+        europeanHaloLeague BOOLEAN DEFAULT 0
+        HaloChampionshipSeries BOOLEAN DEFAULT 0
+    );
+    """)
+
+    # === GAME MODES ===
+    cursor.execute("""
+    CREATE TABLE game_modes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code INTEGER NOT NULL UNIQUE,
+        name TEXT NOT NULL
+    );
+    """)
+
+    # === PLAYLISTS ===
+    cursor.execute("""
+    CREATE TABLE playlists (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE
+    );
+    """)
+
+    # === Playists to Map and Mode Joining Table ===
+    cursor.execute("""
+    CREATE TABLE playlist_map_modes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        playlist_id INTEGER NOT NULL,
+        map_id INTEGER NOT NULL,
+        mode_id INTEGER NOT NULL,
+        FOREIGN KEY (playlist_id) REFERENCES playlists(id),
+        FOREIGN KEY (map_id) REFERENCES maps(id),
+        FOREIGN KEY (mode_id) REFERENCES game_modes(id)
+    );
+    """)
+
+
+
+    # Content Linking table for all articles / videos using preset tags
     cursor.execute(""" 
     CREATE TABLE Tags (
         tagName STRING PRIMARY KEY
@@ -127,6 +172,7 @@ def create_database(db_path="database.db"):
         ); 
     """)
 
+    
 
     # === RELATIONSHIPS ===
     # Messages.boardID → Posts.postID

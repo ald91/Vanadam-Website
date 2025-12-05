@@ -159,3 +159,7 @@ ul.dropdown-menu, a.dropdown-item {
 footer {
     border-top: 1px solid #D3A03B;
 }
+
+.adminDashBoardButton {
+    width: 200px;
+}
