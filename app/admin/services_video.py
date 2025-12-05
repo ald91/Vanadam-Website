@@ -1,6 +1,3 @@
-#TODO: Move this somewhere it should go
-
-
 from flask import current_app
 import requests
 import json

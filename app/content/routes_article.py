@@ -25,12 +25,11 @@ def article():
     cur.execute(query)
 
     article_results = cur.fetchall()
-    article_results = [dict(row) for row in article_results]
+    articles = [dict(row) for row in article_results]
 
     print(article_results)
 
-    #return redirect(url_for('content.article_create'))
-    return render_template('content.article_view.html')
+    return render_template('content/allarticles.html', articles=articles)
 
 @content.route('/articles/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
 def article_view(id):

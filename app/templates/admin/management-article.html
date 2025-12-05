@@ -10,16 +10,17 @@
 
 <div class="container-fluid">
     <div class="col-3 col-sm-12">
-        <H2>Video Management</H2>
+        <H2>Article Management</H2>
         <br>
-        <form class="" method="POST" action="/admin/video-management">
+        <form class="" method="POST" action="/admin/article-management">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col-12 d-flex justify-content-evenly">
                 <div class="col-4">
-                    <h3 class=""> Video Overview</h3>
+                    <h3 class=""> Articles Overview</h3>
                 </div>
                 <div class="col-8">
-                    <p>total videos on record: XXXXXXXXX</p>
+                    <!-- TODO -->
+                    <p>total articles on record: XXXXXXXXX</p>
                     <p>last updated: XXXXXXXXX</p>
                 </div>
             </div>
@@ -28,17 +29,12 @@
                 <div class="col-4">
                     <h3 class="">Modify Records</h3>
                 </div>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_thumbnails">Refresh
-                    Thumbnails</button>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_data">Refresh
-                    Database</button>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_modify">Modify a
-                    Record</button>
+                            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_new">Register New Article</button>
             </div>
             <br>
     </div>
 
-    <h2> full video library </h2>
+    <h2> full article library </h2>
     <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
         <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
             {% for result in videos %}
@@ -50,17 +46,24 @@
                         </div>
                         <div class="col-6 flex-fill">
                             <h2>{{ result.title }}</h2>
-                            <p>video ID = {{ result.vidID }} / video CSR = {{ result.csr }} / uploaded ({{ result.date}})</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} / video type = {{ result.videotype }}</p>
+                            <p>video ID = {{ result.vidID }} / video CSR = {{ result.csr }} / uploaded ({{
+                                result.date}})</p>
+                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} / video type = {{
+                                result.videotype }}</p>
                             <p> video map = {{result.gamemap }} / video mode = {{ result.gamemode }}</p>
+
 
                         </div>
                         <div class="col-md-2 col-auto d-flex align-content-center justify-content-center">
+                            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_modify({{ result.articleID }})">Modify Article</button>
+                            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_delete({{ result.articleID }})">Delete Article</button>
+                            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_toggle({{ result.articleID }})">Toggle Article</button>
                         </div>
                     </div>
                 </article>
             </a>
             {% endfor %}
+            </form>
         </div>
     </div>
 </div>
