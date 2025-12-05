@@ -13,9 +13,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #internal imports
-from ..HaloData import HALO_INFINITE_DATA, infiniteCSR
-from ..db import *
-from ..services import checkTags
+from app.HaloData import HALO_INFINITE_DATA, infiniteCSR
+from app.data.db import *
+from app.services import checkTags
 
 # constants
 KEY = os.getenv("GOOGLE_API_KEY", "ERROR")
@@ -263,13 +263,18 @@ def Google_API_V3_Clean_Data(extracted):
 #write completed list "extrated" to videoDump.Json
 def Google_API_V3_Write_JSON(data, where):
 
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
+    data_dir = os.path.join(base_dir, "data")
+    json_dump_path = os.path.join(data_dir, "videoDump.json")
+    json_ready_path = os.path.join(data_dir, "videoDbReady.json")
+
     try:
         if where == "clean":
-            with open ('app/data/videoDump.json', 'w', encoding="utf-8") as file:
+            with open (json_dump_path, 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
         
         elif where == "dbReady":
-            with open ('app/data/videoDbReady.json', 'w', encoding="utf-8") as file:
+            with open (json_ready_path, 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
 
     except Exception as e:
@@ -281,8 +286,11 @@ def Google_API_V3_Write_JSON(data, where):
 def Google_API_V3_Modify_Values():
     modified = []
 
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
+    data_dir = os.path.join(base_dir, "data")
+    json_path = os.path.join(data_dir, "videoDump.json")
 
-    with open ('app/data/videoDump.Json', 'r', encoding="utf-8") as file:
+    with open (json_path, 'r', encoding="utf-8") as file:
             extracted = json.load(file)
 
     for video in extracted:
@@ -330,13 +338,16 @@ def Google_API_V3_Modify_Values():
 
 #finally, load in the thumbnails of all assets listed on the site
 def Google_API_V3_Write_Thumbnails():
-    with open("app/data/videoDbReady.json", "r", encoding="utf-8") as file:
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
+    data_dir = os.path.join(base_dir, "data")
+    json_path = os.path.join(data_dir, "videoDbReady.json")
+    thumb_dir = Path(current_app.root_path) / "static" / "assets" / "videothumbs"
+
+    with open(json_path, "r", encoding="utf-8") as file:
         videos = json.load(file)
 
-    errornails = []
-
-    thumb_dir = Path(current_app.root_path) / "static/assets/videothumbs"
-    existing_files = {file.name for file in thumb_dir.iterdir() if file.is_file()}
+        existing_files = {file.name for file in thumb_dir.iterdir() if file.is_file()}
 
     for video in videos:
         thumb_url = video["thumbnails"]["maxres"]
@@ -346,28 +357,30 @@ def Google_API_V3_Write_Thumbnails():
 
         #if thumbnail doesn't exist, make one
         if thumb_file not in existing_files:
-            print("new thumbnail found for")
+            print(f"new thumbnail found for {video_id}")
             response = requests.get(thumb_url)
             if response.ok:
-                thumbnail_path = f"static/assets/videothumbs/{video_id}.jepg"
+                thumbnail_path = f"{thumb_dir}{video_id}.jepg"
                 
                 if os.path.exists(thumbnail_path):
                     print(f"thumbnail for {video_id} already exists, skipping.")
                     continue
                 
-                with open(f"static/assets/videothumbs/{video_id}.jpeg", "wb") as file:
+                with open(f"{video_id}.jpeg", "wb") as file:
                     file.write(response.content)
             
             else:
                 print(f"failed to get thumbail for video: {video_id}")
-                errornails.append(video_id)
-                with open("errors/thumbnailerrors.txt", "wb") as file:
-                    file.write("/n".join(errornails))
         else:
             continue
 
 def Commit_to_DB():
-    with open("videoDbReady.json", "r", encoding="utf-8") as file:
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
+    data_dir = os.path.join(base_dir, "data")
+    json_path = os.path.join(data_dir, "videoDbReady.json")
+
+    with open(json_path, "r", encoding="utf-8") as file:
         videos = json.load(file)
 
     db = get_database()

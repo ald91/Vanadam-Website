@@ -7,8 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 
 #App Imports
-from ..db import get_database
-from ..extensions import mail, serializer, security_salt
+from app.data.db import get_database
+from app.extensions import mail, serializer, security_salt
 
 def log_in_user(form):
     if form.validate_on_submit():

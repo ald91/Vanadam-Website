@@ -6,9 +6,9 @@ from flask_session import Session
 from functools import wraps
 
 #app imports
-from ..db import get_database
+from app.data.db import get_database
 
-#internal import
+#iself import
 from . import content
 
 ##################

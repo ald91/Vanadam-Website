@@ -1,4 +1,4 @@
-from ..db import get_database
+from ..data.db import get_database
 
 def fetchSideBar():
 

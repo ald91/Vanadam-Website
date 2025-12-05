@@ -5,13 +5,13 @@ import os
 #python modules
 from functools import wraps
 
-#app
-from ..db import create_database, dbpath
-from ..services import *
+#app imports
+from app.data.db import create_database, db_path
+from app.services import *
 
 #self module
 from . import admin
-from .services_video import Update_Video_Database_Full, Full_Video_Management_Query
+from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
 
 
 ##################
@@ -66,25 +66,29 @@ def video_management():
         videos = Full_Video_Management_Query()
         return render_template('admin/video-management.html', videos=videos)
         
-    if request.form.get("dbAction"):
-        action = request.form.get("dbAction")
-    
-        if action == "vdbUpdate":
-            Update_Video_Database_Full()
-            flash("Video Database Update Completed", "success")
-            return redirect(url_for("admin.dashboard"))
+    elif request.method == "POST":
         
-        elif action == "vdbDelete":
-            dbpath = "database.db"
-            try:
-                os.remove(dbpath)
-                create_database()
-                flash("Video Database delete attempted", "success")
-                return redirect(url_for("admin.dashboard"))
-                
-            except FileNotFoundError:
-                flash("Could not delete database", "error")
-                return redirect(url_for("admin.dashboard"))
+        action = request.form.get("videoAction")
+    
+        match action:
+            case "video_thumbnails":
+                #TODO
+                flash("Video thumbnails folder update completes", "success")
+                Google_API_V3_Write_Thumbnails()
+                return redirect(url_for("admin.video_management"))
+
+            case "video_data":
+                Update_Video_Database_Full()
+                flash("Video database update completed", "success")
+                return redirect(url_for("admin.video_management"))
+        
+            case "video_modify":
+                return
+                #TODO
+    else:
+        flash("internal routing error", "error")
+        return redirect(url_for("admin.video_management"))
+
 
 
 #TODO: admin articles

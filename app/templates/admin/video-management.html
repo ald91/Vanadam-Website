@@ -12,7 +12,7 @@
     <div class="col-3 col-sm-12">
         <H2>Video Management</H2>
         <br>
-        <form class="" method="POST" action="/admin/dashboard/video-management">
+        <form class="" method="POST" action="/admin/video-management">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col-12 d-flex justify-content-evenly">
                 <div class="col-4">
@@ -30,8 +30,6 @@
                 </div>
                 <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_thumbnails">Refresh
                     Thumbnails</button>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_data">Refresh
-                    JSON</button>
                 <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_data">Refresh
                     Database</button>
                 <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_modify">Modify a

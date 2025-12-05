@@ -4,12 +4,14 @@ from flask import render_template, redirect, url_for, flash, request, session
 #python modules
 from functools import wraps
 
-#self module
+#app imports
+from app.forms import LoginForm, RegisterForm, RecoveryForm, PasswordResetForm
+
+#self imports
 from . import auth
 from .services import *
 
-#app imports
-from ..forms import LoginForm, RegisterForm, RecoveryForm, PasswordResetForm
+
 
 ##################
 #-----Routes-----#

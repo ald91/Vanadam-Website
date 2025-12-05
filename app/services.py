@@ -1,4 +1,4 @@
-from .db import get_database
+from app.data.db import get_database
 
 def checkTags(postType, tags):
 

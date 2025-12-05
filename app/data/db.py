@@ -4,22 +4,31 @@ from flask import g
 #Databases
 import sqlite3, os, hashlib, base64
 
-def get_database():
-    if 'db' not in g:
-        dbpath = "database.db"
-        if not os.path.exists(dbpath):
-            create_database()
-        g.db = sqlite3.connect("database.db")
-        g.db.row_factory = sqlite3.Row
+# get relative path name
+base_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(base_dir, "database.db")
 
-        print("Connected to database!")
+def get_database():
+
+
+    
+    os.makedirs(base_dir, exist_ok=True) #make sure the directory is a thing
+
+    if 'db' not in g:
+        if not os.path.exists(db_path):
+            create_database(db_path)
+        
+        g.db = sqlite3.connect(db_path)
+        g.db.row_factory = sqlite3.Row
+        print(f"Connected to database at: {db_path}")
+
     return g.db
 
-def create_database(db_path="database.db"):
-    """
-    Creates a new SQLite database using the schema defined in the DBML specification.
-    All relationships and constraints are included where supported by SQLite.
-    """
+def create_database(db_path):
+    
+    """ Creates a new SQLite database using the schema defined in the DBML specification.
+        All relationships and constraints are included where supported by SQLite.  """
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("PRAGMA foreign_keys = ON;")
@@ -117,8 +126,8 @@ def create_database(db_path="database.db"):
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         mapName TEXT NOT NULL UNIQUE,
         description TEXT,
-        ranked_arena BOOLEAN DEFAULT 0
-        europeanHaloLeague BOOLEAN DEFAULT 0
+        ranked_arena BOOLEAN DEFAULT 0,
+        europeanHaloLeague BOOLEAN DEFAULT 0,
         HaloChampionshipSeries BOOLEAN DEFAULT 0
     );
     """)
@@ -236,8 +245,6 @@ def create_database(db_path="database.db"):
     conn.close()
     print("Database created successfully.")
 
-
-dbpath = "database.db"
-if not os.path.exists(dbpath):
-    create_database()
+if not os.path.exists(db_path):
+    create_database(db_path)
 

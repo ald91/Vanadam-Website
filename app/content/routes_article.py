@@ -6,11 +6,11 @@ from werkzeug.utils import secure_filename
 import os
 
 # app imports
-from ..db import get_database
-from ..forms import ArticleForm
-from ..services import checkTags
+from app.data.db import get_database
+from app.forms import ArticleForm
+from app.services import checkTags
 
-#internal import
+#self import
 from . import content
 
 #TODO: article upload folder

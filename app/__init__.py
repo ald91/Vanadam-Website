@@ -22,7 +22,7 @@ from .content import content
 from .forum import forum
 from .admin import admin
 from .HaloData import *
-from .db import g
+from .data.db import g
 from .extensions import mail, serializer, security_salt
 
 def app_create():

@@ -6,13 +6,13 @@ from flask_session import Session
 #python modules
 from functools import wraps
 
+#app imports
+from app.data.db import get_database
+from app.forms import SearchForm
+from app.HaloData import *
+
 #self
 from . import content
-
-#app imports
-from ..db import get_database
-from ..forms import SearchForm
-from ..HaloData import *
 from .services import fetchNewsBar, fetchSideBar 
 
 ##################
