@@ -340,6 +340,7 @@ def Google_API_V3_Write_Thumbnails():
     data_dir = os.path.join(base_dir, "data")
     json_path = os.path.join(data_dir, "videoDbReady.json")
     thumb_dir = Path(current_app.root_path) / "static" / "assets" / "videothumbs"
+    thumb_dir.mkdir(parents=True, exist_ok=True)
 
     with open(json_path, "r", encoding="utf-8") as file:
         videos = json.load(file)
