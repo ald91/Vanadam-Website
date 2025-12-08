@@ -24,3 +24,11 @@ def forum():
     
     elif request.method == "POST":
         pass
+
+@forum.route("/LFG/create", methods=["GET", "POST"])
+def create_post():
+    pass
+
+@forum.route("/LFG/<id>", methods=["GET", "POST"])
+def view_post():
+    pass
