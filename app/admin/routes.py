@@ -13,7 +13,7 @@ from app.forms import ArticleForm
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data
 
    
 
@@ -97,13 +97,13 @@ def article_management():
     elif request.method == "POST":
         
         #JINJA 2 sends "articleAction(Article.ID)"
-        check = "( )"
+        check = "("
         input = request.form.get("articleAction")
 
         if check in input:
             input = request.form.get("articleAction").split("(")
             action = str(input[0])
-            articleID = input[1].split(")")
+            articleID = input[1].replace("(","").replace(")","")
         else:
             action = str(input)
     
@@ -115,7 +115,7 @@ def article_management():
 
             case "article_modify":
                 #TODO - ARTICLE MODIFY FUNCTION
-                return redirect(url_for(f"admin.article_management", articleID=articleID))
+                return redirect(url_for(f"admin.article_management_individual", articleID=articleID))
             
             case "article_delete":
                 #TODO - ARTICLE DELETE FUNCTION
@@ -149,14 +149,16 @@ def article_management_new():
     
     return render_template('admin/management-article-new.html', form=form)
 
-
 #TODO
 @admin.route('/article-management/<articleID>', methods=["GET", "POST"])
 def article_management_individual(articleID):
     
     if request.method == "GET":
         articleData = Single_Article_Query(articleID)
-        return render_template('admin/management-article-invidual', articleData=articleData)
+        articleText = Get_Article_Data(articleID)
+        form = ArticleForm()
+        print(articleData)
+        return render_template('admin/management-article-individual.html', articleData=articleData, form=form, articleText = articleText )
 
 
 #TODO: admin user management

@@ -2,24 +2,32 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Manage Article - {{ articleInfo.title }} {% endblock %}
+{% block title %} Manage Article - {{ articleData.title }} {% endblock %}
 {% endblock %}
 
 
 {% block content %}
 
-<H2 class="text-center">{{ articleInfo.title }}</H2>
+
+<H2 class="text-center">{{ articleData.title }}</H2>
+
+<form class="" method="POST" action="/admin/article-management/{{ articleData.articleID }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_delete">Delete Article</button>
+            <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_toggle">Toggle Article</button>
+
+</form>
 
 <div class="container-fluid d-flex justify-content-center m-1 p-1">
-    {% if videoInfo.videotype == "Longform" %}
-    <iframe width="1020" height="574" src="https://www.youtube.com/embed/{{ videoInfo.vidID }}"
-        title="YouTube video player" frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-    </iframe>
-    {% endif %}
+
+<p>{{ articleData.image_filename }}</p>
+<p>{{ articleData.description }}</p>
+<p>{{ articleData.content }}</p>
+
 
 </div>
 
 <br>
+
+{% endblock %}
 

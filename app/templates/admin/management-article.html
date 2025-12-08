@@ -37,20 +37,18 @@
     <h2> full article library </h2>
     <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
         <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
-            {% for result in videos %}
-            <a href="/videos-management/{{result.vidID}}" class="text-decoration-none">
+            {% for result in articles %}
+            <a href="/article-management/{{result.articleID}}" class="text-decoration-none">
                 <article id="{{ result.vidID }}" class="video-long">
                     <div class="row mb-1 video-long">
                         <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                            <img class="rounded-start-2" src="{{ result.thumbnailsmax}}" width="auto" height="170px" />
+                            <img class="rounded-start-2" src="{{ url_for('static', filename='Assets/ArticlesIMG/' ~ result.image_filename) }}" width="auto" height="170px" />
                         </div>
                         <div class="col-6 flex-fill">
                             <h2>{{ result.title }}</h2>
-                            <p>video ID = {{ result.vidID }} / video CSR = {{ result.csr }} / uploaded ({{
-                                result.date}})</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} / video type = {{
-                                result.videotype }}</p>
-                            <p> video map = {{result.gamemap }} / video mode = {{ result.gamemode }}</p>
+                            <p>article ID = {{ result.articleID }} / uploaded xxxxx</p>
+                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} </p>
+                            <p>post img = {{ result.img_filename}}
 
 
                         </div>

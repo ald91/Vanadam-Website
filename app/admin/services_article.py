@@ -21,9 +21,10 @@ from app.services import checkTags
 #directories
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
 data_dir = os.path.join(base_dir, "data")
+assets_dir = os.path.join(base_dir, "static/assets")
 articles_dir = os.path.join(data_dir,"articles")
 articles_JSON_dir = os.path.join(articles_dir, "ArticlesJSON")
-articles_IMG_dir = os.path.join(articles_dir, "ArticlesIMG")
+articles_IMG_dir = os.path.join(assets_dir, "ArticlesIMG")
 
     # === ARTICLES ===
 """ articleID / postID / title / description / content / image_filename """
@@ -48,6 +49,7 @@ def All_Articles_Management_Query():
     cur.execute(query)
     articles = cur.fetchall()
     articles = [dict(row) for row in articles]
+    print(articles)
 
     return articles
 
@@ -57,11 +59,13 @@ def Single_Article_Query(articleID):
     db = get_database()
     cur = db.cursor()
     query =  """
-    SELECT articleID, postID, title, description, content, thumbnailsdefault, image_filename
+    SELECT articleID, postID, title, description, content, image_filename
     FROM Articles
     WHERE articleID = ?
     """
-    articleData = cur.execute(query, (articleID,))
+    article = cur.execute(query, (articleID,))
+    article = cur.fetchone()
+    articleData = dict(article)
 
     return articleData
 
@@ -130,3 +134,9 @@ def Register_New_Article(form):
 
     return
 
+def Get_Article_Data(articleID: int):
+    filePath = os.path.join(f"{articles_JSON_dir}/A{articleID}.JSON")
+    with open(filePath, "r", encoding="utf-8") as f:
+        data = json.load(f)
+  
+    return data
