@@ -13,7 +13,8 @@ from app.forms import ArticleForm
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article
+from .services_users import All_Users_Management_Query
 
    
 
@@ -162,7 +163,69 @@ def article_management_individual(articleID):
 
 
 #TODO: admin user management
-@admin.route('/user-management')
+# TODO: admin user management
+@admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
     """ modify user data """
-    pass
+
+    if request.method == "GET":
+        # TODO: Replace with your real query
+        users = All_Users_Management_Query()
+        return render_template('admin/management-user.html', users=users)
+
+    elif request.method == "POST":
+
+        # Jinja sends: userAction(userID)
+        raw_input = request.form.get("userAction")
+
+        check = "("
+        if check in raw_input:
+            split_input = raw_input.split("(")
+            action = split_input[0]
+            userID = split_input[1].replace(")", "")
+        else:
+            action = raw_input
+            userID = None
+
+        print("Action:", action)
+        print("UserID:", userID)
+
+        match action:
+
+            #CREATE USER (Redirect to form)
+            case "user_new":
+                return redirect(url_for("admin.user_management_new"))
+
+            #DELETE USER
+            case "user_delete":
+                Delete_User(userID)
+                flash("User deleted successfully", "success")
+                return redirect(url_for("admin.user_management"))
+
+            #BAN USER
+            case "user_ban":
+                Ban_User(userID)
+                flash("User banned successfully", "success")
+                return redirect(url_for("admin.user_management"))
+
+            #UNBAN USER
+            case "user_unban":
+                Unban_User(userID)
+                flash("User unbanned successfully", "success")
+                return redirect(url_for("admin.user_management"))
+
+            #CHANGE USER TAGS
+            case "user_tags":
+                new_tags = request.form.get("newTags")  # from input field
+                Update_User_Tags(userID, new_tags)
+                flash("User tags updated", "success")
+                return redirect(url_for("admin.user_management"))
+
+            case _:
+                flash("Unknown user action", "error")
+                return redirect(url_for("admin.user_management"))
+
+    else:
+        flash("Internal routing error", "error")
+        return redirect(url_for("admin.user_management"))
+

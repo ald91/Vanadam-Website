@@ -39,7 +39,8 @@ def create_database(db_path):
         username TEXT PRIMARY KEY,
         email TEXT NOT NULL,
         password TEXT NOT NULL,
-        tag TEXT
+        tag TEXT,
+        banned BOOL
     );
     """)
 
