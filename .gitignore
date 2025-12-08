@@ -16,3 +16,4 @@ app/static/assets/videothumbs/*
 .gitignore
 config.py
 database.db
+*.jpeg
