@@ -8,12 +8,14 @@ from functools import wraps
 #app imports
 from app.data.db import create_database, db_path
 from app.services import *
+from app.forms import ArticleForm
 
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import Full_Article_Management_Query
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article
 
+   
 
 ##################
 #-----Routes-----#
@@ -84,25 +86,32 @@ def video_management():
         return redirect(url_for("admin.video_management"))
 
 #TODO: admin articles
-@admin.route('article-management')
+@admin.route('/article-management', methods=["GET", "POST"])
 def article_management():
     """ article documents and table related admin actions"""
             
     if request.method == "GET":
-        articles = Full_Article_Management_Query()
+        articles = All_Articles_Management_Query()
         return render_template('admin/management-article.html', articles=articles)  
           
     elif request.method == "POST":
         
         #JINJA 2 sends "articleAction(Article.ID)"
-        input = request.form.get("articleAction").split("(")
-        action = input[0]
-        articleID = input[1].split(")")
+        check = "( )"
+        input = request.form.get("articleAction")
+
+        if check in input:
+            input = request.form.get("articleAction").split("(")
+            action = str(input[0])
+            articleID = input[1].split(")")
+        else:
+            action = str(input)
     
+        print(action)
+
         match action:
             case "article_new":
-                #TODO - ARTICLE NEW REDIRECTION FOR ADMINS
-                return redirect(url_for("admin.article_management"))
+                return redirect(url_for("admin.article_management_new"))
 
             case "article_modify":
                 #TODO - ARTICLE MODIFY FUNCTION
@@ -118,11 +127,40 @@ def article_management():
     else:
         flash("internal routing error", "error")
         return redirect(url_for("admin.article_management"))
+    
+    flash("internal routing error", "error")
+    return redirect(url_for("admin.article_management"))
 
+
+@admin.route('/article-management/new', methods=['GET', 'POST'])
+def article_management_new():
+    
+    form = ArticleForm()
+  
+    if request.method == "POST":
+        print("form is a post request")
+
+        if form.validate_on_submit():
+            print("form validated on submit")
+            Register_New_Article(form)
+            print("Article Created")
+            flash("New article created")
+            return redirect(url_for("admin.article_management"))
+    
+    return render_template('admin/management-article-new.html', form=form)
+
+
+#TODO
+@admin.route('/article-management/<articleID>', methods=["GET", "POST"])
+def article_management_individual(articleID):
+    
+    if request.method == "GET":
+        articleData = Single_Article_Query(articleID)
+        return render_template('admin/management-article-invidual', articleData=articleData)
 
 
 #TODO: admin user management
-@admin.route('user-management')
+@admin.route('/user-management')
 def user_management():
     """ modify user data """
     pass
