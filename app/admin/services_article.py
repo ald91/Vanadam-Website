@@ -134,9 +134,11 @@ def Register_New_Article(form):
 
     return
 
+#TODO THIS IS WHERE U R MATE
 def Get_Article_Data(articleID: int):
     filePath = os.path.join(f"{articles_JSON_dir}/A{articleID}.JSON")
     with open(filePath, "r", encoding="utf-8") as f:
         data = json.load(f)
-  
+        print(data)
+
     return data

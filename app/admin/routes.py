@@ -13,7 +13,7 @@ from app.forms import ArticleForm
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data
 from .services_users import All_Users_Management_Query
 
    
@@ -159,7 +159,7 @@ def article_management_individual(articleID):
         articleText = Get_Article_Data(articleID)
         form = ArticleForm()
         print(articleData)
-        return render_template('admin/management-article-individual.html', articleData=articleData, form=form, articleText = articleText )
+        return render_template('admin/management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 
 
 #TODO: admin user management

@@ -18,11 +18,14 @@
 
 </form>
 
-<div class="container-fluid d-flex justify-content-center m-1 p-1">
+<div class="container-fluid justify-content-center m-1 p-1">
 
 <p>{{ articleData.image_filename }}</p>
 <p>{{ articleData.description }}</p>
 <p>{{ articleData.content }}</p>
+<img src="{{ url_for('static', filename='Assets/ArticlesIMG/' ~ articleData.image_filename) }}" width="auto" height="170px"/>
+<p>{{ articleText.articlecontent }}</p>
+
 
 
 </div>
