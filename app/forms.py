@@ -222,3 +222,14 @@ class ArticleForm(FlaskForm):
     ])
 
     submit = SubmitField('Save Article')
+
+class ForumForm(FlaskForm):
+    title = StringField(
+        'Title',
+        validators=[]
+    )
+    content = TextAreaField()
+
+class MessageForm(FlaskForm):
+    content = TextAreaField()
+
