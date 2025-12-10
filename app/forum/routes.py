@@ -6,10 +6,8 @@ from flask import Blueprint, render_template, redirect, url_for, request
 #python modules
 from functools import wraps
 
-#set admin route
-forum = Blueprint("forum", __name__)
-
-
+#internal module
+from . import forum
 
 ##################
 #-----Routes-----#
