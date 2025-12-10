@@ -1,6 +1,8 @@
 {
     "articleID": 1,
-    "articleContent": "1234",
+    "articleTitle": "test",
+    "articleDescription": "test",
+    "articleContent": "test",
     "articleTags": "test",
     "article_IMG_filename": "A1.jpeg"
 }

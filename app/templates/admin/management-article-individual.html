@@ -10,23 +10,66 @@
 
 
 <H2 class="text-center">{{ articleData.title }}</H2>
-
+<div class="d-flex justify-content-around">
 <form class="" method="POST" action="/admin/article-management/{{ articleData.articleID }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_delete">Delete Article</button>
             <button class="adminDashBoardButton" type="submit" name="articleAction" value="article_toggle">Toggle Article</button>
-
+</div>
 </form>
 
 <div class="container-fluid justify-content-center m-1 p-1">
 
-<p>{{ articleData.image_filename }}</p>
-<p>{{ articleData.description }}</p>
-<p>{{ articleData.content }}</p>
-<img src="{{ url_for('static', filename='Assets/ArticlesIMG/' ~ articleData.image_filename) }}" width="auto" height="170px"/>
-<p>{{ articleText.articlecontent }}</p>
+        <h2>Edit {{ articleData.title }}</h2>
+ <form action="/admin/article-management/{{ articleData.articleID }}" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
 
-
+ <div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-6">
+            <label>Title</label><br>
+        </div>
+        <div class="col-6">
+             {{ form.title(size=60) }}<br><br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label>Description</label><br>
+        </div>
+        <div class="col-6">
+                 {{ form.description(rows=20, cols=80) }}<br><br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+              <label>Content</label><br>
+        </div>
+        <div class="col-6">
+                 {{ form.content(rows=20, cols=80) }}<br><br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+              <label>Tags (comma-separated)</label><br>
+        </div>
+        <div class="col-6">
+                {{ form.tags(size=60) }}<br><br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+              <label>Image (Optional)</label><br>
+        </div>
+        <div class="col-6">
+                {{ form.image() }}<br><br>
+                <img src="{{ url_for('static', filename='Assets/ArticlesIMG/' ~ articleData.image_filename) }}" width="auto" height="170px"/>
+        </div>
+    </div>
+       
+    {{ form.submit(class="btn btn-primary") }}
+            
+</form>
 
 </div>
 
