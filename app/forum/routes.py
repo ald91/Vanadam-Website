@@ -15,7 +15,7 @@ from . import forum
 
 #Admin dashboard
 @forum.route('/LFG', methods=["GET", "POST"])
-def forum():
+def forum_page():
     """ forum entry point """
     if request.method == "GET":
         return render_template("forum.html")
@@ -23,10 +23,10 @@ def forum():
     elif request.method == "POST":
         pass
 
-@forum.route("/LFG/create", methods=["GET", "POST"])
+@forum.route('/LFG/create', methods=["GET", "POST"])
 def create_post():
     pass
 
-@forum.route("/LFG/<id>", methods=["GET", "POST"])
+@forum.route('/LFG/<id>', methods=["GET", "POST"])
 def view_post():
     pass
