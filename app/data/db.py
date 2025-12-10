@@ -74,7 +74,8 @@ def create_database(db_path):
         msgID INTEGER PRIMARY KEY AUTOINCREMENT,
         boardID INTEGER,
         username TEXT NOT NULL,
-        datetime TEXT,
+        content TEXT NOT NULL,
+        date TEXT,
         FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE,
         FOREIGN KEY (boardID) REFERENCES Forums(boardID) ON DELETE CASCADE
     );
@@ -108,6 +109,7 @@ def create_database(db_path):
         forumID INTEGER PRIMARY KEY AUTOINCREMENT,
         postID INTEGER UNIQUE,
         originalPoster TEXT,
+        date TEXT,
         FOREIGN KEY(postID) REFERENCES Posts(postID)
     );
     """)
@@ -191,7 +193,7 @@ def create_database(db_path):
     """)
 
     # == Triggers ===
-    #video table row additions
+    # video table row additions
     cursor.execute("""
         CREATE TRIGGER videos_post_insert
         AFTER INSERT ON Videos
@@ -204,8 +206,7 @@ def create_database(db_path):
             UPDATE Videos
             SET postID = (SELECT last_insert_rowid())
             WHERE vidID = NEW.vidID;
-        END;
-                      
+        END;                      
     """)
 
     #article table row additions
@@ -225,7 +226,7 @@ def create_database(db_path):
                       
     """)
 
-    #article table row additions
+    #forum table row additions
     cursor.execute("""
         CREATE TRIGGER forum_post_insert
         AFTER INSERT ON Forums
@@ -233,14 +234,18 @@ def create_database(db_path):
         BEGIN
             INSERT INTO Posts(date)
             VALUES (datetime('now'));
-            
-            -- Update the newly inserted article row to link to the post
-            UPDATE Articles
-            SET postID = (SELECT last_insert_rowid())
-            WHERE articleID = NEW.articleID;
-        END;
-                      
+        END;                      
     """)
+    # messages board row additions
+    cursor.execute("""
+            CREATE TRIGGER messages_post_insert
+            AFTER INSERT ON Messages
+            FOR EACH ROW
+            BEGIN
+                INSERT INTO Messages(date)
+                VALUES (datetime('now'));
+            END;                      
+        """)
 
     conn.commit()
     conn.close()
