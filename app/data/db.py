@@ -20,6 +20,7 @@ def get_database():
         
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
+        g.db.execute("PRAGMA foreign_keys = ON;")
         print(f"Connected to database at: {db_path}")
 
     return g.db
@@ -41,6 +42,15 @@ def create_database(db_path):
         password TEXT NOT NULL,
         tag TEXT,
         banned BOOL
+    );
+    """)
+
+    
+    # === POSTS ===
+    cursor.execute("""
+    CREATE TABLE Posts (
+        postID INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT
     );
     """)
 
@@ -99,6 +109,7 @@ def create_database(db_path):
         description TEXT,
         content TEXT,
         image_filename TEXT,
+        hidden BOOLEAN default 0,
         FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
     );
     """)
@@ -113,15 +124,6 @@ def create_database(db_path):
         FOREIGN KEY(postID) REFERENCES Posts(postID)
     );
     """)
-
-    # === POSTS ===
-    cursor.execute("""
-    CREATE TABLE Posts (
-        postID INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT
-    );
-    """)
-
 
     # === MAPS ===
     cursor.execute("""
@@ -246,6 +248,9 @@ def create_database(db_path):
                 VALUES (datetime('now'));
             END;                      
         """)
+
+
+
 
     conn.commit()
     conn.close()

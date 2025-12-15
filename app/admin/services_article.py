@@ -55,7 +55,7 @@ def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str
         "articleTags" : articleTags,
     }
     
-    article_JSON_filename = "A{articleID}.JSON"
+    article_JSON_filename = f"A{articleID}.JSON"
 
     article_save_location = os.path.join(articles_JSON_dir, article_JSON_filename)
 
@@ -90,6 +90,7 @@ def All_Articles_Management_Query():
     return articles
 
 def Single_Article_Query(articleID: str) -> dict:
+   
     """ returns all database info of a single article """
 
     db = get_database()
@@ -105,7 +106,10 @@ def Single_Article_Query(articleID: str) -> dict:
 
     return articleData
 
-def Register_New_Article(form):
+def Register_New_Article(form: object) -> bool:
+
+    """ registers a new article to the database, saving the JSON file and the Image file using helper functions"""
+    
     print("revieved data of:", form)
     articleTitle = form.title.data
     articleDescription = form.description.data
@@ -116,11 +120,15 @@ def Register_New_Article(form):
     #runs against DB for tags
     checkTags("Article", articleTags)
 
-    #save new article (sets articleID)
     db = get_database()
     cur = db.cursor()
-    query = """INSERT INTO Articles (title) VALUES (?)"""
-    cur.execute(query, (articleTitle,))
+
+    #secure PostID FK (sets postID)
+    cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
+    postID = cur.lastrowid
+    
+    #save new article (sets articleID relating to post ID)
+    cur.execute("INSERT INTO Articles (postID, title) VALUES (?, ?)", (postID, articleTitle))
 
     #find article just saved to link JSON / IMG to DB
     query =  """
@@ -143,17 +151,14 @@ def Register_New_Article(form):
     """
     cur.execute(query,(articleDescription, article_IMG_filename, article_JSON_filename, articleID))
 
-
     db.commit()
     db.close()
 
     return True
 
-
-#TODO THIS IS WHERE U R MATE
 def Get_Article_Data(articleID: int) -> dict:
+    
     """ opens article JSON data giving fields  articleID/articleTitle/articleDescription/articleContent/articleTags/article_IMG_filename"""
-
 
     filePath = os.path.join(f"{articles_JSON_dir}/A{articleID}.JSON")
     with open(filePath, "r", encoding="utf-8") as f:
@@ -162,9 +167,9 @@ def Get_Article_Data(articleID: int) -> dict:
 
     return data
 
-def Modify_Article_Data(articleID, form):
+def Modify_Article_Data(articleID: int, form: object) -> bool:
 
-    """ articleID / postID / title / description / content / image_filename """
+    """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / content / image_filename """
 
     articleID = articleID
     articleTitle = form.title.data
@@ -186,3 +191,80 @@ def Modify_Article_Data(articleID, form):
     print("Article Edited")
 
     return True
+
+def Delete_Article(articleID: int) -> bool:
+
+    """ fully delete an article from the DB, including JSON and IMG"""
+
+    articleData = Single_Article_Query(articleID)
+    articlePostID = articleData.get("postID")
+
+    try:
+        db = get_database()
+        cur = db.cursor()
+        cur.execute("DELETE FROM Posts WHERE postID = ?", (articlePostID,))
+        db.commit()
+
+        print(f"Article number {articleID} deleted from DB")
+
+    except Exception as e:
+        print(f"error deleting article from DB", {e})
+        return False
+
+    print(articleID)
+    JSON_Deletion = Delete_Article_JSON(articleID)
+    IMG_Deletion = Delete_Article_IMG(articleID)
+
+    if JSON_Deletion and IMG_Deletion == True:
+        return True
+    else:
+        return False
+
+def Delete_Article_JSON(articleID: int) -> bool:
+    
+    """ Delete an article JSON file"""
+    
+    JSONArticleFilePath = f"{articles_JSON_dir}/A{articleID}.JSON"
+    try:
+        os.remove(JSONArticleFilePath)
+    except FileNotFoundError as e:
+        print("could not find article JSON file", e)
+    
+    except Exception as e:
+        print("could not delete article JSON file", e)
+        return False
+
+    print("Article JSON file deleted")
+    return True
+   
+def Delete_Article_IMG(articleID: int) -> bool:
+    
+    """ Delete an article IMG file"""
+    
+    IMGArticleFilePath = f"{articles_IMG_dir}/A{articleID}.jpeg"
+    try:
+        os.remove(IMGArticleFilePath)
+    except FileNotFoundError as e:
+        print(f"could not find article IMG file", {e})
+
+    
+    except Exception as e:
+        print(f"could not delete article IMG file", {e})
+        return False
+
+    print("Article IMG file deleted")
+    return True
+
+def Toggle_Article_Visibility(articleID: int) -> bool:
+    
+    """ Toggle an articles visibility flag True/False so that it cannot be seen by non admins"""
+    
+    articleData = Single_Article_Query(articleID)
+
+    if articleData.get("hidden") == True:
+        articleData("hidden") == None
+
+    if articleData.get("hidden") == False or articleData.get("hidden") == None:
+        articleData("hidden") == True
+
+    

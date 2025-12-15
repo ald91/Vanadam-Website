@@ -13,7 +13,7 @@ from app.forms import ArticleForm
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article
 from .services_users import All_Users_Management_Query
 
    
@@ -119,8 +119,14 @@ def article_management():
                 return redirect(url_for(f"admin.article_management_individual", articleID=articleID))
             
             case "article_delete":
-                #TODO - ARTICLE DELETE FUNCTION
-                return redirect(url_for(f"admin.article_delete", articleID=articleID))
+                flag = Delete_Article(articleID)
+                if flag == False:
+                    flash("unable to delete article, an error has occured", "error")
+                    return redirect(url_for("admin.article_management"))
+
+                else:
+                    flash(f"article {articleID} has been Deleted successfully", "success")
+                    return redirect(url_for("admin.article_management"))
             
             case "article_toggle":
                 #TODO - ARTICLE TOGGLE FUNCTION
