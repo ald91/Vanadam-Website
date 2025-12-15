@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<h2>Create Post</h2>
 
-</body>
-</html>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.title.label }}<br>
+        {{ form.title(size=50) }}
+        {% for error in form.title.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.content.label }}<br>
+        {{ form.content(cols=60, rows=10) }}
+        {% for error in form.content.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.tags.label }}<br>
+        {{ form.tags(size=50) }}
+        {% for error in form.tags.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <button type="submit">Post</button>
+</form>
+
+{% endblock %}

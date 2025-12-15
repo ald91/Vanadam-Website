@@ -13,7 +13,7 @@ from app.forms import ArticleForm
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data
 from .services_users import All_Users_Management_Query
 
    
@@ -154,19 +154,39 @@ def article_management_new():
 @admin.route('/article-management/<articleID>', methods=["GET", "POST"])
 def article_management_individual(articleID):
     
+    form = ArticleForm()
+
     if request.method == "GET":
         articleData = Single_Article_Query(articleID)
         articleText = Get_Article_Data(articleID)
-        form = ArticleForm()
         print(articleData)
+
+        form.title.data = articleText["articleTitle"]
+        form.description.data = articleText["articleDescription"]
+        form.content.data = articleText["articleContent"]
+        form.tags.data = articleText["articleTags"]
+
         return render_template('admin/management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 
+    if request.method == "POST":
+        if form.validate_on_submit():
+            modifyAttempt = Modify_Article_Data(articleID, form)
+            if modifyAttempt:
+                flash("Article updated successfully", "success")
+                return redirect(url_for('admin.article_management'))
 
+            else:
+                flash("Article update failed", "error")
+                return redirect(url_for('admin.article_management'))
+        else:
+            flash("form entry error", "error")
+            return render_template(f"admin/article-management.html", articleID=articleID) #sends user back to edit if there is an error
+
+"""
 #TODO: admin user management
-# TODO: admin user management
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
-    """ modify user data """
+    
 
     if request.method == "GET":
         # TODO: Replace with your real query
@@ -229,3 +249,4 @@ def user_management():
         flash("Internal routing error", "error")
         return redirect(url_for("admin.user_management"))
 
+"""

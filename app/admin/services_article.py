@@ -26,8 +26,44 @@ articles_dir = os.path.join(data_dir,"articles")
 articles_JSON_dir = os.path.join(articles_dir, "ArticlesJSON")
 articles_IMG_dir = os.path.join(assets_dir, "ArticlesIMG")
 
-    # === ARTICLES ===
-""" articleID / postID / title / description / content / image_filename """
+""" ARTICLE DB SCHEMA -> articleID / postID / title / description / content / image_filename """
+
+# === ARTICLE HELPERS ===
+
+def Article_Image_save(imagedata: str, articleID: str) -> str: #article_IMG_filename
+    #save image (as A###.jpeg linking it to articleID)
+    try:
+        file = imagedata
+        article_IMG_filename = secure_filename(f"A{articleID}.jpeg")
+        image_path = os.path.join(articles_IMG_dir, article_IMG_filename)
+        file.save(image_path)
+        print("image for article:", articleID," saved successfully.")
+    except:
+        print("no image submitted for article", articleID)
+        article_IMG_filename = None
+    
+    return article_IMG_filename
+
+def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
+    
+    #prep article and store to JSON with all info
+    articleData = {
+        "articleID" : articleID,
+        "articleTitle": articleTitle,
+        "articleDescription" : articleDescription,
+        "articleContent" : articleContent,
+        "articleTags" : articleTags,
+    }
+    
+    article_JSON_filename = "A{articleID}.JSON"
+
+    article_save_location = os.path.join(articles_JSON_dir, article_JSON_filename)
+
+    json_str = json.dumps(articleData, indent=4)
+    with open(article_save_location, "w") as f:
+        f.write(json_str)
+
+# === ARTICLES MAIN FUNCTIONS ===
 
 def All_Articles_Management_Query():
     """fetches all video records with Post tags and Post ID"""
@@ -53,8 +89,8 @@ def All_Articles_Management_Query():
 
     return articles
 
-def Single_Article_Query(articleID):
-    """ returns all data of a single article """
+def Single_Article_Query(articleID: str) -> dict:
+    """ returns all database info of a single article """
 
     db = get_database()
     cur = db.cursor()
@@ -72,8 +108,10 @@ def Single_Article_Query(articleID):
 def Register_New_Article(form):
     print("revieved data of:", form)
     articleTitle = form.title.data
+    articleDescription = form.description.data
     articleContent = form.content.data
     articleTags = form.tags.data
+    articleImage = form.image.data
 
     #runs against DB for tags
     checkTags("Article", articleTags)
@@ -94,51 +132,57 @@ def Register_New_Article(form):
     articleInfo = dict(cur.fetchone())
     articleID = articleInfo["articleID"]
 
-    #save image (as A###.jpeg linking it to articleID)
-    if form.image.data:
-        file = form.image.data
-        article_IMG_filename = secure_filename(f"A{articleID}.jpeg")
-        image_path = os.path.join(articles_IMG_dir, article_IMG_filename)
-        file.save(image_path)
-    else:
-        article_IMG_filename = None
-
-    
-    article_JSON_filename = f"A{articleID}.JSON"
+    article_IMG_filename = Article_Image_save(articleImage, articleID)
+    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
 
     #update DB record with img filename
     query = """
         UPDATE Articles
-        SET image_filename = ?, content = ?
+        SET  description = ?, image_filename = ?, content = ? 
         WHERE articleID = ? ;
     """
-    cur.execute(query,(article_IMG_filename, article_JSON_filename, articleID))
+    cur.execute(query,(articleDescription, article_IMG_filename, article_JSON_filename, articleID))
 
-
-    #prep article and store to JSON with all info
-    articleData = {
-        "articleID" : articleID,
-        "articleContent" : articleContent,
-        "articleTags" : articleTags,
-        "article_IMG_filename" : article_IMG_filename
-    }
-    
-    article_save_location = os.path.join(articles_JSON_dir, article_JSON_filename)
-
-    json_str = json.dumps(articleData, indent=4)
-    with open(article_save_location, "w") as f:
-        f.write(json_str)
 
     db.commit()
     db.close()
 
-    return
+    return True
+
 
 #TODO THIS IS WHERE U R MATE
-def Get_Article_Data(articleID: int):
+def Get_Article_Data(articleID: int) -> dict:
+    """ opens article JSON data giving fields  articleID/articleTitle/articleDescription/articleContent/articleTags/article_IMG_filename"""
+
+
     filePath = os.path.join(f"{articles_JSON_dir}/A{articleID}.JSON")
     with open(filePath, "r", encoding="utf-8") as f:
         data = json.load(f)
         print(data)
 
     return data
+
+def Modify_Article_Data(articleID, form):
+
+    """ articleID / postID / title / description / content / image_filename """
+
+    articleID = articleID
+    articleTitle = form.title.data
+    articleDescription = form.description.data
+    articleContent = form.content.data
+    articleImage = form.image.data
+    articleTags = form.tags.data
+
+    Article_Image_save(articleImage, articleID)
+    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+
+    db = get_database()
+    cur = db.cursor()
+    
+    #tag changes?
+    query = "UPDATE Articles SET title = ?, description = ? WHERE articleID = ?"
+    cur.execute(query, (articleTitle, articleDescription, articleID))
+    db.commit()
+    print("Article Edited")
+
+    return True

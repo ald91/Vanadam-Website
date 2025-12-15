@@ -364,7 +364,7 @@ def Google_API_V3_Write_Thumbnails():
                     print(f"thumbnail for {video_id} already exists, skipping.")
                     continue
                 
-                with open(f"{video_id}.jpeg", "wb") as file:
+                with open(f"{thumb_dir}/{video_id}.jpeg", "wb") as file:
                     file.write(response.content)
             
             else:

@@ -198,6 +198,14 @@ class ArticleForm(FlaskForm):
             Length(min=3, max=200, message="Title must be between 3 and 200 characters.")
         ]
     )
+    
+    description = TextAreaField(
+        'Description',
+        validators=[
+            DataRequired(message="Content cannot be empty.")
+        ]
+    )
+
 
     content = TextAreaField(
         'Content',
@@ -222,3 +230,14 @@ class ArticleForm(FlaskForm):
     ])
 
     submit = SubmitField('Save Article')
+
+class ForumForm(FlaskForm):
+    title = StringField(
+        'Title',
+        validators=[]
+    )
+    content = TextAreaField()
+
+class MessageForm(FlaskForm):
+    content = TextAreaField()
+
