@@ -17,6 +17,7 @@ load_dotenv()
 from app.HaloData import HALO_INFINITE_DATA, infiniteCSR
 from app.data.db import *
 from app.services import checkTags
+from app.classes import Article
 
 #directories
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
@@ -24,9 +25,9 @@ data_dir = os.path.join(base_dir, "data")
 assets_dir = os.path.join(base_dir, "static/assets")
 articles_dir = os.path.join(data_dir,"articles")
 articles_JSON_dir = os.path.join(articles_dir, "ArticlesJSON")
-articles_IMG_dir = os.path.join(assets_dir, "ArticlesIMG")
+articles_IMG_dir = os.path.join(articles_dir, "ArticlesIMG")
 
-""" ARTICLE DB SCHEMA -> articleID / postID / title / description / content / image_filename """
+""" ARTICLE DB SCHEMA -> articleID / postID / title / description / json_filename / image_filename """
 
 # === ARTICLE HELPERS ===
 
@@ -73,7 +74,7 @@ def All_Articles_Management_Query():
     cur = db.cursor()
     query = """
         SELECT 
-        'Article' AS type, a.postID, a.articleID, a.title, a.description, a.image_filename, a.content, p.date,
+        'Article' AS type, a.postID, a.articleID, a.title, a.description, a.image_filename, a.json_filename, a.hidden, p.date,
         GROUP_CONCAT(pt.tagname) AS tags
         FROM Articles a
         
@@ -97,7 +98,7 @@ def Single_Article_Query(articleID: str) -> dict:
     db = get_database()
     cur = db.cursor()
     query =  """
-    SELECT articleID, postID, title, description, content, image_filename
+    SELECT articleID, postID, title, description, json_filename, image_filename
     FROM Articles
     WHERE articleID = ?
     """
@@ -112,6 +113,7 @@ def Register_New_Article(form: object) -> bool:
     """ registers a new article to the database, saving the JSON file and the Image file using helper functions"""
     
     print("revieved data of:", form)
+
     articleTitle = form.title.data
     articleDescription = form.description.data
     articleContent = form.content.data
@@ -135,7 +137,7 @@ def Register_New_Article(form: object) -> bool:
 
     #find article just saved to link JSON / IMG to DB
     query =  """
-        SELECT articleID, postID, title, description, content, image_filename, hidden
+        SELECT articleID, postID, title, description, json_filename, image_filename, hidden
         FROM Articles
         WHERE title = ?
     """
@@ -149,7 +151,7 @@ def Register_New_Article(form: object) -> bool:
     #update DB record with img filename
     query = """
         UPDATE Articles
-        SET  description = ?, image_filename = ?, content = ? 
+        SET  description = ?, image_filename = ?, json_filename = ? 
         WHERE articleID = ? ;
     """
     cur.execute(query,(articleDescription, article_IMG_filename, article_JSON_filename, articleID))
@@ -161,7 +163,7 @@ def Register_New_Article(form: object) -> bool:
 
 def Get_Article_Data(articleID: int) -> dict:
     
-    """ opens article JSON data giving fields  articleID/articleTitle/articleDescription/articleContent/articleTags/article_IMG_filename"""
+    """ opens article JSON data giving fields  articleID/articleTitle/articleDescription/json_filename/articleTags/img_filename"""
 
     filePath = os.path.join(f"{articles_JSON_dir}/A{articleID}.JSON")
     with open(filePath, "r", encoding="utf-8") as f:
@@ -172,7 +174,7 @@ def Get_Article_Data(articleID: int) -> dict:
 
 def Modify_Article_Data(articleID: int, form: object) -> bool:
 
-    """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / content / image_filename """
+    """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / json_filename / image_filename """
 
     articleID = articleID
     articleTitle = form.title.data
@@ -180,17 +182,19 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
     articleContent = form.content.data
     articleImage = form.image.data
     articleTags = form.tags.data
-    articleHidden = form.hidden.data
+    articleHidden = bool(form.hidden.data)
 
-    Article_Image_save(articleImage, articleID)
+    if articleImage:
+        Article_Image_save(articleImage, articleID)
+            
     Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags, articleHidden)
 
     db = get_database()
     cur = db.cursor()
     
     #tag changes?
-    query = "UPDATE Articles SET title = ?, description = ? WHERE articleID = ?"
-    cur.execute(query, (articleTitle, articleDescription, articleID))
+    query = "UPDATE Articles SET title = ?, description = ?, hidden = ? WHERE articleID = ?"
+    cur.execute(query, (articleTitle, articleDescription, articleHidden, articleID))
     db.commit()
     print("Article Edited")
 

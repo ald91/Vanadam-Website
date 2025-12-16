@@ -417,10 +417,6 @@ def Commit_to_DB():
         # does video exist in DB
         db_etag = existing.get(vidID)
 
-        #prepare for check tags
-        tags = videocategory
-        checkTags("Video", tags)
-
         if db_etag is None:
             print(f"new video. {vidID, title}")
 
@@ -457,6 +453,14 @@ def Commit_to_DB():
 
     #inteserts videos that are new
     if newRecords:
+
+        for record in newRecords:
+            cur.execute("""
+            cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
+            postID = cur.lastrowid   
+        """)
+
+
         cur.executemany("""
             INSERT INTO Videos (
                 vidID, title, duration, published, description,
@@ -488,12 +492,8 @@ def Commit_to_DB():
         cleanTags.append(entry)
 
     # add it to postTags
-    cur.executemany("""
-    INSERT OR IGNORE INTO PostTags (
-        postID, tagName
-    )
-    VALUES (?, ?)
-""", cleanTags)
+    checkTags(cur, "Video", postID, cleanTags)
+    cur.executemany(""" INSERT OR IGNORE INTO PostTags ( postID, tagName) VALUES (?, ?) """, cleanTags)
         
     db.commit()
     db.close()  

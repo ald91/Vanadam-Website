@@ -105,7 +105,7 @@ def create_database(db_path):
         postID INTEGER UNIQUE,
         title TEXT,
         description TEXT,
-        content TEXT,
+        json_filename TEXT,
         image_filename TEXT,
         hidden BOOLEAN default 0,
         FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE

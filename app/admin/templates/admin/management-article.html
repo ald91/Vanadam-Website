@@ -19,9 +19,7 @@
                     <h3 class=""> Articles Overview</h3>
                 </div>
                 <div class="col-8">
-                    <!-- TODO -->
-                    <p>total articles on record: XXXXXXXXX</p>
-                    <p>last updated: XXXXXXXXX</p>
+                    <p>total articles on record: {{ articles|length }}</p>
                 </div>
             </div>
             <br>
@@ -42,14 +40,17 @@
                 <article id="{{ result.vidID }}" class="video-long">
                     <div class="row mb-1 video-long">
                         <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                            <img class="rounded-start-2" src="{{ url_for('static', filename='Assets/ArticlesIMG/' ~ result.image_filename) }}" width="auto" height="170px" />
+                            <img class="rounded-start-2" src="{{ url_for('data.Data_Send_Article_IMG', filename=result.image_filename) }}" width="auto" height="170px" />
                         </div>
                         <div class="col-6 flex-fill">
                             <h2>{{ result.title }}</h2>
                             <p>article ID = {{ result.articleID }} / uploaded {{ result.date }}</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} </p>
-                            <p>post img = {{ result.img_filename }} </p>
+                            <p>post ID = {{result.postID}} / postTags = {{result.tags}} / visibility = {% if result.hidden == 1 %} True {% else %} False {% endif %}</p>
+                            <p>post img = {{ result.image_filename }} / post json = {{ result.json_filename }}</p>
 
+                            {% if DEBUG_MODE == True %}
+                            <p> {{ result }} </p>
+                            {% endif %}
 
                         </div>
                         <div class="col-md-2 col-auto d-flex align-content-center justify-content-center">

@@ -21,6 +21,7 @@ from .auth import auth
 from .content import content
 from .forum import forum
 from .admin import admin
+from .data import data
 from .HaloData import *
 from .data.db import g
 from .extensions import mail, serializer, security_salt
@@ -62,10 +63,7 @@ def app_create():
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     # Register all modules
-    app.register_blueprint(content) # lists site as '/'
-    app.register_blueprint(auth, url_prefix="/auth")
-    app.register_blueprint(admin, url_prefix="/admin")
-    app.register_blueprint(forum, url_prefix="/forums")
+    load_modules(app)
 
     #Inject required data for navbar for all routes
     @app.context_processor
@@ -78,3 +76,12 @@ def app_create():
     print(app.url_map)
 
     return app
+
+
+def load_modules(app):
+    #prevents circular imports for db routes.py
+    app.register_blueprint(content) # lists site as '/'
+    app.register_blueprint(auth, url_prefix="/auth")
+    app.register_blueprint(admin, url_prefix="/admin")
+    app.register_blueprint(forum, url_prefix="/forums")
+    app.register_blueprint(data, url_prefix="/data")

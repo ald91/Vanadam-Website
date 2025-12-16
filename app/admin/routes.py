@@ -9,11 +9,12 @@ from functools import wraps
 from app.data.db import create_database, db_path
 from app.services import *
 from app.forms import ArticleForm
+from app.data.routes import Data_Send_Article_IMG
 
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article
+from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility
 from .services_users import All_Users_Management_Query
 
    
@@ -44,8 +45,8 @@ def dashboard():
             case "user":
                 return redirect(url_for("admin.user_management")) #TODO
             
-            case "gamedata":
-                return redirect(url_for("admin.gamedata_management")) #TODO
+            case "database":
+                return redirect(url_for("admin.database_management"))
             
             case "quickvid":
                 Update_Video_Database_Full()
@@ -57,8 +58,8 @@ def dashboard():
         return redirect(url_for("admin.dashboard"))
     
     return redirect(url_for("admin.dashboard"))
-        
 
+#TODO: ADAM
 @admin.route('/video-management', methods=["GET", "POST"])
 def video_management():
     """ video table related admin actions"""
@@ -86,13 +87,12 @@ def video_management():
         flash("internal routing error", "error")
         return redirect(url_for("admin.video_management"))
 
-#TODO: admin articles
 @admin.route('/article-management', methods=["GET", "POST"])
 def article_management():
     """ article documents and table related admin actions"""
             
     if request.method == "GET":
-        articles = All_Articles_Management_Query()
+        articles: list[dict] = All_Articles_Management_Query()
         return render_template('management-article.html', articles=articles)  
           
     elif request.method == "POST":
@@ -115,7 +115,6 @@ def article_management():
                 return redirect(url_for("admin.article_management_new"))
 
             case "article_modify":
-                #TODO - ARTICLE MODIFY FUNCTION
                 return redirect(url_for(f"admin.article_management_individual", articleID=articleID))
             
             case "article_delete":
@@ -129,7 +128,9 @@ def article_management():
                     return redirect(url_for("admin.article_management"))
             
             case "article_toggle":
-                #TODO - ARTICLE TOGGLE FUNCTION
+                flag = Toggle_Article_Visibility(articleID)
+                if flag == False:
+                    flash("Unable to toggle article visiblilty", "error")
                 return redirect(url_for(f"admin.article_management", articleID=articleID))    
     else:
         flash("internal routing error", "error")
@@ -137,7 +138,6 @@ def article_management():
     
     flash("internal routing error", "error")
     return redirect(url_for("admin.article_management"))
-
 
 @admin.route('/article-management/new', methods=['GET', 'POST'])
 def article_management_new():
@@ -156,7 +156,6 @@ def article_management_new():
     
     return render_template('management-article-new.html', form=form)
 
-#TODO
 @admin.route('/article-management/<articleID>', methods=["GET", "POST"])
 def article_management_individual(articleID):
     
@@ -171,7 +170,7 @@ def article_management_individual(articleID):
         form.description.data = articleText["articleDescription"]
         form.content.data = articleText["articleContent"]
         form.tags.data = articleText["articleTags"]
-        form.hidden.data = articleText["hidden"]
+        form.hidden.data = articleText["articleHidden"]
 
         return render_template('management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 
@@ -187,7 +186,12 @@ def article_management_individual(articleID):
                 return redirect(url_for('admin.article_management'))
         else:
             flash("form entry error", "error")
-            return render_template(f"admin/article-management.html", articleID=articleID) #sends user back to edit if there is an error
+            return render_template(f"management-article.html", articleID=articleID) #sends user back to edit if there is an error
+
+#TODO: ADAM 17th DECEMBER 2025
+@admin.route('/database-management', methods=[ "GET", "POST"])
+def database_management():
+    pass
 
 """
 #TODO: admin user management

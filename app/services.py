@@ -1,11 +1,11 @@
 from functools import wraps
 from flask import session, redirect, url_for
-from app.data.db import get_database
 
 def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 
-    """ checks if posts has an unknown tag. if it does, adds the new tag to the Tags Table. This function does not open its own database
-        connection, it will rely on the parent function to do so, make sure the connection is opened using cur BEFORE calling this function"""
+    """ checks if posts has an unknown tag. if it does, adds the new tag to the Tags Table.
+        This function does not open its own database connection, it will rely on the parent function to do so,
+        make sure the connection is opened using cur BEFORE calling this function"""
 
     print("post type is: ", postType,"tags revieved are:", tags)
 
@@ -29,10 +29,12 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         return  
     
     #normalize to stop duplication on capitalizations ( Tag vs tag )
-    tags = [t.strip().lower() for t in tags if t.strip()]
+    tags = [t.strip() for t in tags if t.strip()]
+    tags = [t.lower() for t in tags]
     
     for tag in tags:
         cur.execute("INSERT OR IGNORE INTO Tags(tagName) VALUES(?)", (tag,))
+        cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
 
 #By applying @login_required before after a route definition and before function declaration, you can designate a route to require login
