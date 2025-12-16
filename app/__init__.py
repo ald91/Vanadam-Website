@@ -64,15 +64,8 @@ def app_create():
     # Register all modules
     app.register_blueprint(content) # lists site as '/'
     app.register_blueprint(auth, url_prefix="/auth")
-    app.register_blueprint(forum, url_prefix="/forum")
     app.register_blueprint(admin, url_prefix="/admin")
-
-    #This route is called at the end of a request, removing db connection from g, ready for the next request
-    @app.teardown_appcontext
-    def close_db(exception):
-        db = g.pop('db', None)
-        if db is not None:
-            db.close()
+    app.register_blueprint(forum, url_prefix="/forums")
 
     #Inject required data for navbar for all routes
     @app.context_processor
@@ -81,5 +74,7 @@ def app_create():
             "HALO_INFINITE_DATA": HALO_INFINITE_DATA,
             "DEBUG_MODE" : DEBUG_MODE
     }
-    
+
+    print(app.url_map)
+
     return app

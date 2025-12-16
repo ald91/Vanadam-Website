@@ -1,6 +1,6 @@
 
 #external modules
-from flask import Blueprint, render_template, redirect, url_for, request, session
+from flask import Blueprint, render_template, redirect, url_for, request
 
 
 #python modules
@@ -8,9 +8,9 @@ from functools import wraps
 
 #internal module
 from . import forum
-from .services import prefill, modify, post
-from ..forms import ForumForm, MessageForm
-from ..services import checkTags
+from .services import prefill, modify, post, comment, delete, fetch_all, fetch_one, fetch_comments
+from ..forms import ForumForm, CommentForm
+from ..services import login_required
 from ..data.db import get_database
 
 ##################
@@ -18,24 +18,50 @@ from ..data.db import get_database
 ##################
 
 #Admin dashboard
-@forum.route('/LFG', methods=["GET", "POST"])
+@forum.route('/', methods=["GET", "POST"])
 def forum_page():
     """ forum entry point """
     if request.method == "GET":
-        return render_template("forum.html")
+        posts = fetch_all()
     
     elif request.method == "POST":
         pass
 
-@forum.route('/LFG/create', methods=["GET", "POST"])
-def post_create():
+    return render_template("all_forums.html", posts=posts)
+
+@forum.route('/create', methods=["GET", "POST"])
+@login_required
+def create_post():
     form = ForumForm()
 
     if form.validate_on_submit():
         post(form)
         print("Article Created")
+        return redirect(url_for("forum_page"))
 
-@forum.route('/LFG/<id>', methods=["GET", "POST"])
+    return render_template("create_post.html", form=form)
+
+@login_required
+@forum.route('/<id>/comment', methods=["GET", "POST"])
+def create_comment(id):
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        comment(form, id)
+        print("Comment Created")
+
+    return redirect(url_for("forum.view_post", id=id))
+
+@forum.route('/<id>/view', methods=["GET"])
+def view_post(id):
+    post = fetch_one(id)
+    comments = fetch_comments(id)
+    comment_form = CommentForm()
+
+    return render_template("view_post.html", post=post, comment=comment_form,comments=comments)
+
+#TODO: Create edit template
+@forum.route('/<id>/edit', methods=["GET", "POST"])
 def edit_post(id):
     form = ForumForm()
 
@@ -47,26 +73,7 @@ def edit_post(id):
 
     pass
 
-@forum.route('/LFG/<id>', methods=["GET", "DELETE"])
-def delete_post(id):
-    db = get_database()
-    cur = db.cursor()
-
-    #Only permit original poster to delete own post, admin deletion handled elsewhere
-    query = "SELECT username FROM Forums WHERE id = ?"
-    cur.execute(query, (id,))
-    result = dict(cur.fetchone())
-
-    if session["username"] == result["username"]:
-        query = "DELETE FROM Forums WHERE id = ?"
-        cur.execute(query, (id,))
+@forum.route('/<id>/delete', methods=["GET", "DELETE"])
+def delete_post(post_id):
+    delete(post_id)
     return redirect(url_for("forum_page"))
-
-@forum.route('/LFG/<id>', methods=["GET", "POST"])
-def create_comment(id):
-    form = MessageForm()
-    pass
-
-@forum.route('/LFG/<id>', methods=["GET"])
-def view_post():
-    pass

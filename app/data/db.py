@@ -9,15 +9,12 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(base_dir, "database.db")
 
 def get_database():
-
-
-    
     os.makedirs(base_dir, exist_ok=True) #make sure the directory is a thing
 
     if 'db' not in g:
         if not os.path.exists(db_path):
             create_database(db_path)
-        
+
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON;")
@@ -50,7 +47,7 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Posts (
         postID INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT
+        date TEXT DEFAULT (datetime('now'))
     );
     """)
 
@@ -82,12 +79,13 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Messages (
         msgID INTEGER PRIMARY KEY AUTOINCREMENT,
-        boardID INTEGER,
+        forumID INTEGER,
         username TEXT NOT NULL,
         content TEXT NOT NULL,
-        date TEXT,
+        date TEXT DEFAULT (datetime('now'))
+,
         FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE,
-        FOREIGN KEY (boardID) REFERENCES Forums(boardID) ON DELETE CASCADE
+        FOREIGN KEY (forumID) REFERENCES Forums(forumID) ON DELETE CASCADE
     );
     """)
 
@@ -118,10 +116,10 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Forums (
         forumID INTEGER PRIMARY KEY AUTOINCREMENT,
-        postID INTEGER UNIQUE,
         originalPoster TEXT,
-        date TEXT,
-        FOREIGN KEY(postID) REFERENCES Posts(postID)
+        title TEXT,
+        content TEXT,
+        date TEXT DEFAULT (datetime('now'))
     );
     """)
 
@@ -189,9 +187,9 @@ def create_database(db_path):
     
 
     # === RELATIONSHIPS ===
-    # Messages.boardID → Posts.postID
+    # Messages.forumID → Posts.forumID
     cursor.execute("""
-    CREATE INDEX IF NOT EXISTS idx_messages_boardID ON Messages(boardID);
+    CREATE INDEX IF NOT EXISTS idx_messages_boardID ON Messages(forumID);
     """)
 
     # == Triggers ===
@@ -201,9 +199,6 @@ def create_database(db_path):
         AFTER INSERT ON Videos
         FOR EACH ROW
         BEGIN
-            INSERT INTO Posts(date)
-            VALUES (NEW.published);
-            
             -- Update the newly inserted video row to link to the post
             UPDATE Videos
             SET postID = (SELECT last_insert_rowid())
@@ -217,9 +212,6 @@ def create_database(db_path):
         AFTER INSERT ON Articles
         FOR EACH ROW
         BEGIN
-            INSERT INTO Posts(date)
-            VALUES (datetime('now'));
-            
             -- Update the newly inserted article row to link to the post
             UPDATE Articles
             SET postID = (SELECT last_insert_rowid())
@@ -227,30 +219,6 @@ def create_database(db_path):
         END;
                       
     """)
-
-    #forum table row additions
-    cursor.execute("""
-        CREATE TRIGGER forum_post_insert
-        AFTER INSERT ON Forums
-        FOR EACH ROW
-        BEGIN
-            INSERT INTO Posts(date)
-            VALUES (datetime('now'));
-        END;                      
-    """)
-    # messages board row additions
-    cursor.execute("""
-            CREATE TRIGGER messages_post_insert
-            AFTER INSERT ON Messages
-            FOR EACH ROW
-            BEGIN
-                INSERT INTO Messages(date)
-                VALUES (datetime('now'));
-            END;                      
-        """)
-
-
-
 
     conn.commit()
     conn.close()

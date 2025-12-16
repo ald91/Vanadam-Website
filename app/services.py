@@ -1,3 +1,5 @@
+from functools import wraps
+from flask import session, redirect, url_for
 from app.data.db import get_database
 
 def checkTags(postType, tags):
@@ -23,3 +25,12 @@ def checkTags(postType, tags):
         if tag not in existing_tags:
             cur.execute("INSERT INTO Tags(tagName) VALUES(?)", (tag,))
 
+
+#By applying @login_required before after a route definition and before function declaration, you can designate a route to require login
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "username" not in session:
+            return redirect(url_for("auth.login"))
+        return f(*args, **kwargs)
+    return wrapper
