@@ -6,19 +6,33 @@
 <p>{{ post.content }}</p>
 
 <hr>
+<h3>Leave a comment</h3>
 
-<h3>Comments</h3>
+    <form method="POST" action="{{ url_for('forum.create_comment', id=post['forumID']) }}">
+        {{ comment.hidden_tag() }}
+        <p>
+            {{ comment.content.label }}<br>
+            {{ comment.content(rows=4, cols=60) }}
+        </p>
 
-{% for msg in messages %}
-    <div class="comment">
-        <strong>{{ msg.username }}</strong>: {{ msg.content }}
-    </div>
-{% else %}
-    <p>No comments yet.</p>
-{% endfor %}
+        <p>{{ comment.submit() }}</p>
+    </form>
 
 <hr>
 
-{% include "comment_form.html" %}
+
+<hr>
+<h3>Comments</h3>
+
+    {% for cmt in comments %}
+        <div class="comment">
+            <strong>{{ cmt.username }}</strong>: {{ cmt.content }}
+        </div>
+
+    {% else %}
+        <p>No comments yet.</p>
+    {% endfor %}
+
+<hr>
 
 {% endblock %}

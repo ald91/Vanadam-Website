@@ -240,6 +240,10 @@ class ForumForm(FlaskForm):
     )
     content = TextAreaField()
 
-class MessageForm(FlaskForm):
-    content = TextAreaField()
+class CommentForm(FlaskForm):
+    content = TextAreaField(
+        "Comment",
+        validators=[DataRequired(), Length(min=1, max=2000)]
+    )
+    submit = SubmitField("Post Comment")
 
