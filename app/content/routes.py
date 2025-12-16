@@ -26,7 +26,7 @@ def index():
     videos = fetchSideBar() #set number to be retrieved
     news = fetchNewsBar() #set number to be retrieved
 
-    return render_template("content/index.html", news=news, videos=videos)
+    return render_template('index.html', news=news, videos=videos)
 
 #TODO: Report system
 @content.route('/report', methods=['POST'])
@@ -151,7 +151,7 @@ def search():
         # Execute
         cur.execute(query, params)
         result = cur.fetchall()
-    return render_template('content/search.html', form=form)
+    return render_template('search.html', form=form)
 
 #TODO: finish user profile (ADAM)
 @content.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
@@ -169,7 +169,7 @@ def profilePage(username):
             return redirect(url_for('content.index'))
         
         print(f"got request to load profile page for: {logged_in_user}")
-        return render_template('content/profile.html', username=logged_in_user)
+        return render_template('profile.html', username=logged_in_user)
 
     """
     if request.method == "PATCH" and logged_in_user == username:
@@ -205,7 +205,7 @@ def about_page():
 
 @content.route('/mapPage', methods=['GET'])
 def mapsAll():
-    return render_template('content/allmaps.html', HALO_3_DATA=HALO_3_DATA, GAME_MODES=GAME_MODES)
+    return render_template('allmaps.html', HALO_3_DATA=HALO_3_DATA, GAME_MODES=GAME_MODES)
 
 @content.route('/mapPage/<mapID>', methods=['GET'])
 def mapPage(mapID):
@@ -229,7 +229,7 @@ def mapPage(mapID):
      
     if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
-        return render_template('content/siteError.html')
+        return render_template('siteError.html')
     
     print(game_map)
-    return render_template('content/map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results, infiniteCSR_Lookup=infiniteCSR_Lookup)
+    return render_template('map.html', map=game_map, GAME_MODES=GAME_MODES, map_results=map_results, infiniteCSR_Lookup=infiniteCSR_Lookup)

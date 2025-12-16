@@ -27,7 +27,7 @@ from .services_users import All_Users_Management_Query
 def dashboard():
     """ admin dashboard """
     if request.method == "GET":
-        return render_template('admin/dashboard.html')
+        return render_template('dashboard.html')
 
     elif request.method == "POST":
         
@@ -65,7 +65,7 @@ def video_management():
             
     if request.method == "GET":
         videos = Full_Video_Management_Query()
-        return render_template('admin/management-video.html', videos=videos)
+        return render_template('management-video.html', videos=videos)
         
     elif request.method == "POST":
         
@@ -93,7 +93,7 @@ def article_management():
             
     if request.method == "GET":
         articles = All_Articles_Management_Query()
-        return render_template('admin/management-article.html', articles=articles)  
+        return render_template('management-article.html', articles=articles)  
           
     elif request.method == "POST":
         
@@ -154,7 +154,7 @@ def article_management_new():
             flash("New article created")
             return redirect(url_for("admin.article_management"))
     
-    return render_template('admin/management-article-new.html', form=form)
+    return render_template('management-article-new.html', form=form)
 
 #TODO
 @admin.route('/article-management/<articleID>', methods=["GET", "POST"])
@@ -172,7 +172,7 @@ def article_management_individual(articleID):
         form.content.data = articleText["articleContent"]
         form.tags.data = articleText["articleTags"]
 
-        return render_template('admin/management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
+        return render_template('management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -197,7 +197,7 @@ def user_management():
     if request.method == "GET":
         # TODO: Replace with your real query
         users = All_Users_Management_Query()
-        return render_template('admin/management-user.html', users=users)
+        return render_template('management-user.html', users=users)
 
     elif request.method == "POST":
 

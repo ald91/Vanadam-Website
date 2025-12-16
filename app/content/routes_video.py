@@ -43,4 +43,4 @@ def video(videoID):
     videoSameMode = [dict(row) for row in videoSameMode]
 
     
-    return render_template('content/video.html', videoInfo=videoInfo, videoSameMap=videoSameMap, videoSameMode=videoSameMode) 
+    return render_template('video.html', videoInfo=videoInfo, videoSameMap=videoSameMap, videoSameMode=videoSameMode) 

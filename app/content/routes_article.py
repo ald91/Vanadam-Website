@@ -29,7 +29,7 @@ def article():
 
     print(article_results)
 
-    return render_template('content/allarticles.html', articles=articles)
+    return render_template('allarticles.html', articles=articles)
 
 @content.route('/articles/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
 def article_view(id):
@@ -72,7 +72,7 @@ def article_create():
         db.commit()
 
         print("Article Created")
-    return render_template('content/articles/article_create.html', form=form)
+    return render_template('articles/article_create.html', form=form)
 
 @content.route('/articles/<id>/edit', methods=['GET', 'PATCH', 'POST', 'DELETE'])
 def article_edit(id):

@@ -33,9 +33,9 @@ def login():
             return redirect(url_for('content.index'))
         else:
             flash("Incorrect username or password.", "error")
-            return render_template('auth/login.html', form=form)
+            return render_template('login.html', form=form)
 
-    return render_template('auth/login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 @auth.route('/logout')
@@ -63,9 +63,9 @@ def register():
             return redirect(url_for('content.index'))
         
         else:    
-            return redirect(url_for('auth/register'))
+            return redirect(url_for('register'))
         
-    return render_template('auth/register.html', form=form)
+    return render_template('register.html', form=form)
 
 
 @auth.route('/recovery', methods=['GET', 'POST'])
@@ -73,7 +73,7 @@ def recovery():
     form = RecoveryForm()
 
     if request.method == "GET":  
-            return render_template('auth/recovery.html', form=form)
+            return render_template('recovery.html', form=form)
     
     if request.method == "POST":
         if form.validate_on_submit():
@@ -89,7 +89,7 @@ def reset_password(token):
     form = PasswordResetForm()
 
     if request.method == 'GET':
-        return render_template('auth/reset_password.html', token=token, form=form)
+        return render_template('reset_password.html', token=token, form=form)
     
     elif request.method == 'POST':
         if password_change(form):
