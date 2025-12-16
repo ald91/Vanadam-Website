@@ -171,6 +171,7 @@ def article_management_individual(articleID):
         form.description.data = articleText["articleDescription"]
         form.content.data = articleText["articleContent"]
         form.tags.data = articleText["articleTags"]
+        form.hidden.data = articleText["hidden"]
 
         return render_template('management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 

@@ -44,7 +44,7 @@ def Article_Image_save(imagedata: str, articleID: str) -> str: #article_IMG_file
     
     return article_IMG_filename
 
-def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
+def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list, articleHidden: bool) -> str: #article_JSON_filename
     
     #prep article and store to JSON with all info
     articleData = {
@@ -53,6 +53,7 @@ def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str
         "articleDescription" : articleDescription,
         "articleContent" : articleContent,
         "articleTags" : articleTags,
+        "articleHidden": articleHidden,
     }
     
     article_JSON_filename = f"A{articleID}.JSON"
@@ -116,9 +117,8 @@ def Register_New_Article(form: object) -> bool:
     articleContent = form.content.data
     articleTags = form.tags.data
     articleImage = form.image.data
+    articleHidden = form.hidden.data
 
-    #runs against DB for tags
-    checkTags("Article", articleTags)
 
     db = get_database()
     cur = db.cursor()
@@ -126,13 +126,16 @@ def Register_New_Article(form: object) -> bool:
     #secure PostID FK (sets postID)
     cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
     postID = cur.lastrowid
+
+    #runs against DB for tags
+    checkTags(cur, "Article", postID, articleTags)
     
     #save new article (sets articleID relating to post ID)
     cur.execute("INSERT INTO Articles (postID, title) VALUES (?, ?)", (postID, articleTitle))
 
     #find article just saved to link JSON / IMG to DB
     query =  """
-        SELECT articleID, postID, title, description, content, image_filename
+        SELECT articleID, postID, title, description, content, image_filename, hidden
         FROM Articles
         WHERE title = ?
     """
@@ -141,7 +144,7 @@ def Register_New_Article(form: object) -> bool:
     articleID = articleInfo["articleID"]
 
     article_IMG_filename = Article_Image_save(articleImage, articleID)
-    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags, articleHidden)
 
     #update DB record with img filename
     query = """
@@ -177,9 +180,10 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
     articleContent = form.content.data
     articleImage = form.image.data
     articleTags = form.tags.data
+    articleHidden = form.hidden.data
 
     Article_Image_save(articleImage, articleID)
-    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags, articleHidden)
 
     db = get_database()
     cur = db.cursor()

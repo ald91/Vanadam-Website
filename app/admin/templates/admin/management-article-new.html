@@ -22,8 +22,11 @@
     <label>Tags (comma-separated)</label><br>
             {{ form.tags(size=60) }}<br><br>
 
-                <label>Image (Optional)</label><br>
-                {{ form.image() }}<br><br>
+    <label>Article Visbility</label><br>
+            {{ form.hidden() }}<br><br>
+
+    <label>Image (Optional)</label><br>
+                {{ form.image() }}<br><br>        
 
             {{ form.submit(class="btn btn-primary") }}
 </form>
