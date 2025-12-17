@@ -37,7 +37,7 @@
         <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
             {% for result in articles %}
             <a>
-                <article id="{{ result.vidID }}" class="video-long">
+                <article id="{{ result.articleID }}" class="video-long">
                     <div class="row mb-1 video-long">
                         <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
                             <img class="rounded-start-2" src="{{ url_for('data.Data_Send_Article_IMG', filename=result.image_filename) }}" width="auto" height="170px" />
@@ -45,7 +45,7 @@
                         <div class="col-6 flex-fill">
                             <h2>{{ result.title }}</h2>
                             <p>article ID = {{ result.articleID }} / uploaded {{ result.date }}</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.tags}} / visibility = {% if result.hidden == 1 %} True {% else %} False {% endif %}</p>
+                            <p>post ID = {{result.postID}} / postTags = {{result.tags}} / Hidden = {% if result.hidden == True %} True {% else %} False {% endif %}</p>
                             <p>post img = {{ result.image_filename }} / post json = {{ result.json_filename }}</p>
 
                             {% if DEBUG_MODE == True %}

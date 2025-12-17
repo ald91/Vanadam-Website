@@ -17,5 +17,6 @@ app/data/Articles/*
 .gitignore
 config.py
 database.db
+admin.py
 *.jpeg
 

@@ -1,6 +1,7 @@
-from typing import TypedDict
+from dataclasses import dataclass
 
-class Article(TypedDict):
+@dataclass
+class Article:
     
     """ a Article object that contains information on the files associated with the Article
     content files are A{ArticleID}.JSON and IMG files are A{ArticleID}.jpeg
@@ -9,15 +10,14 @@ class Article(TypedDict):
     
     articleID: int
     postID: int
-    PostTags: list[str]
     title: str
     description: str
     json_filename: str
     image_filename: str
     hidden: bool
 
-
-class Video(TypedDict):
+@dataclass
+class Video:
 
     """ a video object that contains information on the video db information based on YT API_V3 Pulls"""
 

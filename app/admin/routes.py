@@ -11,10 +11,12 @@ from app.services import *
 from app.forms import ArticleForm
 from app.data.routes import Data_Send_Article_IMG
 
+#db functions
+from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility
+
 #self module
 from . import admin
 from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_article import All_Articles_Management_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility
 from .services_users import All_Users_Management_Query
 
    
@@ -92,7 +94,7 @@ def article_management():
     """ article documents and table related admin actions"""
             
     if request.method == "GET":
-        articles: list[dict] = All_Articles_Management_Query()
+        articles: list[dict] = All_Articles_Query()
         return render_template('management-article.html', articles=articles)  
           
     elif request.method == "POST":
@@ -107,8 +109,6 @@ def article_management():
             articleID = input[1].replace("(","").replace(")","")
         else:
             action = str(input)
-    
-        print(action)
 
         match action:
             case "article_new":
@@ -131,6 +131,7 @@ def article_management():
                 flag = Toggle_Article_Visibility(articleID)
                 if flag == False:
                     flash("Unable to toggle article visiblilty", "error")
+                flash("successfull changed article visiblity", "success")
                 return redirect(url_for(f"admin.article_management", articleID=articleID))    
     else:
         flash("internal routing error", "error")
@@ -164,13 +165,12 @@ def article_management_individual(articleID):
     if request.method == "GET":
         articleData = Single_Article_Query(articleID)
         articleText = Get_Article_Data(articleID)
-        print(articleData)
 
-        form.title.data = articleText["articleTitle"]
-        form.description.data = articleText["articleDescription"]
-        form.content.data = articleText["articleContent"]
-        form.tags.data = articleText["articleTags"]
-        form.hidden.data = articleText["articleHidden"]
+        form.title.data = articleText["articleTitle"] #json
+        form.description.data = articleText["articleDescription"] #json
+        form.content.data = articleText["articleContent"] #json
+        form.tags.data = articleText["articleTags"] #json
+        form.hidden.data = articleData["hidden"] #db
 
         return render_template('management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
 

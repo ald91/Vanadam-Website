@@ -1,10 +1,10 @@
 from ..data.db import get_database
 
-def fetchSideBar():
-
-    results = (4,)
+def fetchSideBar() -> list[dict]:
     
     """fetches records from DB for the home page right side bar area"""
+
+    results = (4,)
 
     db = get_database()
     cur = db.cursor()
@@ -23,9 +23,7 @@ def fetchSideBar():
 
     return videos
 
-
-
-def fetchNewsBar():
+def fetchNewsBar() -> list[dict]:
 
     """fetches records from DB for the home page bottom area"""
 

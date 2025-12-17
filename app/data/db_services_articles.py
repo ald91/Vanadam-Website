@@ -1,6 +1,3 @@
-
-#TODO - Implement
-
 from flask import current_app
 from werkzeug.utils import secure_filename
 import requests
@@ -11,6 +8,7 @@ from datetime import datetime
 import os
 
 from dotenv import load_dotenv
+from typing import Optional
 load_dotenv()
 
 #internal imports
@@ -45,7 +43,7 @@ def Article_Image_save(imagedata: str, articleID: str) -> str: #article_IMG_file
     
     return article_IMG_filename
 
-def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list, articleHidden: bool) -> str: #article_JSON_filename
+def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
     
     #prep article and store to JSON with all info
     articleData = {
@@ -54,7 +52,6 @@ def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str
         "articleDescription" : articleDescription,
         "articleContent" : articleContent,
         "articleTags" : articleTags,
-        "articleHidden": articleHidden,
     }
     
     article_JSON_filename = f"A{articleID}.JSON"
@@ -65,10 +62,27 @@ def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str
     with open(article_save_location, "w") as f:
         f.write(json_str)
 
+    return article_JSON_filename
+
+def Article_JSON_load(articleID: int) -> str:
+    """ loads a JSON file and returns the content as a HTML String that self formats in the users browser """
+    
+    file_path = f"{articles_JSON_dir}/A{articleID}.JSON"
+
+    with open(file_path, "r", encoding="utf-8" ) as f:
+        data = json.load(f)
+    
+    articleContent = data.get("articleContent")
+
+    return articleContent
+
+
 # === ARTICLES MAIN FUNCTIONS ===
 
-def All_Articles_Management_Query():
-    """fetches all video records with Post tags and Post ID"""
+def All_Articles_Query(visible :bool = True) -> list[dict]:
+    
+    """fetches all video records with Post tags and Post ID
+    visible controls if ALL or just visible articles are returned"""
 
     db = get_database()
     cur = db.cursor()
@@ -89,24 +103,31 @@ def All_Articles_Management_Query():
     articles = [dict(row) for row in articles]
     print(articles)
 
+    if not visible:
+        articles = [article for article in articles if not article.get("hidden")]
+
     return articles
 
-def Single_Article_Query(articleID: str) -> dict:
+def Single_Article_Query(articleID: int) -> dict:
    
-    """ returns all database info of a single article """
+    """ returns all database info of a single article as an Article object"""
 
     db = get_database()
     cur = db.cursor()
     query =  """
-    SELECT articleID, postID, title, description, json_filename, image_filename
+    SELECT articleID, postID, title, description, json_filename, image_filename, hidden
     FROM Articles
     WHERE articleID = ?
     """
-    article = cur.execute(query, (articleID,))
-    article = cur.fetchone()
-    articleData = dict(article)
+    data = cur.execute(query, (articleID,))
+    data = cur.fetchone()
 
-    return articleData
+    if data is None:
+        return None
+    
+    data = dict(data)
+
+    return data
 
 def Register_New_Article(form: object) -> bool:
 
@@ -146,7 +167,7 @@ def Register_New_Article(form: object) -> bool:
     articleID = articleInfo["articleID"]
 
     article_IMG_filename = Article_Image_save(articleImage, articleID)
-    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags, articleHidden)
+    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
 
     #update DB record with img filename
     query = """
@@ -174,7 +195,7 @@ def Get_Article_Data(articleID: int) -> dict:
 
 def Modify_Article_Data(articleID: int, form: object) -> bool:
 
-    """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / json_filename / image_filename """
+    """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / json_filename / image_filename / hidden """
 
     articleID = articleID
     articleTitle = form.title.data
@@ -187,7 +208,7 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
     if articleImage:
         Article_Image_save(articleImage, articleID)
             
-    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags, articleHidden)
+    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
 
     db = get_database()
     cur = db.cursor()
@@ -268,11 +289,28 @@ def Toggle_Article_Visibility(articleID: int) -> bool:
     """ Toggle an articles visibility flag True/False so that it cannot be seen by non admins"""
     
     articleData = Single_Article_Query(articleID)
+    if not articleData:
+        print("article not found:", articleID)
+        return False
+    
+    print(articleData)
+    hidden = articleData.get("hidden")
+    hidden = 0 if hidden else 1
 
-    if articleData.get("hidden") == True:
-        articleData("hidden") == None
+    try:
 
-    if articleData.get("hidden") == False or articleData.get("hidden") == None:
-        articleData("hidden") == True
+        db = get_database()
+        cur = db.cursor()
+        cur.execute("UPDATE Articles SET hidden = ? WHERE articleID = ?",(hidden, articleID))
+        db.commit()
+        db.close()
+
+        return True
+    
+    except Exception as e:
+        print("failed to write new status of article", e)
+        return False
+
+    
 
     

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %} {{article.title}} {% endblock %}
+
+{% block content %}
+
+<h1>{{ article.title }}</h1>
+
+<h2>{{ article.description }}</h2>
+
+<img src="/data/articles_img/{{article.image_filename}}" width="100%"/>
+
+<div>
+<p>{{ content | safe }}</p>
+</div>
+
+{% endblock %}

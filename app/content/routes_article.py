@@ -8,94 +8,22 @@ import os
 # app imports
 from app.data.db import get_database
 from app.forms import ArticleForm
+from app.classes import Article
 from app.services import checkTags
+
+#data imports
+from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Article_JSON_load
 
 #self import
 from . import content
 
-#TODO: article upload folder
-uploadFolder = None
-
-@content.route('/articles')
+@content.route('/articles', methods=["GET"])
 def article():
-    db = get_database()
-    cur = db.cursor()
-
-    query = "SELECT * FROM articles"
-    cur.execute(query)
-
-    article_results = cur.fetchall()
-    articles = [dict(row) for row in article_results]
-
-    print(article_results)
-
+    articles = All_Articles_Query(False)
     return render_template('allarticles.html', articles=articles)
 
-@content.route('/articles/<id>', methods=['GET', 'PATCH', 'POST', 'DELETE'])
-def article_view(id):
-    db = get_database()
-    cur = db.cursor()
-
-    query = "SELECT * FROM articles WHERE articleID = ?"
-    cur.execute(query, (id,))
-    row = cur.fetchone()
-
-    if row is None:
-        flash("Article does not exist", "error")
-        return render_template('siteerror.html')
-
-    article = dict(row)
-
-    return render_template("content/article_view.html", article=article)
-
-@content.route('/articles/create', methods=['GET', 'POST'])
-def article_create():
-    form = ArticleForm()
-    if form.validate_on_submit():
-        title = form.title.data
-        content = form.content.data
-        tags = form.tags.data
-
-        checkTags("Article", tags)
-
-        if form.image.data:
-            file = form.image.data
-            filename = secure_filename(file.filename)
-            image_path = os.path.join(uploadFolder, filename)
-            file.save(image_path)
-
-        db = get_database()
-        cur = db.cursor()
-
-        query = "INSERT INTO Articles (title, content, tags, image_filename) VALUES (?, ?, ?, ?)"
-        cur.execute(query, (title, content, filename))
-        db.commit()
-
-        print("Article Created")
-    return render_template('articles/article_create.html', form=form)
-
-@content.route('/articles/<id>/edit', methods=['GET', 'PATCH', 'POST', 'DELETE'])
-def article_edit(id):
-    db = get_database()
-    cur = db.cursor()
-
-    query = "SELECT * FROM articles WHERE articleID = ?"
-    cur.execute(query, (id,))
-    article = cur.fetchone()
-    form = ArticleForm()
-
-    if form.validate_on_submit():
-        title = form.title.data
-        content = form.content.data
-        tags = form.tags.data
-
-        db = get_database()
-        cur = db.cursor()
-
-        query = "UPDATE Articles SET title = ?, content = ?, tags = ? WHERE articleID = ?"
-        cur.execute(query, (title, content, tags, id))
-        db.commit()
-        print("Article Edited")
-        return redirect(url_for('article_view', id=id))
-
-    return render_template('article_edit.html', id=id, form=form, article=article)
+@content.route('/articles/<articleID>', methods=['GET'])
+def article_view(articleID):
+    article = Single_Article_Query(articleID)
+    content = Article_JSON_load(articleID)
+    return render_template("article_view.html", article=article, content=content)

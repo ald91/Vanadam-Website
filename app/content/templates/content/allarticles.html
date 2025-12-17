@@ -1,19 +1,45 @@
-{% extends "base.html" %}
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Article Library {% endblock %}
+{% endblock %}
+
+
 
 {% block content %}
 
-<h1>{{ article.title }}</h1>
+<div class="container-fluid">
+    <h2> full article library </h2>
+    <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+        <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
+            {% for result in articles %}
+            <a href="articles/{{result.articleID}}" class="text-decoration-none">
+                <article id="{{ result.articleID }}" class="video-long">
+                    <div class="row mb-1 video-long">
+                        <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
+                            <img class="rounded-start-2"
+                                src="{{ url_for('data.Data_Send_Article_IMG', filename=result.image_filename) }}"
+                                width="auto" height="170px" />
+                        </div>
+                        <div class="col-6 flex-fill">
+                            <h2>{{ result.title }}</h2>
+                            <p>article ID = {{ result.articleID }} / uploaded {{ result.date }}</p>
+                            <p>post ID = {{result.postID}} / postTags = {{result.tags}} / Hidden = {% if result.hidden
+                                == 1 %} True {% else %} False {% endif %}</p>
+                            <p>post img = {{ result.image_filename }} / post json = {{ result.json_filename }}</p>
 
-<p>{{ article.content }}</p>
+                            {% if DEBUG_MODE == True %}
+                            <p> {{ result }} </p>
+                            {% endif %}
 
-<hr>
-
-<img src="url_for('static' filename='Assets/articleThumbs/' ~ article.image_filename ~ '.jpg')">
-
-<p><strong>Tags:</strong> {{ article.tags }}</p>
-
-<a href="{{ url_for('article_edit', id=article.articleID) }}" class="btn btn-primary mt-3">
-    Edit Article
-</a>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            {% endfor %}
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
