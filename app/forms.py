@@ -1,8 +1,52 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField
+from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField, FormField
 from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
+
+from .HaloData import infiniteCSR
+
+#field contents
+STANDARD_TIMEZONES = {
+    "UTC": "UTC (Coordinated Universal Time)",
+
+    # Europe
+    "Europe/London": "London (UK)",
+    "Europe/Paris": "Paris (Central Europe)",
+    "Europe/Berlin": "Berlin (Central Europe)",
+    "Europe/Madrid": "Madrid (Central Europe)",
+    "Europe/Rome": "Rome (Central Europe)",
+    "Europe/Athens": "Athens (Eastern Europe)",
+    "Europe/Moscow": "Moscow",
+
+    # Americas
+    "America/New_York": "New York (Eastern Time)",
+    "America/Chicago": "Chicago (Central Time)",
+    "America/Denver": "Denver (Mountain Time)",
+    "America/Los_Angeles": "Los Angeles (Pacific Time)",
+    "America/Toronto": "Toronto",
+    "America/Sao_Paulo": "São Paulo",
+    "America/Mexico_City": "Mexico City",
+
+    # Africa
+    "Africa/Johannesburg": "Johannesburg",
+    "Africa/Cairo": "Cairo",
+
+    # Asia
+    "Asia/Dubai": "Dubai",
+    "Asia/Kolkata": "India (IST)",
+    "Asia/Bangkok": "Bangkok",
+    "Asia/Singapore": "Singapore",
+    "Asia/Shanghai": "China",
+    "Asia/Tokyo": "Tokyo",
+    "Asia/Seoul": "Seoul",
+
+    # Oceania
+    "Australia/Sydney": "Sydney",
+    "Australia/Melbourne": "Melbourne",
+    "Australia/Perth": "Perth",
+    "Pacific/Auckland": "Auckland"
+}
 
 # Class Construction
 # ===================
@@ -74,9 +118,38 @@ class PasswordResetForm(FlaskForm):
 #profile edit form for use in LFG and Forums later
 class ProfileEditForm(FlaskForm):
     #only editable by PATCH request from /profile/<username>
-    username = StringField()
-    gamertag = StringField()
-    # current_mmr = 
+    username = StringField('Username',
+                        validators=[
+                            DataRequired(message="Username is not Valid."),
+                            Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
+                            # Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
+                        ])
+        
+    email = EmailField('Email',
+                    validators=[
+                        DataRequired(message="Email is not Valid."),
+                        Email()
+                    ])
+    
+    xboxname = StringField('Xbox GamerTag',
+                           validators=[
+                            DataRequired(message="Gamertag is required."),
+                            Length(
+                                min=3,
+                                max=15,
+                                message="Gamertag must be between 3 and 15 characters long."
+                            ),
+                            Regexp(
+                                r"^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$",
+                                message="Gamertag may only contain letters, numbers, and single spaces (no leading, trailing, or double spaces)."
+                            ),
+                        ])
+    
+    timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
+
+    arenarank = SelectField('enter your highest ranked area rank', choices=list(infiniteCSR.keys()))
+
+    submit = SubmitField('submit info')
 
 #I assume there will be some sort of issue with wtfforms datefield and sqlite as there is no date datatype but need
 #to test this once we have hands on some data?
@@ -247,3 +320,23 @@ class CommentForm(FlaskForm):
     )
     submit = SubmitField("Post Comment")
 
+#fills coaching form days
+class TimeSlotForm(FlaskForm):
+    morning = BooleanField("Morning (08:00 - 11:59)")
+    afternoon = BooleanField("Afternoon (12:00 - 16:59)")
+    evening = BooleanField("Evening (17:00 - 21:59)")
+    late = BooleanField("Late 22:00-24:00")
+
+class CoachingForm(FlaskForm):
+    name = StringField("Name")
+    timezone = StringField("Your Timezone")
+    email = StringField("Email")
+    xboxname = StringField("Xbox Gamertag")
+    monday = FormField(TimeSlotForm)
+    tuesday = FormField(TimeSlotForm)
+    wednesday = FormField(TimeSlotForm)
+    thursday = FormField(TimeSlotForm)
+    friday = FormField(TimeSlotForm)
+    saturday = FormField(TimeSlotForm)
+    sunday =  FormField(TimeSlotForm)
+    submit = SubmitField("Send Request")

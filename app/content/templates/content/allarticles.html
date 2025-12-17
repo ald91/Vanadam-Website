@@ -23,14 +23,10 @@
                         </div>
                         <div class="col-6 flex-fill">
                             <h2>{{ result.title }}</h2>
-                            <p>article ID = {{ result.articleID }} / uploaded {{ result.date }}</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.tags}} / Hidden = {% if result.hidden
-                                == 1 %} True {% else %} False {% endif %}</p>
-                            <p>post img = {{ result.image_filename }} / post json = {{ result.json_filename }}</p>
-
-                            {% if DEBUG_MODE == True %}
-                            <p> {{ result }} </p>
-                            {% endif %}
+                            <h3>Uploaded on {{ result.date }}</h3>
+                            <h4> {{ result.description }}<h4>
+                            <h6> Tags: {{ result.tags}} </h6>
+                            
 
                         </div>
                     </div>

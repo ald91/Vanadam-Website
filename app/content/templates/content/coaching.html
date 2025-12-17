@@ -1,0 +1,41 @@
+<!-- TODO: ADAM -->
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Coaching Requests {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <strong>Monday</strong><br>
+                {{ form.monday.morning() }} {{ form.monday.morning.label }}
+                {{ form.monday.afternoon() }} {{ form.monday.afternoon.label }}
+                {{ form.monday.evening() }} {{ form.monday.evening.label }}
+            </div>
+            <div class="col">
+                <strong>Tuesday</strong><br>
+                {{ form.tuesday.morning() }} {{ form.tuesday.morning.label }}
+                {{ form.tuesday.afternoon() }} {{ form.tuesday.afternoon.label }}
+                {{ form.tuesday.evening() }} {{ form.tuesday.evening.label }}
+            </div>
+            <div class="col">
+                <strong>Wednesday</strong><br>
+                {{ form.wednesday.morning() }} {{ form.wednesday.morning.label }}
+                {{ form.wednesday.afternoon() }} {{ form.wednesday.afternoon.label }}
+                {{ form.wednesday.evening() }} {{ form.wednesday.evening.label }}
+            </div>
+            <!-- Repeat for Thursday & Friday -->
+        </div>
+    </div>
+
+    {{ form.submit(class="btn btn-primary mt-3") }}
+</form>
+
+
+{% endblock %}

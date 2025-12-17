@@ -177,6 +177,8 @@ def Register_New_Article(form: object) -> bool:
     """
     cur.execute(query,(articleDescription, article_IMG_filename, article_JSON_filename, articleID))
 
+    checkTags(cur, "Article", postID, articleTags)
+
     db.commit()
     db.close()
 
@@ -224,6 +226,9 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
 def Delete_Article(articleID: int) -> bool:
 
     """ fully delete an article from the DB, including JSON and IMG"""
+
+    if articleID == 1:
+        return False
 
     articleData = Single_Article_Query(articleID)
     articlePostID = articleData.get("postID")
@@ -311,6 +316,62 @@ def Toggle_Article_Visibility(articleID: int) -> bool:
         print("failed to write new status of article", e)
         return False
 
-    
+def Test_Article() -> bool:
+    testFile_JSON = "test.JSON"
+    testFile_JSON_path = f"{articles_JSON_dir}/test.JSON"
 
-    
+    testFile_IMG = "test.Jpeg"
+
+    with open(testFile_JSON_path,"r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    articleTitle = data["articleTitle"]
+    articleDescription = data["articleDescription"]
+    articleContent = data["articleContent"]
+    articleTags = data["articleTags"]
+    articleHidden = False
+
+    db = get_database()
+    cur = db.cursor()
+
+    flag = Single_Article_Query(1)
+    if flag != None:
+        print("flag=",flag)
+        return False
+    else:
+        print("flag =", flag)
+
+        #secure PostID FK (sets postID)
+        cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
+        postID = cur.lastrowid
+
+        #runs against DB for tags
+        checkTags(cur, "Article", postID, articleTags)
+        
+        #save new article (sets articleID relating to post ID)
+        cur.execute("INSERT INTO Articles (postID, title) VALUES (?, ?)", (postID, articleTitle))
+
+        #find article just saved to link JSON / IMG to DB
+        query =  """
+            SELECT articleID, postID, title, description, json_filename, image_filename, hidden
+            FROM Articles
+            WHERE title = ?
+        """
+        cur.execute(query, (articleTitle,))
+        articleInfo = dict(cur.fetchone())
+        articleID = articleInfo["articleID"]
+
+        #update DB record with img filename
+        query = """
+            UPDATE Articles
+            SET  description = ?, image_filename = ?, json_filename = ?, hidden = ?
+            WHERE articleID = ? ;
+        """
+        cur.execute(query,(articleDescription, testFile_IMG, testFile_JSON, articleHidden, articleID))
+
+        checkTags(cur, "Article", postID, articleTags)
+
+        db.commit()
+        db.close()
+
+    return True

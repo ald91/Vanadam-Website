@@ -36,6 +36,9 @@ def create_database(db_path):
     CREATE TABLE Users (
         username TEXT PRIMARY KEY,
         email TEXT NOT NULL,
+        xboxname TEXT,
+        arenarank TEXT,
+        timezone TEXT,
         password TEXT NOT NULL,
         tag TEXT,
         banned BOOL

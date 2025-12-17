@@ -1,0 +1,22 @@
+
+FRONT END
+    Site wide
+
+
+    Articles
+        article authors
+        article tags could be a list and clickable
+
+
+    Videos
+
+
+    Forums
+
+
+    Info
+
+    
+
+BACKEND
+

@@ -12,7 +12,7 @@ from app.forms import ArticleForm
 from app.data.routes import Data_Send_Article_IMG
 
 #db functions
-from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility
+from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
 
 #self module
 from . import admin
@@ -86,15 +86,16 @@ def video_management():
                 return redirect(url_for("admin.video_management"))
         
     else:
-        flash("internal routing error", "error")
+        flash("internal routing error", "danger")
         return redirect(url_for("admin.video_management"))
 
 @admin.route('/article-management', methods=["GET", "POST"])
 def article_management():
     """ article documents and table related admin actions"""
-            
+    
+    articles: list[dict] = All_Articles_Query()
+
     if request.method == "GET":
-        articles: list[dict] = All_Articles_Query()
         return render_template('management-article.html', articles=articles)  
           
     elif request.method == "POST":
@@ -120,7 +121,7 @@ def article_management():
             case "article_delete":
                 flag = Delete_Article(articleID)
                 if flag == False:
-                    flash("unable to delete article, an error has occured", "error")
+                    flash("unable to delete article, an error has occured", "danger")
                     return redirect(url_for("admin.article_management"))
 
                 else:
@@ -130,14 +131,21 @@ def article_management():
             case "article_toggle":
                 flag = Toggle_Article_Visibility(articleID)
                 if flag == False:
-                    flash("Unable to toggle article visiblilty", "error")
+                    flash("Unable to toggle article visiblilty", "danger")
                 flash("successfull changed article visiblity", "success")
-                return redirect(url_for(f"admin.article_management", articleID=articleID))    
+                return render_template('management-article.html', articles=articles)   
+
+            case "test_article":
+                flag = Test_Article() 
+                if not flag:
+                    flash("untable to initiate test article, did u try this on a populated DB?", "danger")
+                flash("test article initiated")
+                return redirect(url_for(f"admin.article_management"))  
     else:
-        flash("internal routing error", "error")
+        flash("internal routing error", "danger")
         return redirect(url_for("admin.article_management"))
     
-    flash("internal routing error", "error")
+    flash("internal routing error", "danger")
     return redirect(url_for("admin.article_management"))
 
 @admin.route('/article-management/new', methods=['GET', 'POST'])
@@ -182,10 +190,10 @@ def article_management_individual(articleID):
                 return redirect(url_for('admin.article_management'))
 
             else:
-                flash("Article update failed", "error")
+                flash("Article update failed", "danger")
                 return redirect(url_for('admin.article_management'))
         else:
-            flash("form entry error", "error")
+            flash("form entry error", "danger")
             return render_template(f"management-article.html", articleID=articleID) #sends user back to edit if there is an error
 
 #TODO: ADAM 17th DECEMBER 2025
@@ -253,11 +261,11 @@ def user_management():
                 return redirect(url_for("admin.user_management"))
 
             case _:
-                flash("Unknown user action", "error")
+                flash("Unknown user action", "danger")
                 return redirect(url_for("admin.user_management"))
 
     else:
-        flash("Internal routing error", "error")
+        flash("Internal routing error", "danger")
         return redirect(url_for("admin.user_management"))
 
 """

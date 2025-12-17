@@ -23,7 +23,7 @@ def login():
 
     # If already logged in, do not show login page (commented out request.method =="GET" and)
     if 'username' in session:
-        flash("Cannot log in while already logged in.", "error")
+        flash("Cannot log in while already logged in.", "danger")
         return redirect(url_for('content.index'))
 
     # Handle Login
@@ -32,7 +32,7 @@ def login():
             flash(f"Logged in as {session['username']}", "success")
             return redirect(url_for('content.index'))
         else:
-            flash("Incorrect username or password.", "error")
+            flash("Incorrect username or password.", "danger")
             return render_template('login.html', form=form)
 
     return render_template('login.html', form=form)
@@ -54,7 +54,7 @@ def register():
 
     if request.method == "GET" and 'username' in session:
             print("Already logged in")
-            flash("Cannot register a new account while already logged in.", "error")   
+            flash("Cannot register a new account while already logged in.", "danger")   
             return redirect(url_for('content.index'))
     
     if request.method == "POST":

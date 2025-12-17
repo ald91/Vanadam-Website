@@ -54,13 +54,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/info/coaching">Coaching</a>
+                        <a class="nav-link" href="/coaching">Coaching</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/info/get-involved">Get Involved</a>
+                        <a class="nav-link" href="/get-involved">Get Involved</a>
                     </li>
                     <li class="nav-item disabled">
-                        <a class="nav-link" href="/info/about">About</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
@@ -108,7 +108,9 @@
     {% endif%}
     <!-- Flash Messages: This will display any error/success/status messages to the user -->
     {% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
+        <div class="alert alert-{{ category }}" role="alert">
+        {{ message }}
+      </div>
     {% endfor %}
 
         <!-- Main content -->

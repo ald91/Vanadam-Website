@@ -24,7 +24,7 @@ def log_in_user(form):
 
         if result is None:
             print("User not found")
-            flash("Incorrect username or password.", "error")
+            flash("Incorrect username or password.", "danger")
             return False
         
         stored_password = result['password']
@@ -84,7 +84,7 @@ def register_user(form):
         print("RegisterForm has been validated")
 
         if password != password2:
-            flash("Passwords don't match!", "error")
+            flash("Passwords don't match!", "danger")
             return False
 
         db = get_database()
@@ -142,7 +142,7 @@ def recover_user(form):
         return redirect(url_for('index'))
     
     else:
-        flash("Details incorrect", "error")
+        flash("Details incorrect", "danger")
 
         return redirect(url_for('recovery'))
 
@@ -180,5 +180,5 @@ def password_change(form):
             print(f"⚠️ No user found with username: {username}")
             return False
     
-    flash("password change aborted", "error")
+    flash("password change aborted", "danger")
     return redirect(url_for('index'))

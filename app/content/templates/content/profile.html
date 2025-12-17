@@ -11,18 +11,23 @@
     <div class="row" height="300px">
         <!--user block Avatar area-->
         <div class="col-3">
-            <div class="d-flex">
+            <div class="d-flex flex-column">
                 <img src="/static/Assets/BrandLogo.jpg">
+                <form action="{{ url_for('content.user_self_edit_profile', username=session['username']) }}" method="get">
+                    <button type="submit" class="btn btn-primary">Edit Your Profile</button>
+                </form>
             </div>
         </div>
 
         <!--user block credentials area-->
         <div class="col-9">
             <div class="d-flex flex-column">
-                <p> Username : {{ username }}</p>
-                <p> XBL name : {{ gamertag }}</p>
-                <p> Division Rank: {{ user_division }}</p>
-                <p> numerical rank: {{ user_csr}}</p>
+
+                <p> Username : {{ userData.username }}</p>
+                <p> XBL name : {{ userData.xboxname }}</p>
+                <p> CSR Rank: {{ userData.arenarank }}</p>
+                <p> Email Adress:{{ userData.email }}</p>
+                <p>{{userData}} </p>
             </div>
         </div>
 

@@ -9,16 +9,63 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-6 ">
-        <img src="../static/assets/photos/VanadamEHLC2025.jpg" height="200px"/>
-    <p>photography by <a href="x.com/BlameTheMeg">@BlameTheMeg</a></p>
+    
+    <div class="col-12">
+        <br>
+        <h1 class="text-center">About Vanadam</h1>
+        <br>
     </div>
-    <div class="col-6">
-        <div class="quote-box">
-            <h2> "It's not about being the best, It's about understanding you can always improve..."</h2>
-        </div>
-    </div>
+
+
+    <div class="col-12 justify-content-center d-flex"  style="width: 100%; height: 200px; overflow: hidden;">
+
+        <img class="w-25 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 30%;" src="{{url_for('static', filename='assets/photos/EH_Blackpool2023_Coaching.jpg')}}"/>
+        <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/photos/HCS2024_LONDON_Board.jpg')}}"/>
+        <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/photos/VanadamEHLC2025_BlameTheMeg.jpg')}}"/>
+        <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/photos/HCS2024_LONDON_ROOM2BIG.jpg')}}"/>
+
 </div>
 
+    <div class="col-12">
+        <div class="quote-box">
+            <br>
+            <h2 class="text-center"> "It's not about being the best, It's about understanding you can always improve..."</h2>
+            <br>
+        </div>
+    </div>
+        <div class="col-3" style="width: 100%; height: 200px; overflow: hidden;">
+        <img class="w-100 h-100 overflow-hidden" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/photos/EHL2025_Champs_1_BlameTheMeg.jpg')}}"/>
+    </div>
+
+    <div class="col-12">
+        
+        <br>
+        <h3 class="text-center"><em>Vanadam</em> is a British Halo content creator, esports lecturer, coach, and shoutcaster who has carved
+            out a niche within the Halo community through educational, gameplay-focused, and commentary content.</h3>
+        
+        <br>
+        <p>He produces videos and streams that aim to <strong>help players improve at Halo</strong>, often offering ranked gameplay commentary, VoD reviews, and strategic tips to his audience. His content is structured
+            around helping viewers not only enjoy Halo gameplay but also <em>understand decision-making, positioning, and competitive concepts</em> that can elevate their own play.In addition to his YouTube presence, Vanadam is known in the community for his broader involvement in Halo esports and grassroots engagement. This includes roles as a <strong>coach and shoutcaster</strong>—providing live commentary and analysis for matches, as well as collaborating with others on community platforms like Discord for discourse and improvement.
+        </p>
+    </div>
+
+    <div class="col-12" style="width: 100%; height: 150px; overflow: hidden;">
+        <img class="w-100 h-100 overflow-hidden" style="object-fit: cover; object-position: center 52%;" src="{{url_for('static', filename='assets/photos/HI_ONYX_RANKUP.png')}}"/>
+    </div>
+
+    <div class="col-12">
+        <br>
+        <h3 class="text-center">"Why make a website?"</h3>
+        <br>
+
+        <p>The Halo community has long since found itself spread on multiple platforms for different uses. the wiki exists for lore enthusiasts, Halo waypoint exists for service records, Youtube and Twitch exist for learning experiences and Halotracker, Leafapp, Spartan Records and more exist to help track your progress. But what if you want to get better at ranked? what if you want a centralized location of <em> multiple Halo creators and coaches</em> all striving to generate a <em> centralized </em> hub for halo ranked and esports guides, tips and info. This website is exactly that. This project is a commitment to the Halo community where as time goes on i hope to involve more creators, not just myself in generating a robust library of info, guides and videos categorized, filted and curated, to make your Halo learning journey as simple as possible.. and find some new friends a long the way with the social features we intend to implement over time.</p>
+        </p>
+    </div>
+
+ <div class="col-12 d-flex justify-content-center"  style="width: 100%; height: 200px; overflow: hidden;">
+    <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/icons/EHL.png')}}"/>
+    <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/branding/Gold.png')}}"/>
+    <img class="w-24 h-100 overflow-hidden px-1" style="object-fit: cover; object-position: center 50%;" src="{{url_for('static', filename='assets/icons/HCS.png')}}"/>
+</div>
 
 {% endblock %}

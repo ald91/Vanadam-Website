@@ -7,9 +7,14 @@ from flask_session import Session
 from functools import wraps
 
 #app imports
-from app.data.db import get_database
+
 from app.forms import SearchForm
 from app.HaloData import *
+from app.forms import CoachingForm, ProfileEditForm
+
+#db imports
+from app.data.db import get_database
+from app.data.db_services_users import User_Profile_Update, User_Data_Query
 
 #self
 from . import content
@@ -153,55 +158,76 @@ def search():
         result = cur.fetchall()
     return render_template('search.html', form=form)
 
-#TODO: finish user profile (ADAM)
-@content.route('/profile/<username>', methods=['GET', 'PATCH', 'DELETE'])
+#TODO: finish user profile (ADAM) - user history and submission if time
+@content.route('/profile/<username>', methods=['GET', 'POST'])
 def profilePage(username):
-    if request.method == "GET":
-        logged_in_user = session.get('username')
-        print(f"session username:", logged_in_user)
+    
+    logged_in_user = session.get('username')
 
-        if not logged_in_user:
-            flash("you must be logged in to view your profile", "error")
-            return redirect(url_for('content.index'))
+    if not logged_in_user or username != logged_in_user:
+            flash("you must be logged in to view your profile", "danger")
+            return redirect(url_for('content.index'))         
+    
 
-        if username != logged_in_user:
-            flash("sneaky! you can only view your own profile at the moment!", "error")
-            return redirect(url_for('content.index'))
-        
-        print(f"got request to load profile page for: {logged_in_user}")
-        return render_template('profile.html', username=logged_in_user)
+    if request.method == 'POST':
+        action = request.form.get("userprofile")
 
-    """
-    if request.method == "PATCH" and logged_in_user == username:
-        form = ProfileEditForm()
-        enter_db()
+        match action:
+            case "edit_profile":
+                redirect(url_for("content.User_Self_Edit_Profile"), username=username)
 
-    if form.validate_on_submit():  # If form passes validation rules
-        # Retrieve inputs from form
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-        password2 = form.password2.data
-        print("RegisterForm has been validated")
-        if password != password2:
-            flash("Passwords don't match!", "error")
-            return render_template('register.html', form=form)
 
-        query = "SELECT * FROM Users WHERE username = ? OR email = ?"
-        cur.execute(query, (username, email))
-        existing_user = cur.fetchone()
+    print(f"got request to load profile page for: {logged_in_user}")
+    userData = User_Data_Query(username)
+    return render_template('profile.html', username=logged_in_user, userData=userData)
 
-        if existing_user is None:
-            flash("An account with those details doesnt exist", "error")
-            return redirect(url_for('recovery'))
+@content.route('/profile/edit/<username>', methods=['GET', 'POST'])
+def user_self_edit_profile(username):
+    logged_in_user = session.get('username')
+    if not logged_in_user or logged_in_user != username:
+        flash("You are not allowed to edit this profile.", "error")
+        return redirect(url_for("content.profile", username=logged_in_user))
 
-        if existing_user:
-"""
+    profile_form = ProfileEditForm()
 
-#TODO: Content
+    if profile_form.validate_on_submit():
+        # Only proceed if the user clicked the correct submit button
+        flag = User_Profile_Update(username, profile_form)
+        if flag:
+            flash("Your profile has been updated. Refresh the page if changes are not visible.", "success")
+        else:
+            flash("Your profile could not be updated. If this happens again, contact admin.", "warning")
+        return redirect(url_for("content.profilePage", username=logged_in_user))
+
+    return render_template("profile_edit.html", ProfileForm=profile_form, username=logged_in_user)
+
 @content.route('/about', methods=['GET'])
 def about_page():
     return render_template('about.html')
+
+#TODO: ADAM
+@content.route('/get-involved', methods=['GET', 'POST'])
+def get_involved():
+    if request.method == 'POST':
+        pass
+
+    else:
+        logged_in_user = session.get('username')
+
+        return render_template('get_involved.html')
+
+#TODO: ADAM
+@content.route('/coaching', methods=['GET', 'POST'])
+def coaching():
+    
+    form = CoachingForm()
+    
+    if request.method == 'POST':
+        pass
+
+    else:
+        
+        return render_template('coaching.html', form=form, userData=userData)
 
 @content.route('/mapPage', methods=['GET'])
 def mapsAll():
