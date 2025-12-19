@@ -40,8 +40,8 @@ def create_database(db_path):
         arenarank TEXT,
         timezone TEXT,
         password TEXT NOT NULL,
-        tag TEXT,
-        banned BOOL
+        isAdmin BOOLEAN default 0,
+        banned BOOLEAN default 0
     );
     """)
 
@@ -73,6 +73,8 @@ def create_database(db_path):
         gamemap TEXT,
         gamemode TEXT,
         videotype TEXT,
+        hidden BOOLEAN default 0,
+        manualedit BOOLEAN default 0,
         etag TEXT,
         FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
     );
@@ -195,33 +197,34 @@ def create_database(db_path):
     CREATE INDEX IF NOT EXISTS idx_messages_boardID ON Messages(forumID);
     """)
 
+
     # == Triggers ===
     # video table row additions
-    cursor.execute("""
-        CREATE TRIGGER videos_post_insert
-        AFTER INSERT ON Videos
-        FOR EACH ROW
-        BEGIN
-            -- Update the newly inserted video row to link to the post
-            UPDATE Videos
-            SET postID = (SELECT last_insert_rowid())
-            WHERE vidID = NEW.vidID;
-        END;                      
-    """)
-
-    #article table row additions
-    cursor.execute("""
-        CREATE TRIGGER articles_post_insert
-        AFTER INSERT ON Articles
-        FOR EACH ROW
-        BEGIN
-            -- Update the newly inserted article row to link to the post
-            UPDATE Articles
-            SET postID = (SELECT last_insert_rowid())
-            WHERE articleID = NEW.articleID;
-        END;
-                      
-    """)
+#    cursor.execute("""
+#        CREATE TRIGGER videos_post_insert
+#        AFTER INSERT ON Videos
+#        FOR EACH ROW
+#        BEGIN
+#            -- Update the newly inserted video row to link to the post
+#            UPDATE Videos
+#            SET postID = (SELECT last_insert_rowid())
+#            WHERE vidID = NEW.vidID;
+#        END;                      
+#    """)
+#
+#    #article table row additions
+#    cursor.execute("""
+#        CREATE TRIGGER articles_post_insert
+#        AFTER INSERT ON Articles
+#        FOR EACH ROW
+#        BEGIN
+#            -- Update the newly inserted article row to link to the post
+#            UPDATE Articles
+#            SET postID = (SELECT last_insert_rowid())
+#            WHERE articleID = NEW.articleID;
+#        END;
+#                      
+#    """)
 
     conn.commit()
     conn.close()

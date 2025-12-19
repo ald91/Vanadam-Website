@@ -19,7 +19,7 @@ from . import content
 
 @content.route('/articles', methods=["GET"])
 def article():
-    articles = All_Articles_Query(False)
+    articles = All_Articles_Query()
     return render_template('allarticles.html', articles=articles)
 
 @content.route('/articles/<articleID>', methods=['GET'])

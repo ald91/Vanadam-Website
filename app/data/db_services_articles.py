@@ -79,7 +79,7 @@ def Article_JSON_load(articleID: int) -> str:
 
 # === ARTICLES MAIN FUNCTIONS ===
 
-def All_Articles_Query(visible :bool = True) -> list[dict]:
+def All_Articles_Query(showHidden :bool = False) -> list[dict]:
     
     """fetches all video records with Post tags and Post ID
     visible controls if ALL or just visible articles are returned"""
@@ -103,7 +103,7 @@ def All_Articles_Query(visible :bool = True) -> list[dict]:
     articles = [dict(row) for row in articles]
     print(articles)
 
-    if not visible:
+    if not showHidden:
         articles = [article for article in articles if not article.get("hidden")]
 
     return articles

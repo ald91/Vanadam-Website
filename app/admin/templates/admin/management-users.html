@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Admin Control - Video Management {% endblock %}
+{% block title %} Admin Control - User Management {% endblock %}
 {% endblock %}
 
 
@@ -10,16 +10,16 @@
 
 <div class="container-fluid">
     <div class="col-3 col-sm-12">
-        <H2>Video Management</H2>
+        <H2>User Management</H2>
         <br>
-        <form class="" method="POST" action="/admin/video-management">
+        <form class="" method="POST" action="/admin/user-management">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col-12 d-flex justify-content-evenly">
                 <div class="col-4">
-                    <h3 class=""> Video Overview</h3>
+                    <h3 class=""> Users Overview</h3>
                 </div>
                 <div class="col-8">
-                    <p>total videos on record: {{ videos|length }}</p>
+                    <p>total videos on record: {{ users|length }}</p>
                 </div>
             </div>
             <br>
@@ -27,30 +27,33 @@
                 <div class="col-4">
                     <h3 class="">Modify Records</h3>
                 </div>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_thumbnails">Refresh
-                    Thumbnails</button>
-                <button class="adminDashBoardButton" type="submit" name="videoAction" value="video_data">Refresh
-                    Database</button>
+                <button class="adminDashBoardButton" type="submit" name="videoAction" value="create_user">register user</button>
             </div>
             <br>
     </div>
 
-    <h2> full video library </h2>
+    <h2> administrators </h2>
     <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
         <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
-            {% for result in videos %}
-            <a href="/videos-management/{{result.vidID}}" class="text-decoration-none">
+            {% for result in users %}
+            {% if isAdmin == TRUE %}
+            {% endif %}
+
+        
+            <a href="/videos-management/{{result.userID}}" class="text-decoration-none">
                 <article id="{{ result.vidID }}" class="video-long">
                     <div class="row mb-1 video-long">
                         <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
-                            <img class="rounded-start-2" src="{{ result.thumbnailsmax}}" width="auto" height="170px" />
+                            <p> placeholder </p>>
                         </div>
                         <div class="col-6 flex-fill">
-                            <h2>{{ result.title }}</h2>
-                            <p>video ID = {{ result.vidID }} / video CSR = {{ result.csr }} / uploaded ({{ result.date}})</p>
-                            <p>post ID = {{result.postID}} / postTags = {{result.postTags}} / video type = {{ result.videotype }}</p>
-                            <p> video map = {{result.gamemap }} / video mode = {{ result.gamemode }}</p>
-                            <p> Hidden = {% if result.hidden == True %} True {% else %} False {% endif %}</p>
+                            <h2>{{ result.username }}</h2>
+                            <p> Username : {{ userData.username }}</p>
+                            <p> Email Adress:{{ userData.email }}</p>
+                            <p> XBL name : {{ userData.xboxname }}</p>
+                            <p> CSR Rank: {{ userData.arenarank }}</p>
+                            <p> Banned: {{ userData.Banned }}</p>
+                            <p>{{userData}} </p>
                             
 
                         </div>

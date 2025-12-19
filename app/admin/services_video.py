@@ -135,8 +135,9 @@ def Calculate_Video_Category(videoCsr, videoMap, videoMode, videoType,videoDesc)
             return category.title()
 
 #build video dump file for other functions to use -- prevents API call spam
-def Google_API_V3_PULL_Video_Info(extracted):
+def Google_API_V3_PULL_Video_Info(extracted: list) -> list[dict]:
         
+    """ Pulls video information from YouTube API using PlaylistId of a channel, requests 50 videos and automatically paginates."""
     try:
         url = "https://www.googleapis.com/youtube/v3/playlistItems"
         params = {
@@ -178,7 +179,9 @@ def Google_API_V3_PULL_Video_Info(extracted):
     return extracted
 
 #inputted data must be a list containing API call with video IDs (should be extrated, which is type = list)
-def Google_API_V3_Pull_Durations(extracted):
+def Google_API_V3_Pull_Durations(extracted: list[dict]) -> list[dict]:
+   
+    """performs the second step in API collation and asks youtube API for the video durations  of certain videos"""
     try:
 
         #obtains video duration information
@@ -229,7 +232,10 @@ def Google_API_V3_Pull_Durations(extracted):
     return extracted
 
 #cleans unwanted data from the list
-def Google_API_V3_Clean_Data(extracted):
+def Google_API_V3_Clean_Data(extracted: list[dict]) -> list[dict]:
+
+    """ takes the [dict] and cleans the data for SQLite database inclusion, changing various properties of each dict and standardizing"""
+
     for video in extracted:
         video.pop("kind")
         video.pop("id")
@@ -258,7 +264,9 @@ def Google_API_V3_Clean_Data(extracted):
     return extracted
 
 #write completed list "extrated" to videoDump.Json
-def Google_API_V3_Write_JSON(data, where):
+def Google_API_V3_Write_JSON(data: list[dict], JSON_Type: str) -> bool:
+
+    """ takes the API data and writes it to JSON file, returning a boolean of the outcome"""
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
     data_dir = os.path.join(base_dir, "data")
@@ -266,21 +274,26 @@ def Google_API_V3_Write_JSON(data, where):
     json_ready_path = os.path.join(data_dir, "videoDbReady.json")
 
     try:
-        if where == "clean":
+        if JSON_Type == "clean":
             with open (json_dump_path, 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
         
-        elif where == "dbReady":
+        elif JSON_Type == "dbReady":
             with open (json_ready_path, 'w', encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
 
     except Exception as e:
         print(f"there was a problem writing the file", {e})
+        return False
 
-    return
+    print(f"successfully written JSON file type: {JSON_Type}")
+    return True
 
 #loads file and modifys values stored to be compatible with db system and website
-def Google_API_V3_Modify_Values():
+def Google_API_V3_Modify_Values() -> list[dict]:
+
+    """ Loads JSON data from videoDump.JSON and modifies the values using a series of helper functions"""
+
     modified = []
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
@@ -334,7 +347,9 @@ def Google_API_V3_Modify_Values():
     return modified
 
 #finally, load in the thumbnails of all assets listed on the site
-def Google_API_V3_Write_Thumbnails():
+def Google_API_V3_Write_Thumbnails() -> None:
+
+    """ looks for the thumbnail of a video based on the URL provided by the API from videoDbReady.JSON and saves the file to the site static folder"""
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
     data_dir = os.path.join(base_dir, "data")
@@ -372,7 +387,10 @@ def Google_API_V3_Write_Thumbnails():
         else:
             continue
 
-def Commit_to_DB():
+def Commit_to_DB() -> None:
+
+    """ takes DB ready information, iterating over it and commiting the record to the database, calls the Checktags function"""
+
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
     data_dir = os.path.join(base_dir, "data")
@@ -387,32 +405,34 @@ def Commit_to_DB():
     cur.execute("SELECT vidID, etag from Videos")
     existing = {row[0]:row[1] for row in cur.fetchall()}
 
-    newRecords = []
-    updatedRecords = []
-    newTags = []
+    newRecords: list[tuple] = []
+    updatedRecords : list[tuple]= []
+    newTags : list[list[str,str,str]] = []
     cleanTags = []
 
+    videos: list[dict]
+    video: dict
 
     for video in videos:
-        vidID = video["videoId"]
-        title = video["title"]
-        duration = video["duration"]
-        published = str(video["publishedAt"]).replace("T", " ").replace("Z", "")
-        description = video["description"]
+        vidID:str = video["videoId"]
+        title:str = video["title"]
+        duration:int = video["duration"]
+        published:str = str(video["publishedAt"]).replace("T", " ").replace("Z", "")
+        description:str = video["description"]
 
-        thumbnailsdefault = video["thumbnails"]["default"]
-        thumbnailsmedium = video["thumbnails"]["medium"]
-        thumbnailshigh = video["thumbnails"]["high"]
-        thumbnailsmax = video["thumbnails"]["maxres"]
+        thumbnailsdefault:str = video["thumbnails"]["default"]
+        thumbnailsmedium:str = video["thumbnails"]["medium"]
+        thumbnailshigh:str = video["thumbnails"]["high"]
+        thumbnailsmax:str = video["thumbnails"]["maxres"]
 
-        kind = video["kind"]
-        channelid = video["channelId"] 
-        csr = video["csr"]
-        gameMap = video["gameMap"]
-        gamemode = video["gameMode"]
-        videotype = video["type"]
-        videocategory = video["category"]
-        etag = video["etag"]
+        kind:str = video["kind"]
+        channelid:str = video["channelId"] 
+        csr:int = video["csr"]
+        gameMap:str = video["gameMap"]
+        gamemode:str = video["gameMode"]
+        videotype:str = video["type"]
+        videocategory:str = video["category"]
+        etag:str = video["etag"]
         
         # does video exist in DB
         db_etag = existing.get(vidID)
@@ -453,22 +473,24 @@ def Commit_to_DB():
 
     #inteserts videos that are new
     if newRecords:
+        db = get_database()
+        cur = db.cursor()
+        cur.execute("BEGIN")
 
+        record: tuple
         for record in newRecords:
+            cur.execute("INSERT INTO Posts (date) VALUES (datetime('now'))")
+            postID = cur.lastrowid
+
             cur.execute("""
-            cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
-            postID = cur.lastrowid   
-        """)
+                INSERT INTO Videos (
+                    postID, vidID, title, duration, published, description,
+                    thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
+                    kind, channelid, csr, gameMap, gameMode, videotype, etag
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (postID, *record))
 
-
-        cur.executemany("""
-            INSERT INTO Videos (
-                vidID, title, duration, published, description,
-                thumbnailsdefault, thumbnailsmedium, thumbnailshigh, thumbnailsmax,
-                kind, channelid, csr, gameMap, gameMode, videotype, etag
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, newRecords)
 
     #insert videos that needed updating
     if updatedRecords:
@@ -481,19 +503,17 @@ def Commit_to_DB():
         """, updatedRecords)
 
     #prep for adding to postTags
-    for item in newTags:
-        vidID = item[0]
+    for videoEntry in newTags:
+        vidID = videoEntry[0]
 
         cur.execute("SELECT postID FROM Videos WHERE vidID = ?", (vidID,))
         row = cur.fetchone()
         postID = row["postID"]
 
-        entry = [postID, item[2]]
-        cleanTags.append(entry)
-
-    # add it to postTags
-    checkTags(cur, "Video", postID, cleanTags)
-    cur.executemany(""" INSERT OR IGNORE INTO PostTags ( postID, tagName) VALUES (?, ?) """, cleanTags)
+        tags = [postID, videoEntry[2]]
+        
+        # add it to postTags
+        checkTags(cur, "Video", postID, tags)
         
     db.commit()
     db.close()  
@@ -513,38 +533,23 @@ def Update_Video_Database_Full():
 
     extracted = []
     print("attempting to contact Youtube API")
-    Google_API_V3_PULL_Video_Info(extracted)
+    
+    extracted = Google_API_V3_PULL_Video_Info(extracted)
     print("attempting to contact Youtube API part 2")
-    Google_API_V3_Pull_Durations(extracted)
+    
+    extracted = Google_API_V3_Pull_Durations(extracted)
     print("Attempting to clean JSON data for DB")
-    Google_API_V3_Clean_Data(extracted)
-    Google_API_V3_Write_JSON(extracted, "clean")
+    
+    extracted = Google_API_V3_Clean_Data(extracted)
+    extracted = Google_API_V3_Write_JSON(extracted, "clean")
+    
     modified = Google_API_V3_Modify_Values()
     print("attempting to write to DB")
-    Google_API_V3_Write_JSON(modified, "dbReady")
+    
+    modified = Google_API_V3_Write_JSON(modified, "dbReady")
+    print("saving modified JSON ready for DB")
+
     Google_API_V3_Write_Thumbnails()
+
     with current_app.app_context():
         Commit_to_DB()
-
-def Full_Video_Management_Query():
-    """fetches all video records with Post tags and Post ID"""
-
-    db = get_database()
-    cur = db.cursor()
-    query = """
-        SELECT 
-        'Video' AS type, v.postID, v.vidID, v.title, v.csr, v.thumbnailsmax, v.gamemap, v.gamemode, v.videotype, p.date,
-        GROUP_CONCAT(pt.tagname) AS tags
-        FROM Videos v
-        
-        LEFT JOIN Posts p ON v.postID = p.postID
-        LEFT JOIN PostTags pt ON v.postID = pt.postID
-        
-        GROUP BY v.postID;  
-    """
-
-    cur.execute(query)
-    videos = cur.fetchall()
-    videos = [dict(row) for row in videos]
-
-    return videos

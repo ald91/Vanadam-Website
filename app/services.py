@@ -22,17 +22,16 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 
     #for Videos (only ever have 1 tag)
     elif postType == "Video":
-        tags = [tags]
-
+        pass
     else:
         print("unrecognised tag format, aborting")
         return  
     
     #normalize to stop duplication on capitalizations ( Tag vs tag )
-    tags = [t.strip() for t in tags if t.strip()]
-    tags = [t.lower() for t in tags]
-    
+    tags = [t.strip().lower() for t in tags if isinstance(t, str) and t.strip()]
+
     for tag in tags:
+        print(postID, tag)
         cur.execute("INSERT OR IGNORE INTO Tags(tagName) VALUES(?)", (tag,))
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 

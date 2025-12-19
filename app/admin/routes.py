@@ -13,11 +13,13 @@ from app.data.routes import Data_Send_Article_IMG
 
 #db functions
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
+from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
 
 #self module
 from . import admin
-from .services_video import Update_Video_Database_Full, Full_Video_Management_Query, Google_API_V3_Write_Thumbnails
-from .services_users import All_Users_Management_Query
+from .services import Post_Form_Match_Case
+from .services_video import Update_Video_Database_Full, Google_API_V3_Write_Thumbnails
+from .services_users import All_Users_Management_Query, Delete_User, Ban_User, Unban_User, Update_User_Tags, Update_User_Is_Admin
 
    
 
@@ -61,18 +63,20 @@ def dashboard():
     
     return redirect(url_for("admin.dashboard"))
 
-#TODO: ADAM
 @admin.route('/video-management', methods=["GET", "POST"])
 def video_management():
     """ video table related admin actions"""
-            
+    print(request)
+
     if request.method == "GET":
-        videos = Full_Video_Management_Query()
+        videos = All_Videos_Query(True)
         return render_template('management-video.html', videos=videos)
         
     elif request.method == "POST":
         
-        action = request.form.get("videoAction")
+        matchCase = Post_Form_Match_Case(request.form.get("videoAction"))
+        action = matchCase[0] 
+        vidID = matchCase[1]
     
         match action:
             case "video_thumbnails":
@@ -84,7 +88,14 @@ def video_management():
                 Update_Video_Database_Full()
                 flash("Video database update completed", "success")
                 return redirect(url_for("admin.video_management"))
-        
+
+            case "video_toggle":
+                flag = Toggle_Video_Visibility(vidID)
+                if not flag:
+                    flash(f"could not toggle video {vidID} visibility", "critical")
+                else:
+                    flash(f"video {vidID} has had it's visibility toggled", "success")
+                return redirect(url_for(f"admin.video_management"))
     else:
         flash("internal routing error", "danger")
         return redirect(url_for("admin.video_management"))
@@ -93,7 +104,7 @@ def video_management():
 def article_management():
     """ article documents and table related admin actions"""
     
-    articles: list[dict] = All_Articles_Query()
+    articles: list[dict] = All_Articles_Query(True)
 
     if request.method == "GET":
         return render_template('management-article.html', articles=articles)  
@@ -101,15 +112,9 @@ def article_management():
     elif request.method == "POST":
         
         #JINJA 2 sends "articleAction(Article.ID)"
-        check = "("
-        input = request.form.get("articleAction")
-
-        if check in input:
-            input = request.form.get("articleAction").split("(")
-            action = str(input[0])
-            articleID = input[1].replace("(","").replace(")","")
-        else:
-            action = str(input)
+        matchCase = Post_Form_Match_Case(request.form.get("articleAction"))
+        action = matchCase[0]
+        articleID = matchCase[1]
 
         match action:
             case "article_new":
@@ -201,71 +206,45 @@ def article_management_individual(articleID):
 def database_management():
     pass
 
-"""
+
 #TODO: admin user management
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
     
 
     if request.method == "GET":
-        # TODO: Replace with your real query
         users = All_Users_Management_Query()
         return render_template('management-user.html', users=users)
 
     elif request.method == "POST":
 
-        # Jinja sends: userAction(userID)
-        raw_input = request.form.get("userAction")
-
-        check = "("
-        if check in raw_input:
-            split_input = raw_input.split("(")
-            action = split_input[0]
-            userID = split_input[1].replace(")", "")
-        else:
-            action = raw_input
-            userID = None
-
-        print("Action:", action)
-        print("UserID:", userID)
+        matchCase = Post_Form_Match_Case(request.form.get("userAction"))
+        action = matchCase[0]
+        userID = matchCase[1]
 
         match action:
 
-            #CREATE USER (Redirect to form)
             case "user_new":
-                return redirect(url_for("admin.user_management_new"))
-
-            #DELETE USER
+                pass
             case "user_delete":
-                Delete_User(userID)
-                flash("User deleted successfully", "success")
-                return redirect(url_for("admin.user_management"))
-
-            #BAN USER
+                flag = Delete_User(userID)
             case "user_ban":
-                Ban_User(userID)
-                flash("User banned successfully", "success")
-                return redirect(url_for("admin.user_management"))
-
-            #UNBAN USER
+                flag = Ban_User(userID)
             case "user_unban":
-                Unban_User(userID)
-                flash("User unbanned successfully", "success")
-                return redirect(url_for("admin.user_management"))
-
-            #CHANGE USER TAGS
+                flag = Unban_User(userID)
             case "user_tags":
                 new_tags = request.form.get("newTags")  # from input field
-                Update_User_Tags(userID, new_tags)
-                flash("User tags updated", "success")
-                return redirect(url_for("admin.user_management"))
-
+                flag = Update_User_Tags(userID, new_tags)
             case _:
+                flag = False
                 flash("Unknown user action", "danger")
                 return redirect(url_for("admin.user_management"))
+            
+        if flag:
+            flash(f"successfully carried out action ({action}) on user ({userID})")
+        elif not flag:
+            flash(f"could not carry out action ({action}) on user ({userID})")
 
     else:
         flash("Internal routing error", "danger")
         return redirect(url_for("admin.user_management"))
-
-"""
