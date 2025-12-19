@@ -7,34 +7,119 @@
 
 {% block content %}
 
-
 <form method="POST">
     {{ form.hidden_tag() }}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <strong>Monday</strong><br>
-                {{ form.monday.morning() }} {{ form.monday.morning.label }}
-                {{ form.monday.afternoon() }} {{ form.monday.afternoon.label }}
-                {{ form.monday.evening() }} {{ form.monday.evening.label }}
-            </div>
-            <div class="col">
-                <strong>Tuesday</strong><br>
-                {{ form.tuesday.morning() }} {{ form.tuesday.morning.label }}
-                {{ form.tuesday.afternoon() }} {{ form.tuesday.afternoon.label }}
-                {{ form.tuesday.evening() }} {{ form.tuesday.evening.label }}
-            </div>
-            <div class="col">
-                <strong>Wednesday</strong><br>
-                {{ form.wednesday.morning() }} {{ form.wednesday.morning.label }}
-                {{ form.wednesday.afternoon() }} {{ form.wednesday.afternoon.label }}
-                {{ form.wednesday.evening() }} {{ form.wednesday.evening.label }}
-            </div>
-            <!-- Repeat for Thursday & Friday -->
+    <div class="container-fluid">
+    <h1>Register Your Coaching Interest here</h1>
+    <h5>Let us know you're interested in booking a coaching session and we will get back to you ASAP</h5>
+    <br>
+
+    <div class="row px-5 pb-1">
+        <div class="col-6">{{ form.username.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.username(class='form-control') }} </div>
+    </div>
+    <div class="row px-5 pb-1">
+        <div class="col-6">{{ form.timezone.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.timezone(class='form-control')}} </div>
+    </div>
+    <div class="row px-5 pb-1">
+
+        <div class="col-6">{{ form.email.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.email(class='form-control') }} </div>
+    </div>
+    <div class="row px-5 pb-1">
+        <div class="col-6">{{ form.xboxname.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.xboxname(class='form-control') }} </div>
+    </div>
+        <div class="row px-5 pb-1">
+
+        <div class="col-6">{{ form.sessiontype.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.sessiontype(class='form-control') }} </div>
+    </div>
+    <div class="row px-5 pb-1">
+        <div class="col-6">{{ form.trackernetwork.label(class='form-label') }} </div>
+        <div class="col-6"> {{ form.trackernetwork(class='form-control') }} </div>
+    </div>
+    <div class="row px-5 pb-1">
+        <div class="col-6">{{ form.arenarank.label(class='form-label')}} </div>
+        <div class="col-6"> {{ form.arenarank(class='form-control') }} </div>
+    </div>
+    </div>
+    <div class="container-fluid d-flex flex-column mx-auto align-content-center px-5 py-3">
+        <div class="row day-labels">
+            <div class="col day col-2">Timeslot</div>
+            <div class="col form-label day d-flex justify-content-center">Monday</div>
+            <div class="col form-label day d-flex justify-content-center">Tuesday</div>
+            <div class="col form-label day d-flex justify-content-center">Wednesday</div>
+            <div class="col form-label day d-flex justify-content-center">Thursday</div>
+            <div class="col form-label day d-flex justify-content-center">Friday</div>
+            <div class="col form-label day d-flex justify-content-center">Saturday</div>
+            <div class="col form-label day d-flex justify-content-center">Sunday</div>
         </div>
+        <div class="row morning-labels justify-content-center">
+            <div class="col early col-2">{{form.monday.morning.label }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.monday.morning(disabled=True) }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.tuesday.morning(disabled=True) }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.wednesday.morning(disabled=True) }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.thursday.morning(disabled=True) }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.friday.morning(disabled=True) }}</div>
+            <div class="col early d-flex justify-content-center">{{ form.saturday.morning() }} </div>
+            <div class="col early d-flex justify-content-center">{{ form.sunday.morning() }}</div>
+        </div>
+        <div class="row afternoon-labels">
+            <div class="col afternoon col-2">{{form.monday.afternoon.label }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{ form.monday.afternoon()
+                }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{ form.tuesday.afternoon()
+                }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{
+                form.wednesday.afternoon() }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{
+                form.thursday.afternoon() }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{ form.friday.afternoon()
+                }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{
+                form.saturday.afternoon() }}</div>
+            <div class="col afternoon d-flex justify-content-center">{{ form.sunday.afternoon()
+                }}</div>
+        </div>
+        <div class="row evening-labels">
+            <div class="col evening col-2">{{form.monday.evening.label }}</div>
+            <div class="col evening d-flex justify-content-center">{{ form.monday.evening()}}
+            </div>
+            <div class="col evening d-flex justify-content-center">{{ form.tuesday.evening() }}
+            </div>
+            <div class="col evening d-flex justify-content-center">{{ form.wednesday.evening()
+                }}</div>
+            <div class="col evening d-flex justify-content-center">{{ form.thursday.evening() }}
+            </div>
+            <div class="col evening d-flex justify-content-center">{{ form.friday.evening() }}
+            </div>
+            <div class="col evening d-flex justify-content-center">{{ form.saturday.evening() }}
+            </div>
+            <div class="col evening d-flex justify-content-center">{{ form.sunday.evening() }}
+            </div>
+        </div>
+        <div class="row late-labels">
+            <div class="col late col-2">{{form.monday.late.label }}</div>
+            <div class="col late d-flex justify-content-center">{{
+                form.monday.late(disabled=True) }}</div>
+            <div class="col late d-flex justify-content-center">{{
+                form.tuesday.late(disabled=True) }}</div>
+            <div class="col late d-flex justify-content-center">{{
+                form.wednesday.late(disabled=True) }}</div>
+            <div class="col late d-flex justify-content-center">{{
+                form.thursday.late(disabled=True) }}</div>
+            <div class="col late d-flex justify-content-center">{{
+                form.friday.late(disabled=True) }}</div>
+            <div class="col late d-flex justify-content-center">{{ form.saturday.late() }}</div>
+            <div class="col late d-flex justify-content-center">{{ form.sunday.late() }}</div>
+        </div>
+        <div class="row pt-3"> {{ form.details.label(class='form-label')}}</div>
+        <div class="row"> {{ form.details(class='form-control', rows=5, cols=40) }}</div>
+            {{ form.submit(class="btn btn-primary mt-3") }}
     </div>
 
-    {{ form.submit(class="btn btn-primary mt-3") }}
 </form>
 
 

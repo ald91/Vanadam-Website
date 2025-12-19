@@ -48,6 +48,8 @@ STANDARD_TIMEZONES = {
     "Pacific/Auckland": "Auckland"
 }
 
+SESSION_TYPES = ["Invidiual Vod Review", "Individual Shadow", "Team VoD Review", "Team Scrim Shadow", "Team Tournament Coach Slot", "Map Session"]   
+
 # Class Construction
 # ===================
 # Construct search/filter, user validation and registration form classes
@@ -328,10 +330,13 @@ class TimeSlotForm(FlaskForm):
     late = BooleanField("Late 22:00-24:00")
 
 class CoachingForm(FlaskForm):
-    name = StringField("Name")
-    timezone = StringField("Your Timezone")
+    username = StringField("username")
+    sessiontype = SelectField("select the session type", choices=list(SESSION_TYPES))
+    timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
     email = StringField("Email")
     xboxname = StringField("Xbox Gamertag")
+    arenarank = SelectField('enter your current ranked area rank', choices=list(infiniteCSR.keys()))
+    trackernetwork = StringField("trackernetwork URL for your profile")
     monday = FormField(TimeSlotForm)
     tuesday = FormField(TimeSlotForm)
     wednesday = FormField(TimeSlotForm)
@@ -339,4 +344,5 @@ class CoachingForm(FlaskForm):
     friday = FormField(TimeSlotForm)
     saturday = FormField(TimeSlotForm)
     sunday =  FormField(TimeSlotForm)
+    details = TextAreaField("Enter any additional details here")
     submit = SubmitField("Send Request")

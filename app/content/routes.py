@@ -221,12 +221,27 @@ def get_involved():
 def coaching():
     
     form = CoachingForm()
+    userData = None
     
     if request.method == 'POST':
-        pass
+        if form.validate_on_submit():
+            coachingRequest = True
+            if coachingRequest:
+                flash("thank you for submitting your request, it is now on your profile where you can see it's progress", "success")
+                return redirect(url_for('content.index'))
+            else:
+                flash("there was an issue with your submission, please try again. If this persists, contact an admin", "warning")
+                return redirect(url_for('content.coaching'))
 
     else:
-        
+        #backfill user data if they're logged in UX :)
+        if session.get('username'):
+            userData = User_Data_Query(session.get('username'))
+            form.username.data = userData["username"]
+            form.email.data = userData["email"]
+            form.xboxname.data = userData["xboxname"]
+            form.arenarank.data = userData["arenarank"]
+
         return render_template('coaching.html', form=form, userData=userData)
 
 @content.route('/mapPage', methods=['GET'])
