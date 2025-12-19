@@ -6,7 +6,7 @@
 <p>{{ post.content }}</p>
 <!-- TODO: hide if not original poster -->
 {% if current_user == post.originalPoster %}
-    <a href="/forums/{{ post.forumID }}/edit_post" class="button">Edit Post</a>
+    <a href="/forums/{{ post.forumID }}/edit" class="button">Edit Post</a>
 {% endif %}
 <hr>
 <h3>Leave a comment</h3>

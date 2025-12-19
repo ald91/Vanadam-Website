@@ -69,7 +69,7 @@ def edit_post(id):
         form = prefill(form, id)
 
     if form.validate_on_submit():
-        modify(form)
+        modify(form, id)
 
     return render_template("edit_post.html", form=form)
 

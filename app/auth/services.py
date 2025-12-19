@@ -29,8 +29,6 @@ def log_in_user(form):
         
         stored_password = result['password']
 
-
-
         if check_password_hash(stored_password, password):
             #Clear session data to remove stale data, then fill in session data
             session.clear()
@@ -155,7 +153,7 @@ def password_change(form):
 
         if password == password2:
             print('password match attempting to hash')
-            hashpass = hashlib.sha256(password.encode()).hexdigest() #prep password
+            hashpass = generate_password_hash(password)
             
             print('accessing database')
             db = get_database()

@@ -31,12 +31,8 @@ def delete(id):
     db = get_database()
     cur = db.cursor()
 
-    query = "SELECT originalPoster FROM Forums WHERE forumID = ?"
-    cur.execute(query, (id,))
-    result = dict(cur.fetchone())
-
     # Allow only original poster to delete
-    if check(result["username"]):
+    if check(id):
         query = "DELETE FROM Forums WHERE forumID = ?"
         cur.execute(query, (id,))
 
@@ -53,15 +49,14 @@ def prefill(form, id):
 
     return form
 
-def modify(form):
+def modify(form, id):
     db = get_database()
     cur = db.cursor()
 
     title = form.title.data
     content = form.content.data
-    original_poster = form.content.username
     #Allow only original poster to modify
-    if check(original_poster):
+    if check(id):
         query = "UPDATE Forums SET title = ?, content = ?"
         cur.execute(query, (title, content))
         db.commit()
@@ -96,9 +91,17 @@ def fetch_comments(id):
     result = cur.fetchall()
     return result
 
-#Checks current user from session against provided username (original poster)
-def check(user_id):
-    if session.get("username") == user_id:
+#Checks current user from session against provided username (original poster), optionally, args can provide postID
+def check(forumID):
+    db = get_database()
+    cur = db.cursor()
+
+    query = "SELECT * FROM Forums WHERE forumID = ?"
+    cur.execute(query, (forumID,))
+
+    post = dict(cur.fetchone())
+
+    if session.get("username") == post["username"]:
         return True
     else:
         return False
