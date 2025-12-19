@@ -4,7 +4,6 @@ from flask_mail import Message
 
 #Security
 from werkzeug.security import generate_password_hash, check_password_hash
-import hashlib
 
 #App Imports
 from app.data.db import get_database
