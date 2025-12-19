@@ -6,7 +6,7 @@ def post(form):
     title = form.title.data
     content = form.content.data
 
-    username = session["username"]
+    username = session.get("username")
 
     db = get_database()
     cur = db.cursor()
@@ -31,20 +31,20 @@ def delete(id):
     db = get_database()
     cur = db.cursor()
 
-    query = "SELECT originalPoster FROM Forums WHERE id = ?"
+    query = "SELECT originalPoster FROM Forums WHERE forumID = ?"
     cur.execute(query, (id,))
     result = dict(cur.fetchone())
 
     # Allow only original poster to delete
     if check(result["username"]):
-        query = "DELETE FROM Forums WHERE id = ?"
+        query = "DELETE FROM Forums WHERE forumID = ?"
         cur.execute(query, (id,))
 
-def prefill(form):
+def prefill(form, id):
     db = get_database()
     cur = db.cursor()
 
-    query = "SELECT * FROM Forums WHERE id = ?"
+    query = "SELECT * FROM Forums WHERE forumID = ?"
     cur.execute(query, (id,))
     result = dict(cur.fetchone())
 
@@ -98,7 +98,7 @@ def fetch_comments(id):
 
 #Checks current user from session against provided username (original poster)
 def check(user_id):
-    if session["username"] == user_id:
+    if session.get("username") == user_id:
         return True
     else:
         return False

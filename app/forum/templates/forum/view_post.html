@@ -4,7 +4,10 @@
 <h1>{{ post.title }}</h1>
 <p><strong>Posted by:</strong> {{ post.username }}</p>
 <p>{{ post.content }}</p>
-
+<!-- TODO: hide if not original poster -->
+{% if current_user == post.originalPoster %}
+    <a href="/forums/{{ post.forumID }}/edit_post" class="button">Edit Post</a>
+{% endif %}
 <hr>
 <h3>Leave a comment</h3>
 

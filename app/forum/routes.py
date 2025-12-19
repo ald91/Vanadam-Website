@@ -1,6 +1,6 @@
 
 #external modules
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, session
 
 
 #python modules
@@ -37,7 +37,7 @@ def create_post():
     if form.validate_on_submit():
         post(form)
         print("Article Created")
-        return redirect(url_for("forum_page"))
+        return redirect(url_for("forum.forum_page"))
 
     return render_template("create_post.html", form=form)
 
@@ -57,23 +57,23 @@ def view_post(id):
     post = fetch_one(id)
     comments = fetch_comments(id)
     comment_form = CommentForm()
+    current_user = session.get('username')
 
-    return render_template("view_post.html", post=post, comment=comment_form,comments=comments)
+    return render_template("view_post.html", post=post, comment=comment_form, comments=comments, current_user=current_user)
 
-#TODO: Create edit template
 @forum.route('/<id>/edit', methods=["GET", "POST"])
 def edit_post(id):
     form = ForumForm()
 
     if not form.validate_on_submit():
-        form = prefill(form)
+        form = prefill(form, id)
 
     if form.validate_on_submit():
         modify(form)
 
-    pass
+    return render_template("edit_post.html", form=form)
 
 @forum.route('/<id>/delete', methods=["GET", "DELETE"])
 def delete_post(post_id):
     delete(post_id)
-    return redirect(url_for("forum_page"))
+    return redirect(url_for("forum.forum_page"))
