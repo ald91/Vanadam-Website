@@ -42,13 +42,13 @@ def dashboard():
 
         match action:
             case "video":
-                return redirect(url_for("admin.video_management")) #TODO
+                return redirect(url_for("admin.video_management"))
 
             case "article":
-                return redirect(url_for("admin.article_management")) #TODO
+                return redirect(url_for("admin.article_management"))
 
             case "user":
-                return redirect(url_for("admin.user_management")) #TODO
+                return redirect(url_for("admin.user_management"))
             
             case "database":
                 return redirect(url_for("admin.database_management"))
@@ -208,7 +208,6 @@ def database_management():
     pass
 
 
-#TODO: admin user management
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
     
