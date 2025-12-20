@@ -64,7 +64,8 @@ class LoginForm(FlaskForm):
                              validators=[
                                  DataRequired(),
                                  Length(min=8, max=64),
-                                 Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
+                                 #TODO: Fix regexp, atm prevents logging in.
+                                 #Regexp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
                              ])
     submit = SubmitField('Login')
 
