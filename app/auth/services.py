@@ -38,6 +38,9 @@ def log_in_user(form):
         else:
             return False
 
+    if not form.validate_on_submit():
+        print(form.errors)
+        return False
 def send_registration_email(username,email):
     try:
         msg = Message(
