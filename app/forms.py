@@ -68,7 +68,6 @@ class LoginForm(FlaskForm):
                              ])
     submit = SubmitField('Login')
 
-
 # Length and Regexp need checking
 # Regexp seems properly buggered, needs a rework
 class RegisterForm(FlaskForm):
@@ -103,6 +102,44 @@ class RegisterForm(FlaskForm):
 
     submit = SubmitField('Register')
 
+#for Admins setting and editing users
+#uses same validation as Register form, could refactor for less code but meh WE CANT CHANGE USERPASSWORDS
+class AdminUserForm(FlaskForm):
+    username = StringField('Username',
+                           validators=[
+                               DataRequired(message="Username is not Valid."),
+                               Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
+                               # Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
+                           ])
+
+    email = EmailField('Email',
+                       validators=[
+                           DataRequired(message="Email is not Valid."),
+                           Email()
+                       ])
+
+    xboxname = StringField('Xbox GamerTag',
+                           validators=[
+                            DataRequired(message="Gamertag is required."),
+                            Length(
+                                min=3,
+                                max=15,
+                                message="Gamertag must be between 3 and 15 characters long."
+                            ),
+                            Regexp(
+                                r"^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$",
+                                message="Gamertag may only contain letters, numbers, and single spaces (no leading, trailing, or double spaces)."
+                            ),
+                        ])
+    
+    timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
+    arenarank = SelectField('enter your highest ranked area rank', choices=list(infiniteCSR.keys()))
+    isAdmin = BooleanField('is this user an administrator (CAREFULL)')
+    banned = BooleanField('is this user banned from posting in the forums?')
+    submit = SubmitField('Modify User')
+
+
+
 #users recover account using username and email
 #uses same validation as login
 class RecoveryForm(FlaskForm):
@@ -119,7 +156,7 @@ class PasswordResetForm(FlaskForm):
     
 #profile edit form for use in LFG and Forums later
 class ProfileEditForm(FlaskForm):
-    #only editable by PATCH request from /profile/<username>
+    #only editable by Post request from /profile/<username>
     username = StringField('Username',
                         validators=[
                             DataRequired(message="Username is not Valid."),
@@ -148,10 +185,8 @@ class ProfileEditForm(FlaskForm):
                         ])
     
     timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
-
     arenarank = SelectField('enter your highest ranked area rank', choices=list(infiniteCSR.keys()))
-
-    submit = SubmitField('submit info')
+    submit = SubmitField('submit')
 
 #I assume there will be some sort of issue with wtfforms datefield and sqlite as there is no date datatype but need
 #to test this once we have hands on some data?

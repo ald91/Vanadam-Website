@@ -85,9 +85,9 @@
                     </li>
                 </ul>
                 <div class="align-content-right">
-                    {% if session.get('username') %}
+                    {% if session.get('userID') %}
                     <!-- If user is logged in-->
-                    <a href="/profile/{{ session.get('username') }}"><button class="btn" type="button">Profile</button></a>
+                    <a href="{{ url_for('content.profilePage', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
                     <a href="/auth/logout"><button class="btn" type="button">Log Out</button></a>
                     {% else %}
                     <!-- If user is NOT logged in-->
@@ -105,6 +105,7 @@
       <div id="pageMain" class="container-sm mx-auto my-auto ps-2 pb-1 pt-2">
     {% if DEBUG_MODE %}
     <p>DEBUG: username = {{ session.get('username') }}</p>
+    <P>DEBUG: userID = {{ session.get('userID') }}</P>
     {% endif%}
     <!-- Flash Messages: This will display any error/success/status messages to the user -->
     {% for category, message in get_flashed_messages(with_categories=True) %}

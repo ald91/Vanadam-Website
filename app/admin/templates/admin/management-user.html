@@ -1,0 +1,131 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Admin Control - User Management {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div class="container-fluid">
+        <form class="" method="POST" action="/admin/user-management">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-3 col-sm-12">
+            <H2>User Management</H2>
+            <br>
+            <div class="col-12 d-flex justify-content-evenly">
+                <div class="col-4">
+                    <h3 class=""> Users Overview</h3>
+                </div>
+                <div class="col-8">
+                    <p>total videos on record: {{ AllUserData|length }}</p>
+                </div>
+            </div>
+            <br>
+            <div class="col-12 d-flex justify-content-evenly">
+                <div class="col-4">
+                    <h3 class="">User Actions</h3>
+                </div>
+                <button class="adminDashBoardButton" type="submit" name="userAction" value="user_create">register new user</button>
+                <button class="adminDashBoardButton" type="submit" name="userAction" value="user_login_disable">disable user log in</button>
+                <button class="adminDashBoardButton" type="submit" name="userAction" value="user_force_logout">force logout all users</button>
+            </div>
+            <br>
+        </div>
+        <!-- admin results -->
+        <h2 class="p-2"> Administrators </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2" style="background-color: black!important; border-style: none!important;">
+                <div id ="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">UserID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Email Adress</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Xbox Name</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Banned</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">IsAdmin</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+
+        {% for user in AllUserData %}{% if user.isAdmin == 1 and user.banned == 0 %}
+                <div id="{{ user.userID }} AdminTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.email }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.xboxname }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.banned == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.isAdmin == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton"  type="submit" name="userAction" value="user_modify({{ user.userID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_ban({{ user.userID }})">Ban</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_delete({{ user.userID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+
+        <!-- non-admin results -->
+        <h2 class="p-2"> All Other Users </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="UserTable" class="d-flex flex-column pb-2" style="background-color: black!important; border-style: none!important;">
+                <div id ="UserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">UserID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Email Adress</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Xbox Name</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Banned</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">IsAdmin</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                {% for user in AllUserData %}{% if user.isAdmin == 0 and user.banned == 0 %}
+                <div id="{{ user.userID }}UserTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.email }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.xboxname }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.banned == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.isAdmin == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton"  type="submit" name="userAction" value="user_modify({{ user.userID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_ban({{ user.userID }})">Ban</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_delete({{ user.userID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Banned results -->
+        <h2 class="p-2"> Banned Users </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="UserTable" class="d-flex flex-column pb-2" style="background-color: black!important; border-style: none!important;">
+                <div id ="UserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">UserID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Email Adress</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Xbox Name</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Banned</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">IsAdmin</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                {% for user in AllUserData %}{% if user.banned == 1 %}
+                <div id="{{ user.userID }}UserTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.email }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ user.xboxname }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.banned == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if user.isAdmin == True %} True {% else %} False {% endif %}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton"  type="submit" name="userAction" value="user_modify({{ user.userID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_unban({{ user.userID }})">Unban</button>
+                        <button class="adminDashBoardButton" type="submit" name="userAction" value="user_delete({{ user.userID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+    </form>
+    </div>
+{% endblock %}

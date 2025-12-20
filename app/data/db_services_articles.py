@@ -180,7 +180,6 @@ def Register_New_Article(form: object) -> bool:
     checkTags(cur, "Article", postID, articleTags)
 
     db.commit()
-    db.close()
 
     return True
 
@@ -308,7 +307,6 @@ def Toggle_Article_Visibility(articleID: int) -> bool:
         cur = db.cursor()
         cur.execute("UPDATE Articles SET hidden = ? WHERE articleID = ?",(hidden, articleID))
         db.commit()
-        db.close()
 
         return True
     
@@ -372,6 +370,5 @@ def Test_Article() -> bool:
         checkTags(cur, "Article", postID, articleTags)
 
         db.commit()
-        db.close()
 
     return True

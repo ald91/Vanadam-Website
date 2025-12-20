@@ -31,7 +31,7 @@ def app_create():
 
     #load environment variables
     load_dotenv()
-    DEBUG_MODE = False
+    DEBUG_MODE = True
 
     #config
     app.config.from_object("config")

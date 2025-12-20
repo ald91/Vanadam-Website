@@ -39,7 +39,6 @@ def Toggle_Video_Visibility(vidID: str) -> bool:
         cur = db.cursor()
         cur.execute("UPDATE Videos SET hidden = ?, manualedit = ? WHERE vidID = ?",(hidden, 1 , vidID))
         db.commit()
-        db.close()
 
         return True
     

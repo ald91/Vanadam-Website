@@ -8,12 +8,13 @@ from functools import wraps
 #app imports
 from app.data.db import create_database, db_path
 from app.services import *
-from app.forms import ArticleForm
+from app.forms import ArticleForm, AdminUserForm
 from app.data.routes import Data_Send_Article_IMG
 
 #db functions
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
 from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
+from app.data.db_services_users import Single_User_Query, Modify_User_Data
 
 #self module
 from . import admin
@@ -211,14 +212,16 @@ def database_management():
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
     
+    AllUserData = All_Users_Management_Query()
+    print(AllUserData)
 
     if request.method == "GET":
-        users = All_Users_Management_Query()
-        return render_template('management-user.html', users=users)
+        return render_template('management-user.html', AllUserData=AllUserData)
 
     elif request.method == "POST":
 
         matchCase = Post_Form_Match_Case(request.form.get("userAction"))
+        print(matchCase)
         action = matchCase[0]
         userID = matchCase[1]
 
@@ -226,25 +229,54 @@ def user_management():
 
             case "user_new":
                 pass
+            case "user_modify":
+                return redirect(url_for('admin.User_Management_Individual', userID=userID))
             case "user_delete":
                 flag = Delete_User(userID)
             case "user_ban":
                 flag = Ban_User(userID)
             case "user_unban":
                 flag = Unban_User(userID)
-            case "user_tags":
-                new_tags = request.form.get("newTags")  # from input field
-                flag = Update_User_Tags(userID, new_tags)
             case _:
                 flag = False
                 flash("Unknown user action", "danger")
-                return redirect(url_for("admin.user_management"))
             
         if flag:
-            flash(f"successfully carried out action ({action}) on user ({userID})")
+            flash(f"successfully carried out action ({action}) on user ({userID})", "success")
         elif not flag:
-            flash(f"could not carry out action ({action}) on user ({userID})")
+            flash(f"could not carry out action ({action}) on user ({userID})", "critical")
 
     else:
         flash("Internal routing error", "danger")
-        return redirect(url_for("admin.user_management"))
+    
+    return redirect(url_for("admin.user_management"))
+
+@admin.route('/user-management/<userID>', methods=["GET", "POST"])
+def User_Management_Individual(userID: str):
+    form = AdminUserForm()
+    
+    if request.method == "GET":
+        userData = Single_User_Query("admin", userID)
+        form.username.data = userData["username"] 
+        form.email.data = userData["email"]
+        form.xboxname.data = userData["xboxname"]
+        form.timezone.data = userData["timezone"]
+        form.arenarank.data = userData["arenarank"]
+        form.isAdmin.data = userData["isAdmin"] | False
+        form.banned.data = userData["banned"]  | False
+        return render_template('management-user-individual.html', form=form, userData=userData)  
+    
+    elif request.method =="POST":
+        if form.validate_on_submit():
+                print(f"recieved update request to modify {userID}")
+                flag = Modify_User_Data(userID, form)
+        if flag:
+            flash(f"user data for {userID} has been updated", "success")
+        else:
+            flash(f"user data for {userID} has not been updated, an error occured", "warning")
+        
+        return redirect(url_for('admin.user_management'))     
+        
+    else:
+        flash("invalid request parameter", "critical")
+        return redirect(url_for('admin.user_management'))

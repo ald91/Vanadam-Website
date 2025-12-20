@@ -516,7 +516,6 @@ def Commit_to_DB() -> None:
         checkTags(cur, "Video", postID, tags)
         
     db.commit()
-    db.close()  
     
     #reset lists for next update
     newRecords = [] 

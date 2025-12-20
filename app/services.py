@@ -40,7 +40,7 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "username" not in session:
+        if "userID" not in session:
             return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
     return wrapper

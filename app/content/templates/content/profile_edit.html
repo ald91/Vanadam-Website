@@ -1,13 +1,13 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Profile {% endblock %}
+{% block title %} Edit your profile {{ username }} {% endblock %}
 {% endblock %}
 
 
 
 {% block content %}
- <form action="/profile/edit/{{ username }}" name="editprofile" method="POST" enctype="multipart/ ProfileForm-data">
+ <form action="/profile/edit/{{ userID }}" name="editprofile" method="POST" enctype="multipart/ ProfileForm-data">
         {{  ProfileForm.hidden_tag() }}
 
         <div class="container-fluid mt-4">

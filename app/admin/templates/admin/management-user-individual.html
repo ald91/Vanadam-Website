@@ -1,0 +1,87 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Manage User - {{ userData.username }} {% endblock %}
+{% endblock %}
+
+
+{% block content %}
+
+
+<H2 class="text-center">{{ userData.username }}</H2>
+
+<div class="container-fluid justify-content-center m-1 p-1">
+
+    <h2>Edit User: {{ userData.username }}</h2>
+    <form action="/admin/user-management/{{ userData.userID }}" name="AdminUserForm" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-6">
+                    <label>Username</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.username(size=60) }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>email address</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.email(size=60) }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Xbox Name</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.xboxname(size=60) }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Time Zone</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.timezone() }}<br><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>Arena Rank</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.arenarank() }}<br><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>Administrator Privelages</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.isAdmin() }}<br><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>Ban User</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.banned() }}<br><br>
+                </div>
+            </div>            
+            {{ form.submit(class="btn btn-primary") }}
+
+    </form>
+
+</div>
+
+<br>
+
+{% endblock %}

@@ -31,7 +31,8 @@ def log_in_user(form):
         if check_password_hash(stored_password, password):
             #Clear session data to remove stale data, then fill in session data
             session.clear()
-            session['username'] = result['username']
+            session['userID'] = int(result['userID'])
+            session['username'] = str(result['username'])
             return True
         
         else:
@@ -98,7 +99,7 @@ def register_user(form):
             cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
                         (username, email, hashpass))
             db.commit()
-            session['username'] = username
+            session['userID'] = username
             
             send_registration_email(username, email)
 

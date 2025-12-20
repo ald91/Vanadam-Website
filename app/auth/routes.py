@@ -22,14 +22,14 @@ def login():
     form = LoginForm()
 
     # If already logged in, do not show login page (commented out request.method =="GET" and)
-    if 'username' in session:
+    if 'userID' in session:
         flash("Cannot log in while already logged in.", "danger")
         return redirect(url_for('content.index'))
 
     # Handle Login
     if request.method == "POST":
         if log_in_user(form):
-            flash(f"Logged in as {session['username']}", "success")
+            flash(f"Logged in as {session['userID']}", "success")
             return redirect(url_for('content.index'))
         else:
             flash("Incorrect username or password.", "danger")
@@ -41,7 +41,9 @@ def login():
 @auth.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('userID', None)
     session.pop('logged_in', None)
+
 
     flash("You’ve been logged out.", "info")
     return redirect(url_for('content.index'))

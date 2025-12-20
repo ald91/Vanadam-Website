@@ -34,7 +34,8 @@ def create_database(db_path):
     # === USERS ===
     cursor.execute("""
     CREATE TABLE Users (
-        username TEXT PRIMARY KEY,
+        userID INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
         email TEXT NOT NULL,
         xboxname TEXT,
         arenarank TEXT,
@@ -85,11 +86,10 @@ def create_database(db_path):
     CREATE TABLE Messages (
         msgID INTEGER PRIMARY KEY AUTOINCREMENT,
         forumID INTEGER,
-        username TEXT NOT NULL,
+        userID TEXT NOT NULL,
         content TEXT NOT NULL,
-        date TEXT DEFAULT (datetime('now'))
-,
-        FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE,
+        date TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (forumID) REFERENCES Forums(forumID) ON DELETE CASCADE
     );
     """)

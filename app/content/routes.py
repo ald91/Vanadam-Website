@@ -1,3 +1,4 @@
+#TODO: BUG : when a user changes their username the flash message for user not logged in occurs. (check redirect?)
 
 #external modules
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
@@ -14,7 +15,7 @@ from app.forms import CoachingForm, ProfileEditForm
 
 #db imports
 from app.data.db import get_database
-from app.data.db_services_users import User_Profile_Update, User_Data_Query
+from app.data.db_services_users import User_Profile_Update, Single_User_Query
 
 #self
 from . import content
@@ -159,47 +160,55 @@ def search():
     return render_template('search.html', form=form)
 
 #TODO: finish user profile (ADAM) - user history and submission if time
-@content.route('/profile/<username>', methods=['GET', 'POST'])
-def profilePage(username):
+@content.route('/profile/<int:userID>', methods=['GET', 'POST'])
+def profilePage(userID):
     
-    logged_in_user = session.get('username')
+    username:str = session.get('username')
+    userID:int = session.get('userID')
+    
+    print(username, userID, request)
 
-    if not logged_in_user or username != logged_in_user:
+    if username == None and userID == None:
             flash("you must be logged in to view your profile", "danger")
             return redirect(url_for('content.index'))         
     
 
     if request.method == 'POST':
         action = request.form.get("userprofile")
-
         match action:
             case "edit_profile":
-                redirect(url_for("content.User_Self_Edit_Profile"), username=username)
+                return redirect(url_for("content.User_Self_Edit_Profile", username=username))
 
 
-    print(f"got request to load profile page for: {logged_in_user}")
-    userData = User_Data_Query(username)
-    return render_template('profile.html', username=logged_in_user, userData=userData)
+    print(f"got request to load profile page for: {userID} who is {username}")
+    userData = Single_User_Query("self", userID)
+    return render_template('profile.html', username=username, userID=userID , userData=userData)
 
-@content.route('/profile/edit/<username>', methods=['GET', 'POST'])
-def user_self_edit_profile(username):
-    logged_in_user = session.get('username')
-    if not logged_in_user or logged_in_user != username:
-        flash("You are not allowed to edit this profile.", "error")
-        return redirect(url_for("content.profile", username=logged_in_user))
+@content.route('/profile/edit/<userID>', methods=['GET', 'POST'])
+def User_Self_Edit_Profile(userID):
+    userID = userID
+    username = session.get('username')
+    userData = Single_User_Query("self", userID)
+
+    if username != userData.get('username') and userID != userData.get('userID'):
+            flash("Naughty! trying to edit someone elses profile!", "danger")
+            return redirect(url_for('content.index'))    
 
     profile_form = ProfileEditForm()
 
     if profile_form.validate_on_submit():
         # Only proceed if the user clicked the correct submit button
-        flag = User_Profile_Update(username, profile_form)
+        flag = User_Profile_Update(userID, profile_form)
         if flag:
             flash("Your profile has been updated. Refresh the page if changes are not visible.", "success")
         else:
             flash("Your profile could not be updated. If this happens again, contact admin.", "warning")
-        return redirect(url_for("content.profilePage", username=logged_in_user))
-
-    return render_template("profile_edit.html", ProfileForm=profile_form, username=logged_in_user)
+        
+        return redirect(url_for("content.profilePage", userID=userID))
+    else:
+        flash("form data invalid", "critical")
+        
+    return render_template("profile_edit.html", ProfileForm=profile_form, userID=userID)
 
 @content.route('/about', methods=['GET'])
 def about_page():
@@ -235,8 +244,8 @@ def coaching():
 
     else:
         #backfill user data if they're logged in UX :)
-        if session.get('username'):
-            userData = User_Data_Query(session.get('username'))
+        if session.get('userID'):
+            userData = Single_User_Query("self", session.get('userID'))
             form.username.data = userData["username"]
             form.email.data = userData["email"]
             form.xboxname.data = userData["xboxname"]
