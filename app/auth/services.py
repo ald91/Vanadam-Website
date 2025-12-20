@@ -99,16 +99,23 @@ def register_user(form):
             cur.execute("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
                         (username, email, hashpass))
             db.commit()
-            session['userID'] = username
+            
+            cur.execute("SELECT * FROM Users WHERE username = ?", (username,))
+            userData = cur.fetchone()
+            
+            if userData:
+                userData = dict(userData)
+                session['userID'] = userData.get("userID")
+                session['username'] = userData.get("username")
             
             send_registration_email(username, email)
 
-            return session['username']
+            return
         
         else:
-            return False
+            return None
     else:
-        return False
+        return None
 
 def verify_reset_token(token, expiration=3600):
     try:

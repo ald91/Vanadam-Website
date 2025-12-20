@@ -186,9 +186,10 @@ def profilePage(userID):
 
 @content.route('/profile/edit/<userID>', methods=['GET', 'POST'])
 def User_Self_Edit_Profile(userID):
-    userID = userID
+    userID = session.get('userID')
     username = session.get('username')
     userData = Single_User_Query("self", userID)
+    print(userData)
 
     if username != userData.get('username') and userID != userData.get('userID'):
             flash("Naughty! trying to edit someone elses profile!", "danger")

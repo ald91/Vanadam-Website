@@ -36,13 +36,14 @@ def create_database(db_path):
     CREATE TABLE Users (
         userID INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT,
+        password TEXT NOT NULL,
         email TEXT NOT NULL,
         xboxname TEXT,
         arenarank TEXT,
         timezone TEXT,
-        password TEXT NOT NULL,
+        userTags TEXT,
         isAdmin BOOLEAN default 0,
-        banned BOOLEAN default 0
+        banned BOOLEAN default 0        
     );
     """)
 

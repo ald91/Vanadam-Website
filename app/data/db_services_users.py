@@ -53,8 +53,6 @@ def Single_User_Query(who: str = "public", userID: int = None) -> dict:
     except Exception as e:
         print("Unable to find userdata, database error:", e)
 
-
-
 def User_Profile_Update(userID: int, form: object) -> bool:
 
     """ PUBLIC VERSION. Uses the ProfileEditForm object to check existing user data and edit it. This is the USER version of user edit, use Admin version if admin."""
@@ -95,8 +93,6 @@ def User_Profile_Update(userID: int, form: object) -> bool:
             print(f"Unable to update User Profile for {username}: ", e)
             return False
         
-
-
 def Modify_User_Data(userID:int, form:object) -> bool:
     """ returns all user data for a user including admin fields and contributions to other areas."""
 

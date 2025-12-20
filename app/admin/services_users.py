@@ -27,6 +27,7 @@ def Delete_User(userID: int) -> bool:
         return False
     return True
 
+#TODO: USERS SHOULDNT BE ABLE TO POST TO FORUMS
 def Ban_User(userID: int) -> bool:
     """ set a users banned status to TRUE"""
     try:
