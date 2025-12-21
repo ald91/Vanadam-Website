@@ -384,6 +384,6 @@ class CoachingForm(FlaskForm):
     submit = SubmitField("Send Request")
 
 class ReportForm(FlaskForm):
-    target_type = HiddenField()
     target_id = HiddenField()
+    reason = TextAreaField()
     submit = SubmitField("Report")

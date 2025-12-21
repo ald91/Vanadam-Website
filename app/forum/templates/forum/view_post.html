@@ -8,20 +8,7 @@
     <a href="/forums/{{ post.forumID }}/edit" class="button">Edit Post</a>
     <a href="/forums/{{ post.forumID }}/delete" class="button">Delete Post</a>
 {% endif %}
-
-<form method="POST"
-      action="{{ url_for('forum.report') }}"
-      style="display:inline;">
-    {{ report_form.hidden_tag() }}
-
-    {{ report_form.target_type(value="post") }}
-    {{ report_form.target_id(value=post.forumID) }}
-
-    <button type="submit" class="button warning">
-        Report Post
-    </button>
-</form>
-
+<a href="/forums/{{ post.forumID }}/report" class="button">Report Post/Comment</a>
 
 <hr>
 <h3>Leave a comment</h3>
@@ -44,25 +31,8 @@
     {% for cmt in comments %}
     <div class="comment">
         <strong>{{ cmt.username }}</strong>: {{ cmt.content }}
-
-        {% if current_user != cmt.username %}
-        <form method="POST"
-              action="{{ url_for('forum.report') }}"
-              style="display:inline;">
-            {{ report_form.hidden_tag() }}
-
-            {{ report_form.target_type(value="comment") }}
-            {{ report_form.target_id(value=cmt.commentID) }}
-
-            <button type="submit" class="button warning small">
-                Report
-            </button>
-        </form>
-        {% endif %}
     </div>
     {% endfor %}
-
-
 <hr>
 
 {% endblock %}

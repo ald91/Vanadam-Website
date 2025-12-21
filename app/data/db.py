@@ -82,15 +82,25 @@ def create_database(db_path):
     );
     """)
 
+    # === FORUMS ===
+    cursor.execute("""
+        CREATE TABLE Forums (
+            forumID INTEGER PRIMARY KEY AUTOINCREMENT,
+            originalPoster TEXT,
+            title TEXT,
+            content TEXT,
+            date TEXT DEFAULT (datetime('now'))
+        );
+        """)
+
     # === MESSAGES ===
     cursor.execute("""
     CREATE TABLE Messages (
         msgID INTEGER PRIMARY KEY AUTOINCREMENT,
         forumID INTEGER,
-        userID TEXT NOT NULL,
+        username TEXT NOT NULL,
         content TEXT NOT NULL,
         date TEXT DEFAULT (datetime('now')),
-        FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (forumID) REFERENCES Forums(forumID) ON DELETE CASCADE
     );
     """)
@@ -99,7 +109,6 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Reports (
         reportID INTEGER PRIMARY KEY AUTOINCREMENT,
-        target_type TEXT NOT NULL CHECK(target_type IN ('post', 'comment')),
         target_id INTEGER NOT NULL,
         reported_by TEXT NOT NULL,
         reason TEXT,
@@ -119,17 +128,6 @@ def create_database(db_path):
         image_filename TEXT,
         hidden BOOLEAN default 0,
         FOREIGN KEY(postID) REFERENCES Posts(postID) ON DELETE CASCADE
-    );
-    """)
-
-    # === FORUMS ===
-    cursor.execute("""
-    CREATE TABLE Forums (
-        forumID INTEGER PRIMARY KEY AUTOINCREMENT,
-        originalPoster TEXT,
-        title TEXT,
-        content TEXT,
-        date TEXT DEFAULT (datetime('now'))
     );
     """)
 
@@ -205,7 +203,7 @@ def create_database(db_path):
     #Create a composite key on reports so that one user may not report the same element multiple times, spam prevention
     cursor.execute("""
     CREATE UNIQUE INDEX idx_unique_report
-    ON Reports (target_type, target_id, reported_by);
+    ON Reports (target_id, reported_by);
     """)
 
 

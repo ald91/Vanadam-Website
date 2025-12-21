@@ -73,8 +73,12 @@ def check_ban(username:str) -> bool:
 
     query = "SELECT * FROM Users WHERE username = ?"
     cur.execute(query, (username,))
-
-    result = dict(cur.fetchone())
+    result = cur.fetchone()
+    if result is not None:
+        result = dict(result)
+    else:
+        print("Checked ban on non-existent user")
+        return True
     if result["banned"]:
         return True
     else:

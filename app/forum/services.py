@@ -114,24 +114,14 @@ def check(forumID):
     else:
         return False
 
-def file_report(target_type, target_id, current_user):
+def file_report(target_id, current_user, reason):
     db = get_database()
     cur = db.cursor()
 
-    #Ensure target element exists before processing report
-    if target_type == "post":
-        cur.execute("SELECT 1 FROM Forums WHERE forumID = ?", (target_id,))
-    elif target_type == "comment":
-        cur.execute("SELECT 1 FROM Messages WHERE msgID = ?", (target_id,))
-
-    if cur.fetchone() is None:
-        abort(404)
-
     cur.execute("""
-            INSERT INTO Reports (target_type, target_id, reported_by)
+            INSERT INTO Reports (target_id, reported_by, reason)
             VALUES (?, ?, ?)
-        """, (target_type, target_id, current_user))
+        """, (target_id, current_user, reason))
 
     db.commit()
-
-
+    print("Report Success")

@@ -49,7 +49,7 @@ def create_comment(id):
     username = session.get('username')
 
     if form.validate_on_submit() and not check_ban(username):
-        comment(form, id)
+        comment(form, id, username)
         print("Comment Created")
 
     return redirect(url_for("forum.view_post", id=id, username=username))
@@ -81,12 +81,14 @@ def delete_post(id):
     delete_post_record(id)
     return redirect(url_for("forum.forum_page"))
 
-@forum.route('/report', methods=["GET", "POST"])
+@forum.route('/<id>/report', methods=["GET", "POST"])
 @login_required
 def report():
-    target_type = request.form["target_type"]
     target_id = request.form["target_id"]
     current_user = session.get('username')
+    reason = request.form["reason"]
     if current_user is not None:
-        file_report(target_type, target_id, current_user)
-    return redirect(request.referrer)
+        print("Report Started")
+        file_report(target_id, current_user, reason)
+    return redirect(url_for("forum.forum_page"))
+
