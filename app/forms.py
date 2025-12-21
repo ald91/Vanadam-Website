@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField, FormField
+from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField, FormField, HiddenField
 from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
@@ -382,3 +382,8 @@ class CoachingForm(FlaskForm):
     sunday =  FormField(TimeSlotForm)
     details = TextAreaField("Enter any additional details here")
     submit = SubmitField("Send Request")
+
+class ReportForm(FlaskForm):
+    target_type = HiddenField()
+    target_id = HiddenField()
+    submit = SubmitField("Report")

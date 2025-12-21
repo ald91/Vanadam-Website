@@ -2,12 +2,27 @@
 {% block content %}
 
 <h1>{{ post.title }}</h1>
-<p><strong>Posted by:</strong> {{ post.username }}</p>
+<p><strong>Posted by:</strong> {{ post.originalPoster }}</p>
 <p>{{ post.content }}</p>
-<!-- TODO: hide if not original poster -->
 {% if current_user == post.originalPoster %}
     <a href="/forums/{{ post.forumID }}/edit" class="button">Edit Post</a>
+    <a href="/forums/{{ post.forumID }}/delete" class="button">Delete Post</a>
 {% endif %}
+
+<form method="POST"
+      action="{{ url_for('forum.report') }}"
+      style="display:inline;">
+    {{ report_form.hidden_tag() }}
+
+    {{ report_form.target_type(value="post") }}
+    {{ report_form.target_id(value=post.forumID) }}
+
+    <button type="submit" class="button warning">
+        Report Post
+    </button>
+</form>
+
+
 <hr>
 <h3>Leave a comment</h3>
 
@@ -26,15 +41,27 @@
 
 <hr>
 <h3>Comments</h3>
-
     {% for cmt in comments %}
-        <div class="comment">
-            <strong>{{ cmt.username }}</strong>: {{ cmt.content }}
-        </div>
+    <div class="comment">
+        <strong>{{ cmt.username }}</strong>: {{ cmt.content }}
 
-    {% else %}
-        <p>No comments yet.</p>
+        {% if current_user != cmt.username %}
+        <form method="POST"
+              action="{{ url_for('forum.report') }}"
+              style="display:inline;">
+            {{ report_form.hidden_tag() }}
+
+            {{ report_form.target_type(value="comment") }}
+            {{ report_form.target_id(value=cmt.commentID) }}
+
+            <button type="submit" class="button warning small">
+                Report
+            </button>
+        </form>
+        {% endif %}
+    </div>
     {% endfor %}
+
 
 <hr>
 

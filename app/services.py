@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import session, redirect, url_for
+from app.data.db import get_database
 
 def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 
@@ -36,7 +37,8 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
 
-#By applying @login_required before after a route definition and before function declaration, you can designate a route to require login
+#By applying @login_required before after a route definition and before function declaration,
+# you can designate a route to require login
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -44,3 +46,36 @@ def login_required(f):
             return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
     return wrapper
+
+#Delete all but the 16 newest posts to the forums table,
+# uses Flask-APScheduler for automation, as defined in __init__.py
+def clear_stale_posts():
+    db = get_database()
+    cur = db.cursor()
+
+    query = """
+    DELETE FROM Forums
+    WHERE forumID NOT IN (
+        SELECT forumID FROM (
+            SELECT forumID
+            FROM Forums
+            ORDER BY forumID DESC
+            LIMIT 16
+        ) AS newest
+    )
+    """
+    cur.execute(query)
+    db.commit()
+
+def check_ban(username:str) -> bool:
+    db = get_database()
+    cur = db.cursor()
+
+    query = "SELECT * FROM Users WHERE username = ?"
+    cur.execute(query, (username,))
+
+    result = dict(cur.fetchone())
+    if result["banned"]:
+        return True
+    else:
+        return False

@@ -3,6 +3,7 @@ from flask import Flask, session
 from flask_wtf import CSRFProtect
 from flask_mail import Mail
 from flask_wtf import CSRFProtect
+from flask_apscheduler import APScheduler
 
 #Security
 from itsdangerous import URLSafeTimedSerializer
@@ -12,6 +13,7 @@ import os, hashlib
 
 #Sessions
 from flask_session import Session
+from app.services import clear_stale_posts
 
 #env file loader
 from dotenv import load_dotenv
@@ -25,6 +27,8 @@ from .data import data
 from .HaloData import *
 from .data.db import g
 from .extensions import mail, serializer, security_salt
+
+scheduler = APScheduler()
 
 def app_create():
     app = Flask(__name__)
@@ -72,6 +76,24 @@ def app_create():
             "HALO_INFINITE_DATA": HALO_INFINITE_DATA,
             "DEBUG_MODE" : DEBUG_MODE
     }
+
+    # This route is called at the end of a request, removing db connection from g, ready for the next request
+    @app.teardown_appcontext
+    def close_db(exception):
+        db = g.pop('db', None)
+        if db is not None:
+            db.close()
+
+    #Scheduling for automated tasks
+    scheduler.init_app(app)
+    scheduler.start()
+
+    scheduler.add_job(
+        id='clear_stale_posts',
+        func=clear_stale_posts,
+        trigger='interval',
+        minutes=30
+    )
 
     print(app.url_map)
 

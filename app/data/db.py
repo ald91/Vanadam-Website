@@ -99,9 +99,13 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Reports (
         reportID INTEGER PRIMARY KEY AUTOINCREMENT,
-        msgID INTEGER NOT NULL,
-        FOREIGN KEY (msgID) REFERENCES Messages(msgID) ON DELETE CASCADE
+        target_type TEXT NOT NULL CHECK(target_type IN ('post', 'comment')),
+        target_id INTEGER NOT NULL,
+        reported_by TEXT NOT NULL,
+        reason TEXT,
+        date TEXT DEFAULT (datetime('now'))
     );
+
     """)
 
     # === ARTICLES ===
@@ -197,6 +201,13 @@ def create_database(db_path):
     cursor.execute("""
     CREATE INDEX IF NOT EXISTS idx_messages_boardID ON Messages(forumID);
     """)
+
+    #Create a composite key on reports so that one user may not report the same element multiple times, spam prevention
+    cursor.execute("""
+    CREATE UNIQUE INDEX idx_unique_report
+    ON Reports (target_type, target_id, reported_by);
+    """)
+
 
 
     # == Triggers ===
