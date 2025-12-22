@@ -13,10 +13,12 @@ from app.forms import SearchForm
 from app.HaloData import *
 from app.forms import CoachingForm, ProfileEditForm
 
+
 #db imports
 from app.data.db import get_database
 from app.data.db_services_users import User_Profile_Update, Single_User_Query
 from app.data.db_services_coaching import Register_New_Coaching_Request, Coaching_Save_JSON
+from app.data.db_services_coaching import Coaching_Query
 
 #self
 from . import content
@@ -176,14 +178,19 @@ def profilePage(userID):
 
     if request.method == 'POST':
         action = request.form.get("userprofile")
+        crequestID=None
+
         match action:
             case "edit_profile":
                 return redirect(url_for("content.User_Self_Edit_Profile", username=username))
+            case "edit_crequest":
+                return redirect(url_for('content.User_Self_Edit_Crequest', crequestID=crequestID))
 
 
     print(f"got request to load profile page for: {userID} who is {username}")
     userData = Single_User_Query("self", userID)
-    return render_template('profile.html', username=username, userID=userID , userData=userData)
+    userCrequests= Coaching_Query("self", userID=session["userID"])
+    return render_template('profile.html', username=username, userID=userID , userData=userData, userCrequests=userCrequests)
 
 @content.route('/profile/edit/<userID>', methods=['GET', 'POST'])
 def User_Self_Edit_Profile(userID):

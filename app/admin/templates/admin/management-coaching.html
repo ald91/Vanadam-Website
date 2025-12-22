@@ -8,8 +8,8 @@
 
 {% block content %}
 
-    <div class="container-fluid">
-        <form class="" method="POST" action="/admin/coaching-management">
+<div class="container-fluid">
+    <form class="" method="POST" action="/admin/coaching-requests">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="col-3 col-sm-12">
             <H2>Coaching Sessions Management</H2>
@@ -34,8 +34,9 @@
         <!-- awaiting payment results -->
         <h2 class="p-2"> Sessions awaiting payment </h2>
         <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
-            <div id="AdminUserTable" class="d-flex flex-column pb-2" style="background-color: black!important; border-style: none!important;">
-                <div id ="AdmimUserTable-Label" class="row">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
                     <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
@@ -46,25 +47,163 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
 
-        {% for crequest in AllCrequestsData %}
+                {% for crequest in AllCrequestsData %}{% if crequest["paid"] != 1 and crequest["delivered"] == 1
+                %}
+
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
-                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}</div>
-                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}
+                    </div>
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.username }}</div>
-                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}
+                    </div>
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">NYI</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">NYI</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime}}</div>
                     <div class="col-3 d-flex align-content-center">
-                        <button class="adminDashBoardButton"  type="submit" name="coachingAction" value="modify({{ crequest.crequestID }})">Modify</button>
-                        <button class="adminDashBoardButton" type="submit" name="coachingAction" value="paid({{ crequest.crequestID }})">Paid</button>
-                        <button class="adminDashBoardButton" type="submit" name="coachingAction" value="delete({{ crequest.crequestID }})">Delete</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="modify({{ crequest.crequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="paid({{ crequest.crequestID }})">Paid</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="delete({{ crequest.crequestID }})">Delete</button>
+                    </div>
+
+                    {% endif %} {% endfor %}
+                </div>
+
+
+            </div>
+        </div>
+        <br>
+        <!-- awaiting delivery -->
+        <h2 class="p-2"> Sessions awaiting delivery </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="CoachingAwaitTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Session Type</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == False and crequest["agreedtime"]
+                != "00:00:00" %}
+                <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime}}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="modify({{ crequest.crequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="delivered({{ crequest.crequestID }})">Delivered</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="delete({{ crequest.crequestID }})">Delete</button>
                     </div>
                 </div>
-                {% endfor %}
+
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+        <br>
+        <!-- awaiting time schedule results -->
+        <h2 class="p-2"> Sessions awaiting timeslot </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Session Type</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == False and crequest["agreedtime"]
+                == "00:00:00" %}
+                <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime }}
+                    </div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="modify({{ crequest.crequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="delete({{ crequest.crequestID }})">Delete</button>
+                    </div>
+                </div>
+
+                {% endif %}{% endfor %}
+            </div>
+        </div>
+
+        <!-- Complete and paid -->
+        <h2 class="p-2"> Sessions Completed and Paid </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Session Type</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == True and crequest["paid"] == True
+                and crequest["agreedtime"] !="00:00:00" %}
+                <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime}}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="modify({{ crequest.crequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction"
+                            value="delete({{ crequest.crequestID }})">Delete</button>
+                    </div>
+                </div>
+
+                {% endif %} {% endfor %}
             </div>
         </div>
 
     </form>
-    </div>
+</div>
 {% endblock %}

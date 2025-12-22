@@ -8,14 +8,14 @@ from functools import wraps
 #app imports
 from app.data.db import create_database, db_path
 from app.services import *
-from app.forms import ArticleForm, AdminUserForm
+from app.forms import ArticleForm, AdminUserForm, CoachingForm
 from app.data.routes import Data_Send_Article_IMG
 
 #db functions
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
 from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
 from app.data.db_services_users import Single_User_Query, Modify_User_Data
-from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify
+from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify, Coaching_Record_Modify_Quick, Coaching_Form_Data_Prep
 
 #self module
 from . import admin
@@ -287,30 +287,52 @@ def User_Management_Individual(userID: str):
 def coaching_management():
     
     AllCrequestsData = Coaching_Query("admin")
-    print(AllCrequestsData)
 
     if request.method == "GET":
-        render_template('management-coaching.html', AllCrequestsData=AllCrequestsData)  
+        return render_template('management-coaching.html', AllCrequestsData=AllCrequestsData)  
     
     
     elif request.method == "POST":
         matchCase = Post_Form_Match_Case(request.form.get("coachingAction"))
         action = matchCase[0] 
-        crequestID = matchCase[1]
-    
+        crequestID = int(matchCase[1])
+
+        print(action, crequestID)
+
         match action:
             case "modify":
-                redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
+                return redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
             case "delivered":
-                if Coaching_Record_Modify(crequestID, scope="quick", modification="delivered"):
+                if Coaching_Record_Modify_Quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case "paid":
-                if Coaching_Record_Modify(crequestID, scope="quick", modification="paid"):
+                if Coaching_Record_Modify_Quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case "delete":
-                if Coaching_Record_Modify(crequestID, scope="quick", modification="delete"):
+                if Coaching_Record_Modify_Quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case _:
                 flash("invalid request","warning")
 
-    return render_template("management-coaching.html", AllCrequestsData=AllCrequestsData)
+    return redirect(url_for('admin.coaching_management'))
+
+@admin.route('/coaching-requests/<int:crequestID>', methods=["GET", "POST"])
+def coaching_management_request(crequestID):
+    if request.method == "GET":
+        crequestData = Coaching_Query("admin", crequestID=crequestID)
+        crequestData = crequestData[0]
+        form = Coaching_Form_Data_Prep(crequestData)
+    
+        return render_template('management-coaching-individual.html', crequestData=crequestData, form=form)
+
+    elif request.method == "POST":
+            form = CoachingForm()
+            flag = Coaching_Record_Modify(crequestID, form)
+            if not flag:
+                flash(f"unable to update record {crequestID} an error occurded", "warning")
+                return redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
+            else:
+                flash(f"updated record {crequestID} successfully", "success")
+                return redirect(url_for('admin.coaching_management'))
+    flash(f"unexpected outcome", "critical")
+    return redirect(url_for('admin.coaching_management'))

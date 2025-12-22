@@ -32,10 +32,45 @@
         </div>
 
     </div>
-    <div class = "row">
-        <p> user submissions </p>
-        <p> list here the form submissions by the user such as coaching submissions or private sessions requests</p>
+    <div class="row">
+        <p> Coaching Requests </p>
+        <p> list here the form submissions by the user such as coaching submissions or private sessions requests</p>    
     </div>
+    <h2 class="p-2"> Your Coaching Sessions </h2>
+        <div class="row align-content-center p-1 m-1 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Session Type</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Delivered</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Paid</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Price</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Pay</div>
+                </div>
+                {% for crequest in userCrequests %}
+                <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.delivered == 1 %}YES{% else %} No {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.paid == 1 %} YES {% else %} No {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">£25.00</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">
+                        <a href="https://www.paypal.me/Vanadam"><button class="AdminDashBoardButton">Pay Here</button></a>
+                    </div>
+                </div>
+                {% endfor %}
 </div>
 {% endblock %}
-

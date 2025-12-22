@@ -198,19 +198,19 @@ def create_database(db_path):
         crequestID   INTEGER PRIMARY KEY AUTOINCREMENT,
         crequestTime TEXT DEFAULT CURRENT_TIMESTAMP,
         -- user-facing fields
-        userID       INTEGER NOT NULL,
-        username     TEXT NOT NULL,
+        userID       INTEGER NOT NULL DEFAULT 0,
+        username     TEXT DEFAULT 'No Account',
         email        TEXT,
         xboxname     TEXT,
         arenarank    TEXT,
         sessiontype  TEXT NOT NULL,
         coach        TEXT,
-        timezone     TEXT,
-        agreedtime   TEXT,
+        agreeddate   TEXT DEFAULT '0000-00-00',
+        agreedtime   TEXT DEFAULT '00:00:00',
         delivered    BOOLEAN NOT NULL DEFAULT 0,
         paid         BOOLEAN NOT NULL DEFAULT 0,
         -- admin-only fields
-        invoiceID    TEXT
+        invoiceID    TEXT NOT NULL DEFAULT 'no document'
         );
         """ )    
 
