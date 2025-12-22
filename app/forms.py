@@ -366,9 +366,9 @@ class TimeSlotForm(FlaskForm):
     late = BooleanField("Late 22:00-24:00")
 
 class CoachingForm(FlaskForm):
+    crequestID = IntegerField("PK DO NOT EDIT")
+    crequestTime = StringField("Time given by DB DO NOT EDIT")
     username = StringField("username")
-    sessiontype = SelectField("select the session type", choices=list(SESSION_TYPES))
-    timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
     email = StringField("Email")
     xboxname = StringField("Xbox Gamertag")
     arenarank = SelectField('enter your current ranked area rank', choices=list(infiniteCSR.keys()))
