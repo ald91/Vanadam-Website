@@ -1,12 +1,11 @@
 from ..services import checkTags
 from ..data.db import get_database
-from flask import session
+from flask import session, abort, flash
+import sqlite3
 
-def post(form):
+def post(form, username):
     title = form.title.data
     content = form.content.data
-
-    username = session.get("username")
 
     db = get_database()
     cur = db.cursor()
@@ -15,9 +14,8 @@ def post(form):
     cur.execute(query, (title, content, username))
     db.commit()
 
-def comment(form, id):
+def comment(form, id, username):
     content = form.content.data
-    username = session["username"]
 
     db = get_database()
     cur = db.cursor()
@@ -27,7 +25,7 @@ def comment(form, id):
     db.commit()
 
 
-def delete(id):
+def delete_post_record(id):
     db = get_database()
     cur = db.cursor()
 
@@ -35,6 +33,17 @@ def delete(id):
     if check(id):
         query = "DELETE FROM Forums WHERE forumID = ?"
         cur.execute(query, (id,))
+        db.commit()
+
+def delete_comment_record(id):
+    db = get_database()
+    cur = db.cursor()
+
+    # Allow only original poster to delete
+    if check(id):
+        query = "DELETE FROM Messages WHERE msgID = ?"
+        cur.execute(query, (id,))
+        db.commit()
 
 def prefill(form, id):
     db = get_database()
@@ -101,7 +110,29 @@ def check(forumID):
 
     post = dict(cur.fetchone())
 
-    if session.get("username") == post["username"]:
+    if session.get("username") == post["originalPoster"]:
         return True
     else:
         return False
+
+def file_report(form, current_user):
+    db = get_database()
+    cur = db.cursor()
+
+    target_id = form.target_id.data
+    reason = form.reason.data
+
+    try:
+        cur.execute("""
+            INSERT INTO Reports (target_id, reported_by, reason)
+            VALUES (?, ?, ?)
+        """, (target_id, current_user, reason))
+
+        db.commit()
+        print("Report Success")
+        flash("Report successful, an administrator has been notified.", "success")
+
+    except sqlite3.IntegrityError:
+        db.rollback()
+        print("User has already reported this target")
+        flash("You have already reported this target.", "warning")

@@ -31,7 +31,7 @@ def login():
         if log_in_user(form):
             flash(f"Logged in as {session['userID']}", "success")
             return redirect(url_for('content.index'))
-        else:
+        else:   
             flash("Incorrect username or password.", "danger")
             return render_template('login.html', form=form)
 
