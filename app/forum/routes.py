@@ -83,12 +83,13 @@ def delete_post(id):
 
 @forum.route('/<id>/report', methods=["GET", "POST"])
 @login_required
-def report():
-    target_id = request.form["target_id"]
+def report(id):
+    form = ReportForm()
     current_user = session.get('username')
-    reason = request.form["reason"]
-    if current_user is not None:
+    form.target_id.data = id
+    if current_user is not None and form.validate_on_submit():
         print("Report Started")
-        file_report(target_id, current_user, reason)
-    return redirect(url_for("forum.forum_page"))
+        file_report(form, current_user)
+        return redirect("view")
+    return render_template("report.html", target_id=id, form=form)
 

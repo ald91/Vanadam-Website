@@ -1,6 +1,7 @@
 from ..services import checkTags
 from ..data.db import get_database
-from flask import session, abort
+from flask import session, abort, flash
+import sqlite3
 
 def post(form, username):
     title = form.title.data
@@ -114,14 +115,24 @@ def check(forumID):
     else:
         return False
 
-def file_report(target_id, current_user, reason):
+def file_report(form, current_user):
     db = get_database()
     cur = db.cursor()
 
-    cur.execute("""
+    target_id = form.target_id.data
+    reason = form.reason.data
+
+    try:
+        cur.execute("""
             INSERT INTO Reports (target_id, reported_by, reason)
             VALUES (?, ?, ?)
         """, (target_id, current_user, reason))
 
-    db.commit()
-    print("Report Success")
+        db.commit()
+        print("Report Success")
+        flash("Report successful, an administrator has been notified.", "success")
+
+    except sqlite3.IntegrityError:
+        db.rollback()
+        print("User has already reported this target")
+        flash("You have already reported this target.", "warning")

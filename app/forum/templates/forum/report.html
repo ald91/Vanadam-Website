@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Report Content</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.target_id }}
+    <div>
+        {{ form.reason.label }}<br>
+        {{ form.reason(cols=60, rows=10) }}
+        {% for error in form.reason.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <button type="submit">Post</button>
+</form>
+
+{% endblock %}
