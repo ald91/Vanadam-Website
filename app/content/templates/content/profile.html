@@ -47,10 +47,9 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">Delivered</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">Paid</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">Price</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">Pay</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
                 {% for crequest in userCrequests %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
@@ -64,11 +63,14 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
                     </div>
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime }}</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.delivered == 1 %}YES{% else %} No {% endif %}</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.paid == 1 %} YES {% else %} No {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.paid == 1 %}Paid{% elif crequest.delivered == 1 %} Delivered {% elif crequest.delivered == 0 and crequest.requesttime != '00-00-00' %} Booked {% else %} Pending {% endif %}</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">£25.00</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">
-                        <a href="https://www.paypal.me/Vanadam"><button class="AdminDashBoardButton">Pay Here</button></a>
+                    <div class="col-2 d-flex align-content-center justify-content-center">
+                        <!-- TODO ADD IN REVIEWS AND PAYMENT SYSTEM (INTEGRATION?)-->
+                        {% if crequest.paid != 1 %} <a href="https://www.paypal.me/Vanadam"><button class="AdminDashBoardButton">Pay Here</button></a> {% endif %}
+                        {% if crequest.delivered != 1 %}<a href="NYI"><button class="AdminDashBoardButton">Cancel</button></a> {% endif %}
+                        {% if crequest.paid == 1 %} <a href="NYI"><button class="AdminDashBoardButton">Documents</button></a> {% endif %}
+                        {% if crequest.delivered == 1 %} <a href="NYI"><button class="AdminDashBoardButton">Review</button></a> {% endif %}
                     </div>
                 </div>
                 {% endfor %}
