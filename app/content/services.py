@@ -29,7 +29,9 @@ def fetchNewsBar() -> list[dict]:
 
     db = get_database()
     cur = db.cursor()
-    params = ('Discussion', 'Map Guide', 'News', 'Discussion', 'Map Guide', 'News', 8)
+    params = ('discussion', 'map guide', 'news',  #video params
+              'discussion', 'map guide', 'news',  #article params
+               8) # number of items
 
     newsquery = """
     SELECT *
@@ -55,5 +57,9 @@ def fetchNewsBar() -> list[dict]:
     cur.execute(newsquery, params)
     news = cur.fetchall()
     news = [dict(row) for row in news]
+    print(news)
+
+    cur.execute("SELECT COUNT(*) FROM PostTags")
+    print(cur.fetchone()[0])
 
     return news

@@ -190,7 +190,27 @@ def create_database(db_path):
         ); 
     """)
 
-    
+    #coaching requests table
+    cursor.execute("""
+        CREATE TABLE CoachingRequests (
+        crequestID   INTEGER PRIMARY KEY AUTOINCREMENT,
+        crequestTime TEXT DEFAULT CURRENT_TIMESTAMP,
+        -- user-facing fields
+        userID       INTEGER NOT NULL,
+        username     TEXT NOT NULL,
+        email        TEXT,
+        xboxname     TEXT,
+        arenarank    TEXT,
+        sessiontype  TEXT NOT NULL,
+        coach        TEXT,
+        timezone     TEXT,
+        agreedtime   TEXT,
+        delivered    BOOLEAN NOT NULL DEFAULT 0,
+        paid         BOOLEAN NOT NULL DEFAULT 0,
+        -- admin-only fields
+        invoiceID    TEXT
+        );
+        """ )    
 
     # === RELATIONSHIPS ===
     # Messages.forumID → Posts.forumID

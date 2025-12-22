@@ -16,6 +16,7 @@ from app.forms import CoachingForm, ProfileEditForm
 #db imports
 from app.data.db import get_database
 from app.data.db_services_users import User_Profile_Update, Single_User_Query
+from app.data.db_services_coaching import Register_New_Coaching_Request, Coaching_Save_JSON
 
 #self
 from . import content
@@ -231,11 +232,11 @@ def get_involved():
 def coaching():
     
     form = CoachingForm()
-    userData = None
+    userData = {"" : ""}
     
     if request.method == 'POST':
         if form.validate_on_submit():
-            coachingRequest = True
+            coachingRequest = Register_New_Coaching_Request(form)
             if coachingRequest:
                 flash("thank you for submitting your request, it is now on your profile where you can see it's progress", "success")
                 return redirect(url_for('content.index'))
@@ -247,6 +248,7 @@ def coaching():
         #backfill user data if they're logged in UX :)
         if session.get('userID'):
             userData = Single_User_Query("self", session.get('userID'))
+            form.timezone.data = userData["timezone"]
             form.username.data = userData["username"]
             form.email.data = userData["email"]
             form.xboxname.data = userData["xboxname"]

@@ -1,3 +1,5 @@
+#NOTE: Ryan, i dont intend to implement these until after EFSSD. dont worry :)
+
 from dataclasses import dataclass
 
 @dataclass
@@ -38,3 +40,26 @@ class Video:
     gamemode: str
     videotype: str
     etag: str
+
+@dataclass
+class CoachingRequest:
+
+    """ a coaching object that contains information from COACHING table and the associated JSON"""
+    
+    crequestID:int 
+    userID:int       
+    username:str     
+    email:str        
+    xboxname:str     
+    arenarank:str    
+    sessiontype:str  
+    coach:str        
+    timezone:str     
+    agreedtime:str   
+    delivered:bool   
+    paid:bool        
+    invoiceID:str    
+    json:str
+    timeslots: list[list[bool,bool,bool,bool]]
+    
+        

@@ -1,0 +1,70 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Admin Control - Coaching Management {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <div class="container-fluid">
+        <form class="" method="POST" action="/admin/coaching-management">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-3 col-sm-12">
+            <H2>Coaching Sessions Management</H2>
+            <br>
+            <div class="col-12 d-flex justify-content-evenly">
+                <div class="col-4">
+                    <h3 class="">Requests Overview</h3>
+                </div>
+                <div class="col-8">
+                    <p>total Requests on record: {{ AllCrequestsData|length }}</p>
+                </div>
+            </div>
+            <br>
+            <div class="col-12 d-flex justify-content-evenly">
+                <div class="col-4">
+                    <h3 class="">User Actions</h3>
+                </div>
+                <button class="adminDashBoardButton" type="submit" name="coachingAction" value="">placeholder</button>
+            </div>
+            <br>
+        </div>
+        <!-- awaiting payment results -->
+        <h2 class="p-2"> Sessions awaiting payment </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2" style="background-color: black!important; border-style: none!important;">
+                <div id ="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Session Type</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Coach</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Date</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+
+        {% for crequest in AllCrequestsData %}
+                <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.crequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ crequest.sessiontype }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">NYI</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">NYI</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton"  type="submit" name="coachingAction" value="modify({{ crequest.crequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction" value="paid({{ crequest.crequestID }})">Paid</button>
+                        <button class="adminDashBoardButton" type="submit" name="coachingAction" value="delete({{ crequest.crequestID }})">Delete</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </form>
+    </div>
+{% endblock %}

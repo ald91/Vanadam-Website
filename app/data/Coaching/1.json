@@ -1,0 +1,56 @@
+{
+    "crequestID": 1,
+    "timezone": "Europe/London",
+    "availability": [
+        {
+            "morning": false,
+            "afternoon": false,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": true,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": false,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": false,
+            "evening": true,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": true,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": false,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        },
+        {
+            "morning": false,
+            "afternoon": false,
+            "evening": false,
+            "late": false,
+            "csrf_token": null
+        }
+    ],
+    "details": "TestyTesty"
+}

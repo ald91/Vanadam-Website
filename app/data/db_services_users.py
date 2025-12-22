@@ -47,7 +47,7 @@ def Single_User_Query(who: str = "public", userID: int = None) -> dict:
 
         #reformate the userdata DICT such that it only contains the keys appropriate for that request level
         userData = {k: userData[k] for k in KEYS if k in userData}
-
+        print(userData)
         return userData
     
     except Exception as e:

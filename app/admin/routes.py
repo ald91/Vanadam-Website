@@ -15,6 +15,7 @@ from app.data.routes import Data_Send_Article_IMG
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
 from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
 from app.data.db_services_users import Single_User_Query, Modify_User_Data
+from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify
 
 #self module
 from . import admin
@@ -52,6 +53,9 @@ def dashboard():
             
             case "database":
                 return redirect(url_for("admin.database_management"))
+
+            case "coaching":
+                return redirect(url_for("admin.coaching_management"))
             
             case "quickvid":
                 Update_Video_Database_Full()
@@ -202,11 +206,10 @@ def article_management_individual(articleID):
             flash("form entry error", "danger")
             return render_template(f"management-article.html", articleID=articleID) #sends user back to edit if there is an error
 
-#TODO: ADAM 17th DECEMBER 2025
+#TODO: ADAM 17th DECEMBER 2025 (?)
 @admin.route('/database-management', methods=[ "GET", "POST"])
 def database_management():
     pass
-
 
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
@@ -279,3 +282,35 @@ def User_Management_Individual(userID: str):
     else:
         flash("invalid request parameter", "critical")
         return redirect(url_for('admin.user_management'))
+    
+@admin.route('/coaching-requests', methods=["GET", "POST"])
+def coaching_management():
+    
+    AllCrequestsData = Coaching_Query("admin")
+    print(AllCrequestsData)
+
+    if request.method == "GET":
+        render_template('management-coaching.html', AllCrequestsData=AllCrequestsData)  
+    
+    
+    elif request.method == "POST":
+        matchCase = Post_Form_Match_Case(request.form.get("coachingAction"))
+        action = matchCase[0] 
+        crequestID = matchCase[1]
+    
+        match action:
+            case "modify":
+                redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
+            case "delivered":
+                if Coaching_Record_Modify(crequestID, scope="quick", modification="delivered"):
+                    flash(f"successfully marked ({crequestID}) as {action}","success")
+            case "paid":
+                if Coaching_Record_Modify(crequestID, scope="quick", modification="paid"):
+                    flash(f"successfully marked ({crequestID}) as {action}","success")
+            case "delete":
+                if Coaching_Record_Modify(crequestID, scope="quick", modification="delete"):
+                    flash(f"successfully marked ({crequestID}) as {action}","success")
+            case _:
+                flash("invalid request","warning")
+
+    return render_template("management-coaching.html", AllCrequestsData=AllCrequestsData)
