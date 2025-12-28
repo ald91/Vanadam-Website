@@ -28,7 +28,11 @@ from .services_users import All_Users_Management_Query, Delete_User, Ban_User, U
 ##################
 #-----Routes-----#
 ##################
-
+@admin.before_request
+def require_admin():
+    if not session.get('isAdmin'):
+        flash("You cannot access this page", "critical")
+        return redirect(url_for("content.index"))
 
 @admin.route('/dashboard', methods=["GET", "POST"])
 def dashboard():
@@ -206,11 +210,6 @@ def article_management_individual(articleID):
             flash("form entry error", "danger")
             return render_template(f"management-article.html", articleID=articleID) #sends user back to edit if there is an error
 
-#TODO: ADAM 17th DECEMBER 2025 (?)
-@admin.route('/database-management', methods=[ "GET", "POST"])
-def database_management():
-    pass
-
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
     
@@ -336,3 +335,8 @@ def coaching_management_request(crequestID):
                 return redirect(url_for('admin.coaching_management'))
     flash(f"unexpected outcome", "critical")
     return redirect(url_for('admin.coaching_management'))
+
+#TODO ADAM 27th DECEMBER
+@admin.route('/youtube-requests', methods=["GET", "POST"])
+def youtube_management():
+    pass
