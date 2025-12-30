@@ -1,0 +1,68 @@
+auth.services
+	LOGIN query = "SELECT * FROM Users WHERE username = ?"
+		1: existing users
+		2: case sensitivity
+		3: non-existing users
+		4: empty strings " " / spaces " " / null
+		5: username > 256 chars
+		6: trailing/leading spaces
+		7: sql injection
+		8: encoded/special chars
+
+	LOGIN if check_password_hash(stored_password, password):
+		1: valid passwords
+		2: invalid passwords
+		3: case sensitivity
+		4: sql injection
+		5: password > 256 chars
+		6: encoded/special chars
+		7: empty strings " " / spaces " " / null
+
+	EMAIL recipients= [email] (registration and recovery emails)
+		1: valid email format
+		2: existing/duplicate email
+		3: empty strings " " / spaces " " / null
+
+	REGISTER if password != password2:
+		1: valid passwords
+		2: invalid passwords
+		3: case sensitivity
+		4: sql injection
+		5: password > 256 chars
+		6: encoded/special chars
+		7: empty strings " " / spaces " " / null
+		8: matching/non-matching passwords
+
+	REGISTER query = "SELECT * FROM Users WHERE username = ? OR email = ?"
+		1: existing username, new email
+		2:new username, existing email
+		3:existing username, existing email
+		4: case sensitivity
+		5: non-existing users
+		6: existing/duplicate email
+		7: empty strings " " / spaces " " / null
+		8: username > 256 chars
+		9: trailing/leading spaces
+		10: sql injection
+		11: encoded/special chars
+
+	RECOVERY print(f"A recovery attempt for account: {username} and email: {email} was attempted.")
+		1: existing username + matching email
+		2: existing username + matching email (case sensitivity?)
+		3: wrong credentials
+		4: nulls & whitespace
+		5: input > 256 chars
+		6: sql injection
+		7: encoded/special chars
+		8: SMTP available.	
+
+	PASSWORD CHANGE
+		1: existing users
+		2: case sensitivity
+		3: non-existing users
+		4: empty strings " " / spaces " " / null
+		5: username/password > 256 chars
+		6: trailing/leading spaces
+		7: sql injection
+		8: encoded/special chars		
+		9: matching/non-matching passwords
