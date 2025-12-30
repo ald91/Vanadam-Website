@@ -172,18 +172,7 @@ class ProfileEditForm(FlaskForm):
                     ])
     
     xboxname = StringField('Xbox GamerTag',
-                           validators=[
-                            DataRequired(message="Gamertag is required."),
-                            Length(
-                                min=3,
-                                max=15,
-                                message="Gamertag must be between 3 and 15 characters long."
-                            ),
-                            Regexp(
-                                r"^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$",
-                                message="Gamertag may only contain letters, numbers, and single spaces (no leading, trailing, or double spaces)."
-                            ),
-                        ])
+                           validators=[DataRequired(message="Gamertag is required.")])
     
     timezone = SelectField('enter your timezone', choices=list(STANDARD_TIMEZONES.keys()))
     arenarank = SelectField('enter your highest ranked area rank', choices=list(infiniteCSR.keys()))
@@ -390,6 +379,30 @@ class CoachingForm(FlaskForm):
     paid = BooleanField("Paid by customer")
     delivered = BooleanField("Delivered by coach")
     submit = SubmitField("Send Request")
+
+#youtube review request
+from .HaloData import HALO_INFINITE_DATA
+YTstatus = ["recieved", "queued", "recorded", "uploaded"]
+possiblePlaylists = ["Ranked Arena", "Ranked Slayer", "Team Snipers", "Team Doubles"]
+possibleMaps = list(HALO_INFINITE_DATA["Maps"])
+possibleGameModes = [value for key, value in HALO_INFINITE_DATA["GameModes"].items() if key > 0]
+
+
+class YouTubeReviewForm(FlaskForm):
+    YTrequestID = IntegerField("PK DO NOT EDIT")
+    YTrequestTime = StringField("Time given by DB DO NOT EDIT")
+    username = StringField("username")
+    xboxname = StringField("Xbox Gamertag", validators=[DataRequired(message="you must provide a valid gamertag")])
+    arenarank = SelectField('Enter your current ranked area rank', choices=["", "- SELECT RANK -"] + list(infiniteCSR.keys()),  validators=[DataRequired(message="you must enter a valid arena rank")])
+    videoURL = StringField('enter the url location of the video (xbox DVR / Youtube / Ondrive / Googledrive / etc.)', validators=[DataRequired(message="you must submit a valid URL")])
+    trackernetwork = StringField("URL for The Match (Trackernetwork / Leafapp / Haloquery / etc.)")
+    playlist = SelectField("Select the playlist for the match", choices=["", "- SELECT PLAYLIST -"] + possiblePlaylists , validators=[DataRequired(message="you must provide the playlist type for this submission")])
+    matchmap = SelectField("Select the corresponding map the match is on", choices=["", "- SELECT A MAP -"] + possibleMaps,  validators=[DataRequired(message="you must provide the map type for this submission")])
+    matchgamemode = SelectField("Select the corresponding game mode for the match", choices=["", "- SELECT GAMEMODE -"] + possibleGameModes , validators=[DataRequired(message="you must provide a game mode for this submission")])
+    status = SelectField("current status of request", choices=YTstatus)
+    youtubevideoID = StringField("admin enter URL for video here")
+    submit = SubmitField("submit your video for review")
+
 
 class ReportForm(FlaskForm):
     target_id = HiddenField()

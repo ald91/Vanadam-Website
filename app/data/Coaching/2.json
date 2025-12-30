@@ -12,31 +12,31 @@
         "tuesday": {
             "morning": false,
             "afternoon": false,
-            "evening": false,
+            "evening": true,
             "late": false
         },
         "wednesday": {
-            "morning": true,
-            "afternoon": false,
-            "evening": false,
-            "late": false
-        },
-        "thursday": {
             "morning": false,
             "afternoon": true,
             "evening": false,
             "late": false
         },
-        "friday": {
+        "thursday": {
             "morning": false,
             "afternoon": false,
-            "evening": true,
-            "late": true
+            "evening": false,
+            "late": false
+        },
+        "friday": {
+            "morning": true,
+            "afternoon": false,
+            "evening": false,
+            "late": false
         },
         "saturday": {
             "morning": false,
             "afternoon": false,
-            "evening": false,
+            "evening": true,
             "late": false
         },
         "sunday": {
@@ -46,5 +46,5 @@
             "late": false
         }
     },
-    "details": ""
+    "details": "nfgn rtyn"
 }

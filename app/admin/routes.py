@@ -8,18 +8,19 @@ from functools import wraps
 #app imports
 from app.data.db import create_database, db_path
 from app.services import *
-from app.forms import ArticleForm, AdminUserForm, CoachingForm
+from app.forms import ArticleForm, AdminUserForm, CoachingForm, YouTubeReviewForm
 from app.data.routes import Data_Send_Article_IMG
+from app.services import Post_Form_Match_Case
 
 #db functions
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
 from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
 from app.data.db_services_users import Single_User_Query, Modify_User_Data
-from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify, Coaching_Record_Modify_Quick, Coaching_Form_Data_Prep
+from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify, Coaching_Record_Modify_Quick, Coaching_Form_Data_Prep, Youtube_Query, YT_Record_Modify_Quick, youtube_record_modify
 
 #self module
 from . import admin
-from .services import Post_Form_Match_Case
+
 from .services_video import Update_Video_Database_Full, Google_API_V3_Write_Thumbnails
 from .services_users import All_Users_Management_Query, Delete_User, Ban_User, Unban_User, Update_User_Tags, Update_User_Is_Admin
 
@@ -60,6 +61,9 @@ def dashboard():
 
             case "coaching":
                 return redirect(url_for("admin.coaching_management"))
+            
+            case "youtube":
+                return redirect(url_for("admin.youtube_management"))
             
             case "quickvid":
                 Update_Video_Database_Full()
@@ -336,7 +340,75 @@ def coaching_management_request(crequestID):
     flash(f"unexpected outcome", "critical")
     return redirect(url_for('admin.coaching_management'))
 
-#TODO ADAM 27th DECEMBER
+
 @admin.route('/youtube-requests', methods=["GET", "POST"])
 def youtube_management():
-    pass
+
+    AllYTrequestData = Youtube_Query("admin")
+
+    if request.method == "GET":
+        return render_template('management-youtube.html', AllYTrequestData=AllYTrequestData)  
+    
+    
+    elif request.method == "POST":
+        matchCase = Post_Form_Match_Case(request.form.get("youtubeAction"))
+        action = matchCase[0] 
+        YTrequestID = int(matchCase[1])
+
+        print(action, YTrequestID)
+
+        match action:
+            case "modify":
+                return redirect(url_for('admin.youtube_management_request', YTrequestID=YTrequestID))
+            case "uploaded":
+                if YT_Record_Modify_Quick(YTrequestID, action):
+                    flash(f"successfully marked ({YTrequestID}) as {action}","success")
+            case "recorded":
+                if YT_Record_Modify_Quick(YTrequestID, action):
+                    flash(f"successfully marked ({YTrequestID}) as {action}","success")
+            case "queued":
+                if YT_Record_Modify_Quick(YTrequestID, action):
+                    flash(f"successfully marked ({YTrequestID}) as {action}","success")
+            case "delete":
+                if YT_Record_Modify_Quick(YTrequestID, action):
+                    flash(f"successfully marked ({YTrequestID}) as {action}","success")
+            case _:
+                flash("invalid request","warning")
+
+    return redirect(url_for('admin.youtube_management'))
+
+@admin.route('/youtube-requests/<int:YTrequestID>', methods=["GET", "POST"])
+def youtube_management_request(YTrequestID):
+    
+    form = YouTubeReviewForm()
+    
+    if request.method == "GET":
+        YTrequestData = Youtube_Query("admin", YTrequestID=YTrequestID)
+        YTrequestData = YTrequestData[0]
+
+        form.YTrequestID.data      = YTrequestData["YTrequestID"]
+        form.YTrequestTime.data    = YTrequestData["YTrequestTime"]
+        form.username.data         = YTrequestData["username"]
+        form.xboxname.data         = YTrequestData["xboxname"]
+        form.arenarank.data        = YTrequestData["arenarank"]
+        form.videoURL.data         = YTrequestData["videoURL"]
+        form.trackernetwork.data   = YTrequestData["trackernetwork"]
+        form.playlist.data         = YTrequestData["playlist"]
+        form.matchmap.data         = YTrequestData["matchmap"]
+        form.matchgamemode.data    = YTrequestData["matchgamemode"]
+        form.status.data           = YTrequestData["status"]
+        form.youtubevideoID.data       = YTrequestData["youtubevideoID"]
+    
+        return render_template('management-coaching-individual.html', YTrequestData=YTrequestData, form=form)
+
+    elif request.method == "POST":
+            #TODO ADAM
+            flag = youtube_record_modify(YTrequestID, form)
+            if not flag:
+                flash(f"unable to update record {YTrequestID} an error occurded", "warning")
+                return redirect(url_for('admin.youtube_management_request', YTrequestID=YTrequestID))
+            else:
+                flash(f"updated record {YTrequestID} successfully", "success")
+                return redirect(url_for('admin.youtube_management'))
+    flash(f"unexpected outcome", "critical")
+    return redirect(url_for('admin.youtube_management'))

@@ -80,9 +80,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/articles">Articles</a>
                     </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="/forums">Forums</a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/mapPage" role="button"
                             aria-expanded="false">Maps</a>
@@ -94,13 +91,17 @@
                             {% endfor %}
                         </ul>
                     </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/forums">Looking for Group</a>
+                    </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="/coaching">Coaching</a>
+                        <a class="nav-link" href="/coaching">Private Coaching</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/get-involved">Get Involved</a>
+                        <a class="nav-link" href="/YT-Request">Youtube Review</a>
                     </li>
-                    <li class="nav-item disabled">
+                    <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item dropdown">
@@ -146,9 +147,16 @@
     <section id="main-content" class="mt-5 pt-5">
       <div id="pageMain" class="container-sm mx-auto my-auto ps-2 pb-1 pt-2">
     {% if DEBUG_MODE %}
-    <p>DEBUG: username = {{ session.get('username') }}</p>
-    <P>DEBUG: userID = {{ session.get('userID') }}</P>
-    <P>DEBUG: isAdmin = {{ session.get('isAdmin') }}</P>
+    <div class="AdminUserTable" style="background-color: black!important;">
+    <h2> debug values</h2>
+    <p>username = {{ session.get('username') }}</p>
+    <P>userID = {{ session.get('userID') }}</P>
+    <P>isAdmin = {{ session.get('isAdmin') }}</P>
+    {% if userData %}<p>userData = {{ userData }}</p>   {% endif %}
+    {% if userCrequests %}<p>crequests = {{ userCrequests }}</p>              {% endif %}
+    {% if userYTrequests %}<p>YTrequests = {{ userYTrequests }}</p>            {% endif %}
+    {% if AllYTrequestData %}<p>AllYTrequestData = {{ AllYTrequestData }}</p> {% endif %}
+    </div>
     {% endif%}
     <!-- Flash Messages: This will display any error/success/status messages to the user -->
     {% for category, message in get_flashed_messages(with_categories=True) %}

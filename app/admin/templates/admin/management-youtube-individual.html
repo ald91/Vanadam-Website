@@ -1,0 +1,110 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Manage Youtube Request - {{ YTrequestData.YTrequestID }} {% endblock %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+<H2 class="text-center">Youtube Request Number - {{ YTrequestData.YTrequestID }}</H2>
+
+<div class="container-fluid justify-content-center m-1 p-1">
+
+    <form action="/admin/youtube-requests/{{ YTrequestData.YTrequestID }}" name="AdminUserForm" method="POST"
+        enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="container-fluid mt-4">
+             <div class="row">
+                <div class="col-6">
+                    <label>Status</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.status(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Username</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.username(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Xbox Name</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.xboxname(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Arena Rank</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.arenarank(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Video URL</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.videoURL(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>trackernetwork</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.trackernetwork(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Playlist</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.playlist(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Map</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.matchmap (class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Game Mode</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.matchgamemode(class="form-control") }}<br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>youtube video URL</label><br>
+                </div>
+                <div class="col-6">
+                    {{ form.youtubevideoID(class="form-control") }}<br><br>
+                </div>
+            </div>
+
+
+    </form>
+
+</div>
+
+<br>
+
+{% endblock %}
