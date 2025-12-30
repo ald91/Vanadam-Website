@@ -1,0 +1,45 @@
+forums.routes
+	post, comment & report auth required
+		1: authenticated
+		2: unauthenticated
+		3: with stale session data (?)
+	banned user restrictions
+		1: attempt post as banned user
+		2: attempt comment as banned user
+	validated forms
+		1: empty title (post)
+		2: empty content (post)
+		3: empty comment (comment)
+		4: input too large (post, comment and report forms)
+forums.services
+	POST query = "INSERT INTO Forums (title, content, originalPoster) VALUES (?, ?, ?)"
+		1: valid title
+		2: empty title
+		3: very long title
+		4: special/encoded chars
+		5: sql injection
+		6: username not in session
+		7: markdown content
+		8: <script> content
+	COMMENT query = "INSERT INTO Messages (forumID, username, content) VALUES (?, ?, ?)"
+		1: valid comment
+		2: empty comment
+		3: long comment
+		4: special/encoded chars
+		5: sql injection
+		6: username not in session
+	DELETE POST/COMMENT
+		1: correct user
+		2: wrong user
+		3: no user
+	PREFILL 
+		1: load malformed post
+	CHECK USER
+		1: call function while user not logged in
+	FILE REPORT
+		1: file existing report ID
+		2: file without logging in
+		3: file non existing target ID
+		4: sql injection on reason
+		5: long reason
+		6: special/encoded chars

@@ -347,14 +347,14 @@ class ArticleForm(FlaskForm):
 class ForumForm(FlaskForm):
     title = StringField(
         'Title',
-        validators=[]
+        validators=[DataRequired(), Length(min=3, max=256)]
     )
-    content = TextAreaField()
+    content = TextAreaField(validators=[DataRequired()])
 
 class CommentForm(FlaskForm):
     content = TextAreaField(
         "Comment",
-        validators=[DataRequired(), Length(min=1, max=2000)]
+        validators=[DataRequired(), Length(min=1, max=256)]
     )
     submit = SubmitField("Post Comment")
 
