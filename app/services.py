@@ -36,38 +36,6 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         cur.execute("INSERT OR IGNORE INTO Tags(tagName) VALUES(?)", (tag,))
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
-
-def login_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if "userID" not in session:
-            return redirect(url_for("auth.login"))
-        return f(*args, **kwargs)
-    return wrapper
-
-def admin_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        username = session.get("username")
-        userID = session.get("userID")
-
-        if not username or not userID:
-            flash("You must be logged in to access this page", "warning")
-            return redirect(url_for('auth.login'))
-
-        db = get_database()
-        cur = db.cursor()
-        cur.execute("SELECT isAdmin FROM Users WHERE username = ? AND userID = ?",(username, userID))
-        result = cur.fetchone()
-
-        if not result or not result["isAdmin"]:
-            flash("you do not have permission to access this page", "danger")
-            return redirect(url_for("content.index"))
-
-        return f(*args, **kwargs)
-    
-    return wrapper
-
 #Delete all but the 16 newest posts to the forums table,
 # uses Flask-APScheduler for automation, as defined in __init__.py
 def clear_stale_posts():
@@ -104,3 +72,23 @@ def check_ban(username:str) -> bool:
         return True
     else:
         return False
+    
+def Post_Form_Match_Case(input: str) -> list[str,str]:
+    
+    """ takes a unnamed form from a post request on the dashboard and preps the responce so backend can direct to the correct item (video/article/user) etc."""
+    
+    check = "("
+    itemID: str | None = None
+    
+    print(input)
+
+    if check in input:
+        input = input.split("(")
+        action = str(input[0])
+        itemID = input[1].replace("(","").replace(")","")
+    else:
+        action = str(input)
+
+    matchCase = [action, itemID]
+
+    return matchCase

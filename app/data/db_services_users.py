@@ -17,7 +17,7 @@ def Username_Available(requestedName:str, oldName:str) -> bool:
             return False
     return True
 
-def Single_User_Query(who: str = "public", userID: int = None) -> dict:
+def Single_User_Query(who: str = "self", userID: int = None) -> dict:
     
     """ returns a dict based on the reuqest tier (public / self / admin).  { userID / username / email / xboxname / timezone / arenarank / isAdmin / banned } from USERS table."""
     
@@ -44,6 +44,7 @@ def Single_User_Query(who: str = "public", userID: int = None) -> dict:
 
         elif who == "admin":
             KEYS = KEYS + ("userID", "email", "banned", "isAdmin")
+            
 
         #reformate the userdata DICT such that it only contains the keys appropriate for that request level
         userData = {k: userData[k] for k in KEYS if k in userData}

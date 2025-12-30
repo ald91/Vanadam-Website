@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Youtube Reuqests {% endblock %}
+{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="container-fluid">
+        <h1>Register for a Youtube Review Here</h1>
+        <h5>Let us know you're interested in having your game reviewed and uploaded to the youtube channel</h5>
+        <br>
+        {% if session["username"] and session["userID"] %}
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.username.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.username(class='form-control') }} </div>
+        </div>
+        {% endif %}
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.xboxname.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.xboxname(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.arenarank.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.arenarank(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.videoURL.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.videoURL(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.trackernetwork.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.trackernetwork(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.playlist.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.playlist(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.matchmap.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.matchmap(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 pb-1">
+            <div class="col-6">{{ form.matchgamemode.label(class='form-label') }} </div>
+            <div class="col-6"> {{ form.matchgamemode(class='form-control') }} </div>
+        </div>
+        <div class="row px-5 p-3">
+            <div class="col-12"> {{ form.submit(class='btn btn-primary') }} </div>
+        </div>
+    </div>
+   
+
+</form>
+
+
+{% endblock %}

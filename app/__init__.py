@@ -26,7 +26,7 @@ from .admin import admin
 from .data import data
 from .HaloData import *
 from .data.db import g
-from .extensions import mail, serializer, security_salt, Register_Admins
+from .extensions import mail, serializer, security_salt, Register_Admins, Register_Test
 
 scheduler = APScheduler()
 
@@ -93,6 +93,7 @@ def app_create():
     #populate DB with Admin1 and test user
     with app.app_context():
         Register_Admins()
+        Register_Test()
         #Register_Test()
 
     #Scheduling for automated tasks

@@ -6,7 +6,7 @@ import json
 from .db import get_database
 from .db_services_users import Single_User_Query
 
-from app.forms import CoachingForm, TimeSlotForm
+from app.forms import CoachingForm, TimeSlotForm, YouTubeReviewForm
 
 #directories
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
@@ -175,10 +175,6 @@ def Coaching_Record_Modify(crequestID:int, form:object) -> bool:
         print("couldnt update request: ", e)
         return False
  
-#todo
-def Coaching_Record_Add_Docx(file) -> bool:
-    pass
-
 def Register_New_Coaching_Request(form:object) -> bool:
 
     userID:int = session.get('userID', 0)
@@ -369,3 +365,131 @@ def Coaching_Form_Data_Prep(crequestData:dict) -> object:
     form.sunday.late.data      = crequestData["availability"]["sunday"]["late"]
 
     return form
+
+#for youtube requests which are still coaching
+
+def Register_New_YT_Request(form:object, sessionUserID) -> bool:
+
+    """ takes a YT request form and registers it on the YTrequests Database user must be logged in"""
+
+    form = YouTubeReviewForm()
+    username       = form.username.data
+    userID         = sessionUserID
+    xboxname       = form.xboxname.data
+    arenarank      = form.arenarank.data
+    videoURL       = form.videoURL.data
+    trackernetwork = form.trackernetwork.data
+    playlist       = form.playlist.data
+    matchmap       = form.matchmap.data
+    matchgamemode  = form.matchgamemode.data
+    status         = "recieved"
+
+    try:
+        db = get_database()
+        cur = db.cursor()
+        cur.execute(" INSERT INTO YTRequests (username, userID, xboxname, arenarank, videoURL, trackernetwork, playlist, matchmap, matchgamemode, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (username, userID, xboxname, arenarank, videoURL, trackernetwork, playlist, matchmap, matchgamemode, status))
+        db.commit()
+
+    except Exception as e:
+        print("could not add new record to Database, error: ", e)
+        return False
+    
+    return True
+
+def Youtube_Query(who="self", userID:int = -1, YTrequestID:int = -1) -> list[dict]:
+ 
+    """ Queries YTRequests table and returns any Youtube requests for that specific user. user who = "self" or who = "admin" for customization"""
+
+    VALID_WHO = {"self" , "admin"}
+
+    db = get_database()
+    cur = db.cursor()
+
+    if who not in VALID_WHO:
+        raise ValueError("Invalid 'who' Value supplied only valid inputs are: ",VALID_WHO)
+
+    #send all records
+    if userID == -1 and who == "admin":
+        cur.execute("SELECT * FROM YTRequests ORDER BY YTrequestTime DESC")
+        coachingData = cur.fetchall()
+    #send specific record (As admin)
+    elif userID == -1 and who == "admin" and YTrequestID > 0:
+        cur.execute("SELECT * FROM YTRequests WHERE crecordID = ?", (YTrequestID,))
+        coachingData = cur.fetchone()
+    #send records for a specific user
+    elif isinstance(userID, int):
+        cur.execute("SELECT * FROM YTRequests WHERE userID = ?", (userID,))
+        coachingData = cur.fetchall()
+    else:
+        print("invalid request")
+        return False
+    
+    YTRequestData = [dict(row) for row in coachingData]
+    return YTRequestData
+
+def YT_Record_Modify_Quick(YTrequestID:int, action:str) -> bool :
+    """ performs simple string change or delete's of record from  YTRequests table"""
+    db = get_database()
+    cur = db.cursor()
+    try:
+        print ("ID sent for modification: ", YTrequestID)
+
+        match action:
+            case "uploaded":
+                print(f"attempting {action} of YTrequest id = {YTrequestID}")
+                cur.execute("UPDATE YTRequests SET status = 'uploaded' WHERE YTrequestID = ?", (YTrequestID,))
+            case "recorded":
+                print(f"attempting {action} of YTrequest id = {YTrequestID}")
+                cur.execute("UPDATE YTRequests SET status = 'recorded' WHERE YTrequestID = ?", (YTrequestID,))
+            case "queued":
+                print(f"attempting {action} of YTrequest id = {YTrequestID}")
+                cur.execute("UPDATE YTRequests SET status = 'queued' WHERE YTrequestID = ?",(YTrequestID,))
+            case "recieved":
+                print(f"attempting {action} of YTrequest id = {YTrequestID}")
+                cur.execute("UPDATE YTRequests SET status = 'recieved' WHERE YTrequestID = ?",(YTrequestID,))
+            case "delete":
+                print(f"attempting {action} of YTrequest id = {YTrequestID}")
+                cur.execute("DELETE FROM YTRequests WHERE YTrequestID = ?",(YTrequestID,))
+            case _:
+                print("Invalid Case, no modification made")
+                return False           
+        db.commit()
+        print("minor modification successful")
+        return True
+    except Exception as e:
+        print(f"quick modification of crequest ({YTrequestID}) result in an error: ", e)
+        return False
+    
+def youtube_record_modify(YTrequestID:int, form:object) -> bool:
+    
+    """ modifies youtube request records takes youtubeform object"""
+
+    db = get_database()
+    cur = db.cursor()
+
+    YTrequestID = YTrequestID  
+    username =          form.username.data       
+    xboxname =          form.xboxname.data       
+    arenarank =         form.arenarank.data      
+    videoURL =          form.videoURL.data       
+    trackernetwork =    form.trackernetwork.data 
+    playlist =          form.playlist.data       
+    matchmap =          form.matchmap.data       
+    matchgamemode =     form.matchgamemode.data  
+    status =            form.status.data         
+    youtubevideoID =   form.youtubevideoID.data     
+
+    try:
+
+        cur.execute(""" UPDATE YTRequests SET username = ?, xboxname = ?, arenarank = ?, videoURL = ?, trackernetwork = ?, playlist = ?, matchmap = ?, matchgamemode = ?, status = ?, youtubevideoID = ? WHERE YTrequestID = ? """,
+                     (username, xboxname, arenarank, videoURL, trackernetwork, playlist, matchmap, matchgamemode, status, youtubevideoID))
+
+        db.commit()
+        print(f"youtube request modified and saved")
+        return True
+    
+    except Exception as e:
+        db.rollback()
+        print("couldnt update request: ", e)
+        return False
+ 

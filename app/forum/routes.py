@@ -10,7 +10,8 @@ from functools import wraps
 from . import forum
 from .services import prefill, modify, post, comment, delete_post_record, delete_comment_record, fetch_all, fetch_one, fetch_comments, file_report
 from ..forms import ForumForm, CommentForm, ReportForm
-from ..services import login_required, check_ban
+from ..services import check_ban
+from ..decorators import login_required
 from ..data.db import get_database
 
 ##################

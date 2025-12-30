@@ -8,18 +8,16 @@ from flask_session import Session
 from functools import wraps
 
 #app imports
-
+from app.services import Post_Form_Match_Case
 from app.forms import SearchForm
 from app.HaloData import *
-from app.forms import CoachingForm, ProfileEditForm
+from app.forms import CoachingForm, ProfileEditForm, YouTubeReviewForm
 
 
 #db imports
 from app.data.db import get_database
 from app.data.db_services_users import User_Profile_Update, Single_User_Query
-from app.data.db_services_coaching import Register_New_Coaching_Request, Coaching_Save_JSON
-from app.data.db_services_coaching import Coaching_Query
-
+from app.data.db_services_coaching import Register_New_Coaching_Request, Coaching_Save_JSON, Register_New_YT_Request, Coaching_Record_Modify_Quick, YT_Record_Modify_Quick, Coaching_Query,  Youtube_Query
 #self
 from . import content
 from .services import fetchNewsBar, fetchSideBar 
@@ -162,60 +160,80 @@ def search():
         result = cur.fetchall()
     return render_template('search.html', form=form)
 
-#TODO: finish user profile (ADAM) - user history and submission if time
 @content.route('/profile/<int:userID>', methods=['GET', 'POST'])
 def profilePage(userID):
     
     username:str = session.get('username')
     userID:int = session.get('userID')
-    
-    print(username, userID, request)
 
-    if username == None and userID == None:
+    if session['username'] == None and session['userID'] == None:
             flash("you must be logged in to view your profile", "danger")
             return redirect(url_for('content.index'))         
     
+    elif request.method == 'GET':
+        userData = Single_User_Query("self", userID)
+        userCrequests= Coaching_Query("self", userID=session["userID"])
+        userYTrequests = Youtube_Query("self", userID=session["userID"])
 
-    if request.method == 'POST':
-        action = request.form.get("userprofile")
-        crequestID=None
+    elif request.method == 'POST':
+        print(Post_Form_Match_Case(request.form.get("userprofile")))
+        matchCase = Post_Form_Match_Case(request.form.get("userprofile"))
+        print(matchCase)
+        action = matchCase[0]
+        requestID = matchCase[1]
 
         match action:
             case "edit_profile":
                 return redirect(url_for("content.User_Self_Edit_Profile", username=username))
-            case "edit_crequest":
-                return redirect(url_for('content.User_Self_Edit_Crequest', crequestID=crequestID))
+            case "delete_crequest":
+                flag = Coaching_Record_Modify_Quick(requestID, action="delete")
+            case "delete_YTrequest":
+                flag = YT_Record_Modify_Quick(requestID, action="delete")
+            case _:
+                flag = None
 
+        if flag:
+            flash(f"succesfully carried out {action} on {requestID}", "success")
+        elif not flag:
+            flash(f"couldnt complete request to action: ({action}) on item with request ID: ({requestID})", "warning")
+        else:
+            flash("unknown request", "error")
+    
+        return redirect(url_for('content.profilePage', userID=userID))
 
-    print(f"got request to load profile page for: {userID} who is {username}")
-    userData = Single_User_Query("self", userID)
-    userCrequests= Coaching_Query("self", userID=session["userID"])
-    return render_template('profile.html', username=username, userID=userID , userData=userData, userCrequests=userCrequests)
+    return render_template('profile.html', username=username, userID=userID , userData=userData, userCrequests=userCrequests, userYTrequests=userYTrequests)
 
 @content.route('/profile/edit/<userID>', methods=['GET', 'POST'])
 def User_Self_Edit_Profile(userID):
+
     userID = session.get('userID')
     username = session.get('username')
     userData = Single_User_Query("self", userID)
-    print(userData)
+    profile_form = ProfileEditForm()
 
     if username != userData.get('username') and userID != userData.get('userID'):
             flash("Naughty! trying to edit someone elses profile!", "danger")
             return redirect(url_for('content.index'))    
+    
+    elif request.method == "GET":
+        profile_form.username.data = userData["username"]
+        profile_form.email.data = userData["email"]
+        profile_form.xboxname.data = userData["xboxname"]
+        profile_form.timezone.data = userData["timezone"]
+        profile_form.arenarank.data = userData["arenarank"]
 
-    profile_form = ProfileEditForm()
-
-    if profile_form.validate_on_submit():
-        # Only proceed if the user clicked the correct submit button
-        flag = User_Profile_Update(userID, profile_form)
-        if flag:
-            flash("Your profile has been updated. Refresh the page if changes are not visible.", "success")
+    elif request.method == "POST":
+        if profile_form.validate_on_submit():
+            # Only proceed if the user clicked the correct submit button
+            flag = User_Profile_Update(userID, profile_form)
+            if flag:
+                flash("Your profile has been updated. Refresh the page if changes are not visible.", "success")
+            else:
+                flash("Your profile could not be updated. If this happens again, contact admin.", "warning")       
         else:
-            flash("Your profile could not be updated. If this happens again, contact admin.", "warning")
+            flash("form data invalid", "warning")
         
         return redirect(url_for("content.profilePage", userID=userID))
-    else:
-        flash("form data invalid", "critical")
         
     return render_template("profile_edit.html", ProfileForm=profile_form, userID=userID)
 
@@ -223,18 +241,38 @@ def User_Self_Edit_Profile(userID):
 def about_page():
     return render_template('about.html')
 
-#TODO: ADAM
-@content.route('/get-involved', methods=['GET', 'POST'])
-def get_involved():
-    if request.method == 'POST':
-        pass
+@content.route('/YT-Request', methods=['GET', 'POST'])
+def youtube_request():
+
+    form = YouTubeReviewForm()
+    if not session["username"] and not session["userID"]:
+        flash("you need a user account to submit videos for Youtube Review, please register an account", "information")
+
+    elif session["userID"] and request.method == 'GET':
+        print(session["userID"])
+        userData = Single_User_Query(userID=session["userID"])
+        print(userData)
+        form.username.data = userData.get("username")
+        form.xboxname.data = userData.get("xboxname") or None
+        form.arenarank.data = userData.get("arenarank") or None
+        return render_template('ytrequests.html', form=form)
+    
+    elif request.method == 'POST':
+        form.validate_on_submit()
+        action = Register_New_YT_Request(form, session["userID"])
+        if action:
+            flash("request successfully registered, check your profile for it's progress", "success")
+            return redirect(url_for('content.index'))
+        if not action:
+            flash("your reuqest had a problem, please try again", "warning")
+            return redirect(url_for('content.youtube_request'))
 
     else:
-        logged_in_user = session.get('username')
+        return render_template('ytrequests.html', form=form)
+    
+    flash("unknown request handled", "warning")
+    return render_template('ytrequests.html', form=form)
 
-        return render_template('get_involved.html')
-
-#TODO: ADAM
 @content.route('/coaching', methods=['GET', 'POST'])
 def coaching():
     

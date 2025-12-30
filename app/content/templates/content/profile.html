@@ -20,23 +20,20 @@
         </div>
 
         <!--user block credentials area-->
-        <div class="col-9">
-            <div class="d-flex flex-column">
+        <div class="col-9 d-flex flex-fill">
+            <div class="d-flex flex-column flex-fill">
 
                 <p> Username : {{ userData.username }}</p>
                 <p> XBL name : {{ userData.xboxname }}</p>
                 <p> CSR Rank: {{ userData.arenarank }}</p>
-                <p> Email Adress:{{ userData.email }}</p>
-                <p>{{userData}} </p>
+                <p> Email Adress: {{ userData.email }}</p>
             </div>
         </div>
 
     </div>
-    <div class="row">
-        <p> Coaching Requests </p>
-        <p> list here the form submissions by the user such as coaching submissions or private sessions requests</p>    
-    </div>
-    <h2 class="p-2"> Your Coaching Sessions </h2>
+    <form name="userprofile" method="POST" action="{{ url_for('content.profilePage', userID=session['userID']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h2 class="p-2"> Your Coaching Sessions </h2>
         <div class="row align-content-center p-1 m-1 my-auto" style="background-color: black!important;">
             <div id="AdminUserTable" class="d-flex flex-column pb-2"
                 style="background-color: black!important; border-style: none!important;">
@@ -51,6 +48,11 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Price</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
+                {% if userCrequests|length == 0 %}
+                <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
+                <p class="text-center"> no requests to show</p>
+                </div>  
+                {% endif %}
                 {% for crequest in userCrequests %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
@@ -62,17 +64,74 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.coach }}</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreeddate }}
                     </div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime }}</div>
-                    <div class="col-1 d-flex align-content-center justify-content-center">{%  if crequest.paid == 1 %}Paid{% elif crequest.delivered == 1 %} Delivered {% elif crequest.delivered == 0 and crequest.requesttime != '00-00-00' %} Booked {% else %} Pending {% endif %}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.agreedtime }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{% if crequest.paid == 1
+                        %}Paid{% elif crequest.delivered == 1 %} Delivered {% elif crequest.delivered == 0 and
+                        crequest.requesttime != '00-00-00' %} Booked {% else %} Pending {% endif %}</div>
                     <div class="col-1 d-flex align-content-center justify-content-center">£25.00</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">
                         <!-- TODO ADD IN REVIEWS AND PAYMENT SYSTEM (INTEGRATION?)-->
-                        {% if crequest.paid != 1 %} <a href="https://www.paypal.me/Vanadam"><button class="AdminDashBoardButton">Pay Here</button></a> {% endif %}
-                        {% if crequest.delivered != 1 %}<a href="NYI"><button class="AdminDashBoardButton">Cancel</button></a> {% endif %}
+                        {% if crequest.paid != 1 %} <a href="https://www.paypal.me/Vanadam"><button>Pay Here</button></a> {% endif %}
+                        {% if crequest.delivered != 1 %}<button class="AdminDashBoardButton" type="submit" name="userprofile" value="delete_crequest({{ crequest.crequestID }})">Cancel</button>{% endif %}
                         {% if crequest.paid == 1 %} <a href="NYI"><button class="AdminDashBoardButton">Documents</button></a> {% endif %}
                         {% if crequest.delivered == 1 %} <a href="NYI"><button class="AdminDashBoardButton">Review</button></a> {% endif %}
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+        <br>
+        <h2 class="p-2"> Your Youtube Review Requests </h2>
+        <div class="row align-content-center p-1 m-1 my-auto" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Rank</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Playlist</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Map</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Mode</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+
+
+                </div>
+                {% if userYTrequests|length == 0 %}
+                <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
+                <p class="text-center"> no requests to show</p>
+                </div>  
+                {% endif %}
+                {% for YTrequest in userYTrequests %}
+                <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow d-flex justify-content-center" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.arenarank }}
+                    </div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.playlist }}
+                    </div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchmap }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchgamemode }}
+                    </div>
+                    {% if YTrequest.status != "uploaded"%}
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.status}}</div>
+                    {% else %}
+                    <div class="col-1 d-flex align-content-center justify-content-center"><a href=""><button
+                                class="AdminDashBoardButton">Link</button></a></div>
+                </div>
+                {% endif %}
+                <div class="col-3 d-flex align-content-center justify-content-center">
+                    {% if YTrequest.status != "uploaded" or YTreuqest.status != "recorded" and YTrequest.YTrequestID %}
+                    <button class="AdminDashBoardButton" type="submit" name="userprofile" value="delete_YTrequest({{ YTrequest.YTrequestID }})">Cancel</button>
+                    {% elif YTrequest.stats == "uploaded" %} None Available {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+    </form>
 </div>
+
+
 {% endblock %}

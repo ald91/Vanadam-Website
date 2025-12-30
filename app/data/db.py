@@ -212,6 +212,27 @@ def create_database(db_path):
         invoiceID    TEXT NOT NULL DEFAULT 'no document'
         );
         """ )    
+    
+     # === YT Requests ===
+    cursor.execute("""
+    CREATE TABLE YTRequests (
+        YTrequestID     INTEGER PRIMARY KEY AUTOINCREMENT,
+        YTrequestTime   TEXT DEFAULT CURRENT_TIMESTAMP,
+        userID          INTEGER NOT NULL,
+        username        TEXT NOT NULL,  
+        xboxname        TEXT NOT NULL,
+        arenarank       TEXT NOT NULL,
+        videoURL        TEXT NOT NULL,
+        playlist        TEXT NOT NULL,
+        matchmap        TEXT NOT NULL,
+        matchgamemode   TEXT NOT NULL,
+        status          TEXT NOT NULL DEFAULT 'recieved',
+        trackernetwork  TEXT,
+        youtubevideoID  TEXT,  
+        
+        FOREIGN KEY (userID) REFERENCES Users(UserID) ON DELETE CASCADE    
+        );
+        """)
 
     # === RELATIONSHIPS ===
     # Messages.forumID → Posts.forumID

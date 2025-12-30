@@ -1,0 +1,168 @@
+{% extends 'base.html'%}
+
+{% block header %}
+{% block title %} Admin Control - Coaching Management {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+<!-- TODO ADAM 30TH DECEMBER INPUT AND IF STATEMENTS, MATCH TABLES TO DATA FOR COACHING AND DO INDIVIDUAL EDIT PARTS-->
+
+<div class="container-fluid">
+    <form class="" method="POST" action="/admin/youtube-requests">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-3 col-sm-12">
+            <H2>Youtube VoD Requests Management</H2>
+            <br>
+            <div class="col-12 d-flex justify-content-evenly">
+                <div class="col-4">
+                    <h3 class="">Requests Overview</h3>
+                </div>
+                <div class="col-8">
+                    <p class="pt-2">total Requests on record: {{ AllYTrequestData|length }}</p>
+                </div>
+            </div>
+            <br>
+        </div>
+        <!-- awaiting upload -->
+        <h2 class="p-2"> Sessions awaiting upload </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto flex-fill" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Playlist</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Map</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Mode</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                
+                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "recorded" %}
+                <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.playlist }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchmap }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchgamemode }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.status }}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="modify({{ YTrequest.YTrequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="uploaded({{ YTrequest.YTrequestID }})">Uploaded</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="delete({{ YTrequest.YTrequestID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+        <br>
+        <!-- Awaiting recording-->
+                <h2 class="p-2"> requests awaiting recording </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto flex-fill" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Playlist</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Map</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Mode</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                
+                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "queued" %}
+                <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.playlist }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchmap }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchgamemode }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.status }}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="modify({{ YTrequest.YTrequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="recorded({{ YTrequest.YTrequestID }})">Recorded</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="delete({{ YTrequest.YTrequestID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+         <br>
+        <!-- Awaiting Recieved-->
+                <h2 class="p-2"> Requests Pending</h2>
+        <div class="row align-content-center mx-auto p-2 my-auto flex-fill" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Playlist</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Map</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Mode</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                
+                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "recieved" %}
+                <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.playlist }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchmap }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchgamemode }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.status }}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="modify({{ YTrequest.YTrequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="queued({{ YTrequest.YTrequestID }})">queue</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="delete({{ YTrequest.YTrequestID }})">Delete</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+         <br>
+        <!-- Awaiting recording-->
+                <h2 class="p-2"> All Requests </h2>
+        <div class="row align-content-center mx-auto p-2 my-auto flex-fill" style="background-color: black!important;">
+            <div id="AdminUserTable" class="d-flex flex-column pb-2"
+                style="background-color: black!important; border-style: none!important;">
+                <div id="AdmimUserTable-Label" class="row">
+                    <div class="col-1 d-flex align-content-center justify-content-center">Request ID</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Request Time</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Username</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">Playlist</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Map</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Mode</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">Status</div>
+                    <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
+                </div>
+                
+                {% for YTrequest in AllYTrequestData %}
+                <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.username }}</div>
+                    <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.playlist }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchmap }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.matchgamemode }}</div>
+                    <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.status }}</div>
+                    <div class="col-3 d-flex align-content-center">
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="modify({{ YTrequest.YTrequestID }})">Modify</button>
+                        <button class="adminDashBoardButton" type="submit" name="youtubeAction" value="delete({{ YTrequest.YTrequestID }})">Delete</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
