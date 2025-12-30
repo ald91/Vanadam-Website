@@ -22,14 +22,14 @@ def login():
     form = LoginForm()
 
     # If already logged in, do not show login page (commented out request.method =="GET" and)
-    if 'userID' in session:
-        flash("Cannot log in while already logged in.", "danger")
+    if request.method == 'GET' and 'userID' in session:
+        flash("Cannot log in to another account while already logged in.", "danger")
         return redirect(url_for('content.index'))
 
     # Handle Login
-    if request.method == "POST":
+    if request.method == 'POST':
         if log_in_user(form):
-            flash(f"Logged in as {session['userID']}", "success")
+            flash(f"Logged in as {session['username']}", "success")
             return redirect(url_for('content.index'))
         else:   
             flash("Incorrect username or password.", "danger")
@@ -42,6 +42,7 @@ def login():
 def logout():
     session.pop('username', None)
     session.pop('userID', None)
+    session.pop('isAdmin', None)
     session.pop('logged_in', None)
 
 

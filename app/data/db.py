@@ -13,13 +13,12 @@ def get_database():
 
     if 'db' not in g:
         if not os.path.exists(db_path):
-            create_database(db_path)
+            create_database(db_path)                       
 
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON;")
         print(f"Connected to database at: {db_path}")
-
     return g.db
 
 def create_database(db_path):
@@ -262,4 +261,6 @@ def create_database(db_path):
 
 if not os.path.exists(db_path):
     create_database(db_path)
+
+
 

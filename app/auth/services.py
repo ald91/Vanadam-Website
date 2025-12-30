@@ -1,6 +1,7 @@
 #Flask
 from flask import render_template, redirect, url_for, flash, session
 from flask_mail import Message
+import os
 
 #Security
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -33,6 +34,7 @@ def log_in_user(form):
             session.clear()
             session['userID'] = int(result['userID'])
             session['username'] = str(result['username'])
+            session['isAdmin'] = bool(result["isAdmin"])
             return True
         
         else:

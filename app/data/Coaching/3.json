@@ -11,18 +11,18 @@
         },
         "tuesday": {
             "morning": false,
-            "afternoon": true,
+            "afternoon": false,
             "evening": false,
             "late": false
         },
         "wednesday": {
             "morning": false,
             "afternoon": false,
-            "evening": true,
+            "evening": false,
             "late": false
         },
         "thursday": {
-            "morning": true,
+            "morning": false,
             "afternoon": false,
             "evening": false,
             "late": false
@@ -46,5 +46,5 @@
             "late": false
         }
     },
-    "details": "fsrdgterdbv"
+    "details": "d"
 }

@@ -23,7 +23,48 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand navbar-dark fixed-top justify-content-center ">
+        <!-- Mobile Nav-->
+         <nav class="d-block d-sm-none navbar navbar-expand navbar-dark fixed-top justify-content-center ">
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-fill">
+                <a class="navbar-brand" href="/">
+                    <img src="{{ url_for('static', filename='Assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
+                    <span class>Vanadam Halo</span>
+                                    <div class="align-content-right">
+                    {% if session.get('userID') %}
+                    <!-- If user is logged in-->
+                    <a href="{{ url_for('content.profilePage', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
+                    <a href="/auth/logout"><button class="btn" type="button">Log Out</button></a>
+                    {% else %}
+                    <!-- If user is NOT logged in-->
+                    <a href="/auth/login"><button class="btn" type="button">Log in</button></a>
+                    <a href="/auth/register"><button class="btn" type="button">Register</button></a>
+                    {% endif %}
+                </div>
+            </div>
+                </a>
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button"
+                            aria-expanded="false">Navigation</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/mapPage"><b>Home</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Videos</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Articles</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Maps</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Coaching</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Get Involved</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>About</b></a></li>
+                            <li><a class="dropdown-item" href="/mapPage"><b>Forums</b></a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <!-- Desktop Nav-->
+        <nav class="d-none d-sm-block navbar navbar-expand navbar-dark fixed-top justify-content-center ">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
                     <img src="{{ url_for('static', filename='Assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
@@ -31,16 +72,16 @@
                 </a>
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/videos">Videos</a>
+                        <a class="nav-link" href="/videos">Videos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/articles">Articles</a>
                     </li>
                         <li class="nav-item">
-                        <a class="nav-link active" href="/forums">Forums</a>
+                        <a class="nav-link" href="/forums">Forums</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/mapPage" role="button"
@@ -94,8 +135,9 @@
                     <a href="/auth/login"><button class="btn" type="button">Log in</button></a>
                     <a href="/auth/register"><button class="btn" type="button">Register</button></a>
                     {% endif %}
-                     <!-- If user admin NYI!-->
+                    {% if session.get('isAdmin') == True %}
                     <a href="/admin/dashboard"><button class="btn" type="button">Dashboard</button></a>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -106,6 +148,7 @@
     {% if DEBUG_MODE %}
     <p>DEBUG: username = {{ session.get('username') }}</p>
     <P>DEBUG: userID = {{ session.get('userID') }}</P>
+    <P>DEBUG: isAdmin = {{ session.get('isAdmin') }}</P>
     {% endif%}
     <!-- Flash Messages: This will display any error/success/status messages to the user -->
     {% for category, message in get_flashed_messages(with_categories=True) %}

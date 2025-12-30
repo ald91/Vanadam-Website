@@ -26,7 +26,7 @@ from .admin import admin
 from .data import data
 from .HaloData import *
 from .data.db import g
-from .extensions import mail, serializer, security_salt
+from .extensions import mail, serializer, security_salt, Register_Admins
 
 scheduler = APScheduler()
 
@@ -76,6 +76,12 @@ def app_create():
             "HALO_INFINITE_DATA": HALO_INFINITE_DATA,
             "DEBUG_MODE" : DEBUG_MODE
     }
+    
+    @app.context_processor
+    def user_role():
+        return {
+            "is_admin": session.get("isAdmin", False)
+        }
 
     # This route is called at the end of a request, removing db connection from g, ready for the next request
     @app.teardown_appcontext
@@ -83,6 +89,11 @@ def app_create():
         db = g.pop('db', None)
         if db is not None:
             db.close()
+
+    #populate DB with Admin1 and test user
+    with app.app_context():
+        Register_Admins()
+        #Register_Test()
 
     #Scheduling for automated tasks
     scheduler.init_app(app)

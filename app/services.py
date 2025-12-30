@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, flash
 from app.data.db import get_database
 
 def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
@@ -37,14 +37,35 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
 
-#By applying @login_required before after a route definition and before function declaration,
-# you can designate a route to require login
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if "userID" not in session:
             return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
+    return wrapper
+
+def admin_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        username = session.get("username")
+        userID = session.get("userID")
+
+        if not username or not userID:
+            flash("You must be logged in to access this page", "warning")
+            return redirect(url_for('auth.login'))
+
+        db = get_database()
+        cur = db.cursor()
+        cur.execute("SELECT isAdmin FROM Users WHERE username = ? AND userID = ?",(username, userID))
+        result = cur.fetchone()
+
+        if not result or not result["isAdmin"]:
+            flash("you do not have permission to access this page", "danger")
+            return redirect(url_for("content.index"))
+
+        return f(*args, **kwargs)
+    
     return wrapper
 
 #Delete all but the 16 newest posts to the forums table,

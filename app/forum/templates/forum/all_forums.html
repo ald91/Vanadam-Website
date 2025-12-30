@@ -2,23 +2,33 @@
 {% block content %}
 <h1>Looking For Group</h1>
 
-<a href="{{ url_for('forum.create_post') }}">Create New Post</a>
+<a href="{{ url_for('forum.create_post') }}"><button class="btn">New Post</button></a>
 
 <hr>
 
-<div id="posts">
-    {% for post in posts %}
-        <div class="post">
-            <h3>
-                <a href="{{ url_for('forum.view_post', id=post['forumID']) }}">
-                    {{ post['title'] }}
-                </a>
-            </h3>
-            <p>{{ post['content'][:200] }}...</p>
+<div class="container-fluid">
+    <h2> Current LFG Posts </h2>
+    <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+        <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
+            {% for post in posts %}
+            <a href="forum/{{post.id}}/view" class="text-decoration-none">
+                <article id="{{ post.id }}" class="video-long">
+                    <div class="row mb-1 video-long">
+                        <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
+                            <p>placeholder image</p>
+                        </div>
+                        <div class="col-6 flex-fill flex-column align-content-around">
+                            <h2>{{ post.title }}</h2>
+                            <h3>{{ post.content }}</h3>
+                            <h4> {{ post.date }}<h4>                           
+                        </div>
+                    </div>
+                </article>
+            </a>
+            {% endfor %}
+            </form>
         </div>
-    {% else %}
-        <p>No posts yet.</p>
-    {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
