@@ -399,7 +399,7 @@ def youtube_management_request(YTrequestID):
         form.status.data           = YTrequestData["status"]
         form.youtubevideoID.data       = YTrequestData["youtubevideoID"]
     
-        return render_template('management-coaching-individual.html', YTrequestData=YTrequestData, form=form)
+        return render_template('management-youtube-individual.html', YTrequestData=YTrequestData, form=form)
 
     elif request.method == "POST":
             #TODO ADAM
