@@ -1,5 +1,3 @@
-#TODO: BUG : when a user changes their username the flash message for user not logged in occurs. (check redirect?)
-
 #external modules
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_session import Session
@@ -324,7 +322,7 @@ def mapPage(mapID):
     cur.execute(map_query, (mapID,))
     map_results = cur.fetchall()
     map_results = [dict(row) for row in map_results] #formats for JINJA2
-     
+
     if not game_map:
         print(f'user attempted to access map variant: {mapID} but it doesnt exist. redirecting to siteError.HTML')
         return render_template('siteError.html')

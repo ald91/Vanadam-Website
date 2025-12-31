@@ -13,7 +13,7 @@ import os, hashlib
 
 #Sessions
 from flask_session import Session
-from app.services import clear_stale_posts
+from app.services import clear_stale_posts, video_DB_Daily_Update
 
 #env file loader
 from dotenv import load_dotenv
@@ -105,6 +105,13 @@ def app_create():
         func=clear_stale_posts,
         trigger='interval',
         minutes=30
+    )
+
+    scheduler.add_job(
+        id='video_DB_Daily',
+        func=video_DB_Daily_Update,
+        trigger='interval',
+        minutes=1440
     )
 
     print(app.url_map)

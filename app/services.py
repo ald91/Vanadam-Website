@@ -1,6 +1,7 @@
-from functools import wraps
-from flask import session, redirect, url_for, flash
 from app.data.db import get_database
+from flask import session
+
+
 
 def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 
@@ -55,6 +56,11 @@ def clear_stale_posts():
     """
     cur.execute(query)
     db.commit()
+
+def video_DB_Daily_Update():
+    from app.admin.services_video import Update_Video_Database_Full
+    Update_Video_Database_Full()
+    return
 
 def check_ban(username:str) -> bool:
     db = get_database()

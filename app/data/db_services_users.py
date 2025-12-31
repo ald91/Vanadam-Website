@@ -122,8 +122,6 @@ def Modify_User_Data(userID:int, form:object) -> bool:
                     (submittedUsername, email, xboxname, timezone, arenarank, isAdmin, banned, userID))       
         db.commit()
 
-        #ToDO: should a user be told their username has been changed?
-
         print(f" user {userID} is now {submittedUsername} and their database record has been updated")
         
     except Exception as e:
