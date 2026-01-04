@@ -83,11 +83,13 @@ def fetch_all():
 def fetch_one(id):
     db = get_database()
     cur = db.cursor()
-
+    print(id)
+    
     query = "SELECT * FROM Forums WHERE forumID = ?"
     cur.execute(query, (id,))
 
     result = cur.fetchone()
+    print(result)
     return result
 
 def fetch_comments(id):

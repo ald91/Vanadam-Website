@@ -2,8 +2,10 @@
 {% block content %}
 
 <h1>{{ post.title }}</h1>
-<p><strong>Posted by:</strong> {{ post.originalPoster }}</p>
+<br>
 <p>{{ post.content }}</p>
+<br>
+<p><strong>Posted by:</strong> {{ post.originalPoster }}</p>
 {% if current_user == post.originalPoster %}
     <a href="/forums/{{ post.forumID }}/edit" class="button">Edit Post</a>
     <a href="/forums/{{ post.forumID }}/delete" class="button">Delete Post</a>

@@ -49,28 +49,20 @@ def dashboard():
         match action:
             case "video":
                 return redirect(url_for("admin.video_management"))
-
             case "article":
                 return redirect(url_for("admin.article_management"))
-
             case "user":
                 return redirect(url_for("admin.user_management"))
-            
-            case "database":
-                return redirect(url_for("admin.database_management"))
-
             case "coaching":
                 return redirect(url_for("admin.coaching_management"))
-            
             case "youtube":
                 return redirect(url_for("admin.youtube_management"))
-            
             case "quickvid":
                 Update_Video_Database_Full()
                 flash("Video Database Update Completed", "success")
                 return redirect(url_for("admin.dashboard"))
-
-    
+            case _:
+                pass
     else:    
         return redirect(url_for("admin.dashboard"))
     
@@ -79,7 +71,6 @@ def dashboard():
 @admin.route('/video-management', methods=["GET", "POST"])
 def video_management():
     """ video table related admin actions"""
-    print(request)
 
     if request.method == "GET":
         videos = All_Videos_Query(True)
@@ -172,8 +163,6 @@ def article_management_new():
     form = ArticleForm()
   
     if request.method == "POST":
-        print("form is a post request")
-
         if form.validate_on_submit():
             print("form validated on submit")
             Register_New_Article(form)
@@ -183,7 +172,7 @@ def article_management_new():
     
     return render_template('management-article-new.html', form=form)
 
-@admin.route('/article-management/<articleID>', methods=["GET", "POST"])
+@admin.route('/article-management/<int:articleID>', methods=["GET", "POST"])
 def article_management_individual(articleID):
     
     form = ArticleForm()
@@ -256,7 +245,7 @@ def user_management():
     
     return redirect(url_for("admin.user_management"))
 
-@admin.route('/user-management/<userID>', methods=["GET", "POST"])
+@admin.route('/user-management/<int:userID>', methods=["GET", "POST"])
 def User_Management_Individual(userID: str):
     form = AdminUserForm()
     

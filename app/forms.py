@@ -401,7 +401,7 @@ class YouTubeReviewForm(FlaskForm):
     matchgamemode = SelectField("Select the corresponding game mode for the match", choices=["", "- SELECT GAMEMODE -"] + possibleGameModes , validators=[DataRequired(message="you must provide a game mode for this submission")])
     status = SelectField("current status of request", choices=YTstatus)
     youtubevideoID = StringField("admin enter URL for video here")
-    submit = SubmitField("submit your video for review")
+    submit = SubmitField("submit YouTube Review Request")
 
 
 class ReportForm(FlaskForm):
