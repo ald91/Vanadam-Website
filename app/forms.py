@@ -343,9 +343,17 @@ class ForumForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = TextAreaField(
         "Comment",
-        validators=[DataRequired(), Length(min=1, max=256)]
+        validators=[DataRequired(), Length(min=3, max=256)]
     )
     submit = SubmitField("Post Comment")
+
+class ReportForm(FlaskForm):
+    target_id = HiddenField()
+    reason = TextAreaField(
+        "Reason",
+        validators=[DataRequired(), Length(min=3, max=256)]
+    )
+    submit = SubmitField("Report")
 
 #fills coaching form days
 class TimeSlotForm(FlaskForm):
@@ -402,9 +410,3 @@ class YouTubeReviewForm(FlaskForm):
     status = SelectField("current status of request", choices=YTstatus)
     youtubevideoID = StringField("admin enter URL for video here")
     submit = SubmitField("submit YouTube Review Request")
-
-
-class ReportForm(FlaskForm):
-    target_id = HiddenField()
-    reason = TextAreaField()
-    submit = SubmitField("Report")
