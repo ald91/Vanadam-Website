@@ -1,17 +1,12 @@
 #external modules
-from flask import render_template, redirect, url_for, flash, request
-import os
-
-#python modules
-from functools import wraps
+from flask import render_template, redirect, url_for, flash, request, session
 
 #app imports
-from app.services import *
 from app.forms import ArticleForm, AdminUserForm, CoachingForm, YouTubeReviewForm
 from app.services import Post_Form_Match_Case
 
 #db functions
-from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
+from app.data.db_services_articles import all_articles_query, single_article_query, register_new_article, get_article_data, modify_article_data, delete_article, toggle_article_visibility, test_article
 from app.data.db_services_videos import All_Videos_Query, Toggle_Video_Visibility
 from app.data.db_services_users import Single_User_Query, Modify_User_Data
 from app.data.db_services_coaching import coaching_query, coaching_record_modify, coaching_record_modify_quick, coaching_form_data_prep, youtube_query, YT_record_modify_quick, youtube_record_modify
@@ -26,6 +21,7 @@ from .services_users import All_Users_Management_Query, Delete_User, Ban_User, U
 ##################
 @admin.before_request
 def require_admin():
+    """ ensures anyone accessing dashboard is flag isAdmin=True before allowing access"""
     if not session.get('isAdmin'):
         flash("You cannot access this page", "critical")
         return redirect(url_for("content.index"))
@@ -103,7 +99,7 @@ def video_management():
 def article_management():
     """ article documents and table related admin actions"""
     
-    articles: list[dict] = All_Articles_Query(True)
+    articles: list[dict] = all_articles_query(True)
 
     if request.method == "GET":
         return render_template('management-article.html', articles=articles)  
@@ -123,7 +119,7 @@ def article_management():
                 return redirect(url_for("admin.article_management_individual", articleID=articleID))
             
             case "article_delete":
-                flag = Delete_Article(articleID)
+                flag = delete_article(articleID)
                 if flag == False:
                     flash("unable to delete article, an error has occured", "danger")
                     return redirect(url_for("admin.article_management"))
@@ -132,14 +128,14 @@ def article_management():
                     flash(f"article {articleID} has been Deleted successfully", "success")
                     return redirect(url_for("admin.article_management"))           
             case "article_toggle":
-                flag = Toggle_Article_Visibility(articleID)
+                flag = toggle_article_visibility(articleID)
                 if flag == False:
                     flash("Unable to toggle article visiblilty", "danger")
                 flash("successfull changed article visiblity", "success")
                 return render_template('management-article.html', articles=articles)   
 
             case "test_article":
-                flag = Test_Article() 
+                flag = test_article() 
                 if not flag:
                     flash("untable to initiate test article, did u try this on a populated DB?", "danger")
                 flash("test article initiated")
@@ -157,7 +153,7 @@ def article_management_new():
     if request.method == "POST":
         if form.validate_on_submit():
             print("form validated on submit")
-            Register_New_Article(form)
+            register_new_article(form)
             print("Article Created")
             flash("New article created")
             return redirect(url_for("admin.article_management"))
@@ -170,12 +166,12 @@ def article_management_individual(articleID):
     form = ArticleForm()
 
     if request.method == "GET":
-        article_data = Single_Article_Query(articleID)
-        article_text = Get_Article_Data(articleID)
+        article_data = single_article_query(articleID)
+        article_text = get_article_data(articleID)
 
         form.title.data = article_text["articleTitle"] #json
         form.description.data = article_text["articleDescription"] #json
-        form.content.data = article_text["articleContent"] #json
+        form.content.data = article_text["article_content"] #json
         form.tags.data = article_text["articleTags"] #json
         form.hidden.data = article_data["hidden"] #db
 
@@ -183,7 +179,7 @@ def article_management_individual(articleID):
 
     if request.method == "POST":
         if form.validate_on_submit():
-            modify_attempt = Modify_Article_Data(articleID, form)
+            modify_attempt = modify_article_data(articleID, form)
             if modify_attempt:
                 flash("Article updated successfully", "success")
                 return redirect(url_for('admin.article_management'))
@@ -356,8 +352,7 @@ def youtube_management():
 @admin.route('/youtube-requests/<int:YTrequestID>', methods=["GET", "POST"])
 def youtube_management_request(YTrequestID):
     """ retrieve and modify a single youtube request by ID from the database. provides an editable form"""
-    form = YouTubeReviewForm()
-    
+    form = YouTubeReviewForm()   
     if request.method == "GET":
         YT_request_data = youtube_query("admin", YTrequestID=YTrequestID)
         YT_request_data = YT_request_data[0]
@@ -373,17 +368,16 @@ def youtube_management_request(YTrequestID):
         form.matchmap.data         = YT_request_data["matchmap"]
         form.matchgamemode.data    = YT_request_data["matchgamemode"]
         form.status.data           = YT_request_data["status"]
-        form.youtubevideoID.data       = YT_request_data["youtubevideoID"]
-    
+        form.youtubevideoID.data       = YT_request_data["youtubevideoID"]    
         return render_template('management-youtube-individual.html', YT_request_data=YT_request_data, form=form)
 
     elif request.method == "POST":
-            flag = youtube_record_modify(YTrequestID, form)
-            if not flag:
-                flash(f"unable to update record {YTrequestID} an error occurded", "warning")
-                return redirect(url_for('admin.youtube_management_request', YTrequestID=YTrequestID))
-            else:
-                flash(f"updated record {YTrequestID} successfully", "success")
-                return redirect(url_for('admin.youtube_management'))
+        flag = youtube_record_modify(YTrequestID, form)
+        if not flag:
+            flash(f"unable to update record {YTrequestID} an error occurded", "warning")
+            return redirect(url_for('admin.youtube_management_request', YTrequestID=YTrequestID))
+        else:
+            flash(f"updated record {YTrequestID} successfully", "success")
+            return redirect(url_for('admin.youtube_management'))
     flash("unexpected outcome", "critical")
     return redirect(url_for('admin.youtube_management'))

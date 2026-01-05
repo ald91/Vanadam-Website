@@ -1,21 +1,14 @@
 from flask import current_app
 from werkzeug.utils import secure_filename
-import requests
 import json
-import isodate
-from pathlib import Path
-from datetime import datetime
 import os
 
 from dotenv import load_dotenv
-from typing import Optional
 load_dotenv()
 
 #internal imports
-from app.HaloData import HALO_INFINITE_DATA, infiniteCSR
 from app.data.db import *
 from app.services import checkTags
-from app.classes import Article
 
 #directories
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
@@ -30,7 +23,7 @@ articles_IMG_dir = os.path.join(articles_dir, "ArticlesIMG")
 # === ARTICLE HELPERS ===
 
 def article_image_save(imagedata: str, articleID: str) -> str: #article_IMG_filename
-    #save image (as A###.jpeg linking it to articleID)
+    """save an image (as A###.jpeg linking it to articleID) in data module /articles/articleIMG"""
     try:
         file = imagedata
         article_IMG_filename = secure_filename(f"A{articleID}.jpeg")
@@ -43,43 +36,38 @@ def article_image_save(imagedata: str, articleID: str) -> str: #article_IMG_file
     
     return article_IMG_filename
 
-def article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
-    
-    #prep article and store to JSON with all info
+def article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, article_content: str, articleTags:list) -> str: #article_JSON_filename
+    """ saves data to  JSON in data module articles/articleJSON"""
     article_data = {
         "articleID" : articleID,
         "articleTitle": articleTitle,
         "articleDescription" : articleDescription,
-        "articleContent" : articleContent,
+        "article_content" : article_content,
         "articleTags" : articleTags,
     }
-    
-    article_JSON_filename = f"A{articleID}.JSON"
 
+    article_JSON_filename = f"A{articleID}.JSON"
     article_save_location = os.path.join(articles_JSON_dir, article_JSON_filename)
 
     json_str = json.dumps(article_data, indent=4)
-    with open(article_save_location, "w") as f:
+    with open(article_save_location, "w", encoding="utf-8") as f:
         f.write(json_str)
 
     return article_JSON_filename
 
 def article_JSON_load(articleID: int) -> str:
     """ loads a JSON file and returns the content as a HTML String that self formats in the users browser """
-    
     file_path = f"{articles_JSON_dir}/A{articleID}.JSON"
 
     with open(file_path, "r", encoding="utf-8" ) as f:
-        data = json.load(f)
-    
-    articleContent = data.get("articleContent")
-
-    return articleContent
+        data = json.load(f)  
+    article_content = data.get("article_content")
+    return article_content
 
 
 # === ARTICLES MAIN FUNCTIONS ===
 
-def All_Articles_Query(showHidden :bool = False) -> list[dict]:
+def all_articles_query(showHidden :bool = False) -> list[dict]:
     
     """fetches all video records with Post tags and Post ID
     visible controls if ALL or just visible articles are returned"""
@@ -108,7 +96,7 @@ def All_Articles_Query(showHidden :bool = False) -> list[dict]:
 
     return articles
 
-def Single_Article_Query(articleID: int) -> dict:
+def single_article_query(articleID: int) -> dict:
    
     """ returns all database info of a single article as an Article object"""
 
@@ -129,7 +117,7 @@ def Single_Article_Query(articleID: int) -> dict:
 
     return data
 
-def Register_New_Article(form: object) -> bool:
+def register_new_article(form: object) -> bool:
 
     """ registers a new article to the database, saving the JSON file and the Image file using helper functions"""
     
@@ -137,7 +125,7 @@ def Register_New_Article(form: object) -> bool:
 
     articleTitle = form.title.data
     articleDescription = form.description.data
-    articleContent = form.content.data
+    article_content = form.content.data
     articleTags = form.tags.data
     articleImage = form.image.data
     articleHidden = form.hidden.data
@@ -167,7 +155,7 @@ def Register_New_Article(form: object) -> bool:
     articleID = articleInfo["articleID"]
 
     article_IMG_filename = article_image_save(articleImage, articleID)
-    article_JSON_filename = article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    article_JSON_filename = article_JSON_save(articleID, articleTitle, articleDescription, article_content, articleTags)
 
     #update DB record with img filename
     query = """
@@ -183,7 +171,7 @@ def Register_New_Article(form: object) -> bool:
 
     return True
 
-def Get_Article_Data(articleID: int) -> dict:
+def get_article_data(articleID: int) -> dict:
     
     """ opens article JSON data giving fields  articleID/articleTitle/articleDescription/json_filename/articleTags/img_filename"""
 
@@ -194,14 +182,14 @@ def Get_Article_Data(articleID: int) -> dict:
 
     return data
 
-def Modify_Article_Data(articleID: int, form: object) -> bool:
+def modify_article_data(articleID: int, form: object) -> bool:
 
     """ Modify the JSON data and IMG data of an article article -> ID / postID / title / description / json_filename / image_filename / hidden """
 
     articleID = articleID
     articleTitle = form.title.data
     articleDescription = form.description.data
-    articleContent = form.content.data
+    article_content = form.content.data
     articleImage = form.image.data
     articleTags = form.tags.data
     articleHidden = bool(form.hidden.data)
@@ -209,7 +197,7 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
     if articleImage:
         article_image_save(articleImage, articleID)
             
-    article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    article_JSON_save(articleID, articleTitle, articleDescription, article_content, articleTags)
 
     db = get_database()
     cur = db.cursor()
@@ -222,14 +210,14 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
 
     return True
 
-def Delete_Article(articleID: int) -> bool:
+def delete_article(articleID: int) -> bool:
 
     """ fully delete an article from the DB, including JSON and IMG"""
 
     if articleID == 1:
         return False
 
-    article_data = Single_Article_Query(articleID)
+    article_data = single_article_query(articleID)
     articlePostID = article_data.get("postID")
 
     try:
@@ -245,15 +233,15 @@ def Delete_Article(articleID: int) -> bool:
         return False
 
     print(articleID)
-    JSON_Deletion = Delete_Article_JSON(articleID)
-    IMG_Deletion = Delete_Article_IMG(articleID)
+    JSON_Deletion = delete_article_JSON(articleID)
+    IMG_Deletion = delete_article_IMG(articleID)
 
     if JSON_Deletion and IMG_Deletion == True:
         return True
     else:
         return False
 
-def Delete_Article_JSON(articleID: int) -> bool:
+def delete_article_JSON(articleID: int) -> bool:
     
     """ Delete an article JSON file"""
     
@@ -270,7 +258,7 @@ def Delete_Article_JSON(articleID: int) -> bool:
     print("Article JSON file deleted")
     return True
    
-def Delete_Article_IMG(articleID: int) -> bool:
+def delete_article_IMG(articleID: int) -> bool:
     
     """ Delete an article IMG file"""
     
@@ -288,11 +276,11 @@ def Delete_Article_IMG(articleID: int) -> bool:
     print("Article IMG file deleted")
     return True
 
-def Toggle_Article_Visibility(articleID: int) -> bool:
+def toggle_article_visibility(articleID: int) -> bool:
     
     """ Toggle an articles visibility flag True/False so that it cannot be seen by non admins"""
     
-    article_data = Single_Article_Query(articleID)
+    article_data = single_article_query(articleID)
     if not article_data:
         print("article not found:", articleID)
         return False
@@ -314,7 +302,7 @@ def Toggle_Article_Visibility(articleID: int) -> bool:
         print("failed to write new status of article", e)
         return False
 
-def Test_Article() -> bool:
+def test_article() -> bool:
     testFile_JSON = "test.JSON"
     testFile_JSON_path = f"{articles_JSON_dir}/test.JSON"
 
@@ -325,14 +313,14 @@ def Test_Article() -> bool:
 
     articleTitle = data["articleTitle"]
     articleDescription = data["articleDescription"]
-    articleContent = data["articleContent"]
+    article_content = data["article_content"]
     articleTags = data["articleTags"]
     articleHidden = False
 
     db = get_database()
     cur = db.cursor()
 
-    flag = Single_Article_Query(1)
+    flag = single_article_query(1)
     if flag != None:
         print("flag=",flag)
         return False

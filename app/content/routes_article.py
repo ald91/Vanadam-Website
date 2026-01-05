@@ -12,18 +12,18 @@ from app.classes import Article
 from app.services import checkTags
 
 #data imports
-from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, article_JSON_load
+from app.data.db_services_articles import all_articles_query, single_article_query, article_JSON_load
 
 #self import
 from . import content
 
 @content.route('/articles', methods=["GET"])
 def article():
-    articles = All_Articles_Query()
+    articles = all_articles_query()
     return render_template('allarticles.html', articles=articles)
 
 @content.route('/articles/<articleID>', methods=['GET'])
 def article_view(articleID):
-    article = Single_Article_Query(articleID)
+    article = single_article_query(articleID)
     content = article_JSON_load(articleID)
     return render_template("article_view.html", article=article, content=content)
