@@ -9,7 +9,7 @@ security_salt = None
 serializer = None
 
 
-def Register_Admins() -> None:
+def register_admins() -> None:
 
     """Registers Admin Users using .env file"""
     
@@ -32,7 +32,7 @@ def Register_Admins() -> None:
 
     return
 
-def Register_Test() -> None:
+def register_test() -> None:
     """ Registers Test User """
     
     testUsername = os.getenv('TEST_USER_USERNAME')

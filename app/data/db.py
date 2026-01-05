@@ -198,14 +198,14 @@ def create_database(db_path):
         crequestTime TEXT DEFAULT CURRENT_TIMESTAMP,
         -- user-facing fields
         userID       INTEGER NOT NULL DEFAULT 0,
-        username     TEXT DEFAULT 'No Account',
+        username     TEXT,
         email        TEXT,
         xboxname     TEXT,
         arenarank    TEXT,
         sessiontype  TEXT NOT NULL,
         coach        TEXT,
-        agreeddate   TEXT DEFAULT '0000-00-00',
-        agreedtime   TEXT DEFAULT '00:00:00',
+        agreeddate   TEXT,
+        agreedtime   TEXT,
         delivered    BOOLEAN NOT NULL DEFAULT 0,
         paid         BOOLEAN NOT NULL DEFAULT 0,
         -- admin-only fields

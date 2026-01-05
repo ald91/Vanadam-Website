@@ -1,7 +1,7 @@
 {
     "crequestID": 1,
-    "timezone": "Europe/Moscow",
-    "trackernetwork": "https://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=overall",
+    "timezone": "UTC",
+    "trackernetwork": null,
     "availability": {
         "monday": {
             "morning": false,
@@ -12,11 +12,11 @@
         "tuesday": {
             "morning": false,
             "afternoon": false,
-            "evening": true,
+            "evening": false,
             "late": false
         },
         "wednesday": {
-            "morning": true,
+            "morning": false,
             "afternoon": false,
             "evening": false,
             "late": false
@@ -30,7 +30,7 @@
         "friday": {
             "morning": false,
             "afternoon": false,
-            "evening": true,
+            "evening": false,
             "late": false
         },
         "saturday": {
@@ -46,5 +46,5 @@
             "late": false
         }
     },
-    "details": "dthrabtr"
+    "details": ""
 }

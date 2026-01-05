@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField, FormField, HiddenField
+from wtforms import EmailField, PasswordField, StringField, FileField, SelectMultipleField, SelectField, SubmitField, IntegerField, TextAreaField, widgets, BooleanField, FormField, HiddenField, TimeField,DateField
 from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo, Optional
 
@@ -358,15 +358,15 @@ class CoachingForm(FlaskForm):
     crequestID = IntegerField("PK DO NOT EDIT")
     crequestTime = StringField("Time given by DB DO NOT EDIT")
     username = StringField("username")
-    email = StringField("Email")
+    email = StringField("Email", validators=[DataRequired()])
     timezone = SelectField("Enter Your Local Timezone", choices=STANDARD_TIMEZONES.keys())
     xboxname = StringField("Xbox Gamertag")
     coach = StringField("Select a coach (NYI for users)")
     arenarank = SelectField('Enter your current ranked area rank', choices=list(infiniteCSR.keys()))
     trackernetwork = StringField("URL for your profile (Trackernetwork / Leafapp / Haloquery / etc.)")
     sessiontype = SelectField("Select the session type", choices=list(SESSION_TYPES))
-    agreeddate = StringField("Enter a valid date in format 0000-00-00 yyyy-mm-dd")
-    agreedtime = StringField("Enter a valid time in format 00:00:00 24hr")
+    agreeddate = StringField("Enter a valid date", render_kw={"placeholder" : "YYYY-MM-DD"})
+    agreedtime = StringField("Enter a valid time", render_kw={"placeholder" : "00:00"})
     monday = FormField(TimeSlotForm)
     tuesday = FormField(TimeSlotForm)
     wednesday = FormField(TimeSlotForm)

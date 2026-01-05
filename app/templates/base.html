@@ -33,7 +33,7 @@
                                     <div class="align-content-right">
                     {% if session.get('userID') %}
                     <!-- If user is logged in-->
-                    <a href="{{ url_for('content.profilePage', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
+                    <a href="{{ url_for('content.profile_page', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
                     <a href="/auth/logout"><button class="btn" type="button">Log Out</button></a>
                     {% else %}
                     <!-- If user is NOT logged in-->
@@ -51,7 +51,7 @@
                             <li><a class="dropdown-item" href="/"><b>Home</b></a></li>
                             <li><a class="dropdown-item" href="/Search"><b>Search</b></a></li>
                             <li><a class="dropdown-item" href="/Articles"><b>Articles</b></a></li>
-                            <li><a class="dropdown-item" href="/mapPage"><b>Maps</b></a></li>
+                            <li><a class="dropdown-item" href="/map_page"><b>Maps</b></a></li>
                             <li><a class="dropdown-item" href="/coaching"><b>Coaching</b></a></li>
                             <li><a class="dropdown-item" href="/YT-request"><b>Youtube Request</b></a></li>
                             <li><a class="dropdown-item" href="/forums"><b>LFG</b></a></li>
@@ -82,13 +82,13 @@
                         <a class="nav-link" href="/articles">Articles</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/mapPage" role="button"
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/map_page" role="button"
                             aria-expanded="false">Maps</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/mapPage"><b>Halo infinite</b></a></li>
+                            <li><a class="dropdown-item" href="/map_page"><b>Halo infinite</b></a></li>
                             <div class="dropdown-divider"></div>
                             {% for map_key, map_data in HALO_INFINITE_DATA["Maps"].items() %}
-                            <li><a class="dropdown-item" href="/mapPage/{{ map_key }}">{{ map_key }}</a></li>
+                            <li><a class="dropdown-item" href="/map_page/{{ map_key }}">{{ map_key }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -130,7 +130,7 @@
                 <div class="align-content-right">
                     {% if session.get('userID') %}
                     <!-- If user is logged in-->
-                    <a href="{{ url_for('content.profilePage', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
+                    <a href="{{ url_for('content.profile_page', userID=session.get('userID')) }}"><button class="btn" type="button">Profile</button></a>
                     <a href="/auth/logout"><button class="btn" type="button">Log Out</button></a>
                     {% else %}
                     <!-- If user is NOT logged in-->
@@ -153,10 +153,10 @@
     <p>username = {{ session.get('username') }}</p>
     <P>userID = {{ session.get('userID') }}</P>
     <P>isAdmin = {{ session.get('isAdmin') }}</P>
-    {% if userData %}<p>userData = {{ userData }}</p>   {% endif %}
-    {% if userCrequests %}<p>crequests = {{ userCrequests }}</p>              {% endif %}
-    {% if userYTrequests %}<p>YTrequests = {{ userYTrequests }}</p>            {% endif %}
-    {% if AllYTrequestData %}<p>AllYTrequestData = {{ AllYTrequestData }}</p> {% endif %}
+    {% if user_data %}<p>user_data = {{ user_data }}</p>   {% endif %}
+    {% if user_crequests %}<p>crequests = {{ user_crequests }}</p>              {% endif %}
+    {% if user_YTrequests %}<p>YTrequests = {{ user_YTrequests }}</p>            {% endif %}
+    {% if all_YT_request_data %}<p>all_YT_request_data = {{ all_YT_request_data }}</p> {% endif %}
     </div>
     {% endif%}
     <!-- Flash Messages: This will display any error/success/status messages to the user -->

@@ -1,19 +1,19 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Manage Article - {{ articleData.title }} {% endblock %}
+{% block title %} Manage Article - {{ article_data.title }} {% endblock %}
 {% endblock %}
 
 
 {% block content %}
 
 
-<H2 class="text-center">{{ articleData.title }}</H2>
+<H2 class="text-center">{{ article_data.title }}</H2>
 
 <div class="container-fluid justify-content-center m-1 p-1">
 
-    <h2>Edit {{ articleData.title }}</h2>
-    <form action="/admin/article-management/{{ articleData.articleID }}" name="articleform" method="POST" enctype="multipart/form-data">
+    <h2>Edit {{ article_data.title }}</h2>
+    <form action="/admin/article-management/{{ article_data.articleID }}" name="articleform" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
 
         <div class="container-fluid mt-4">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-6">
                     {{ form.image() }}<br><br>
-                    <img src="{{ url_for('data.Data_Send_Article_IMG', filename=articleData.image_filename) }}"
+                    <img src="{{ url_for('data.Data_Send_Article_IMG', filename=article_data.image_filename) }}"
                         width="auto" height="170px" />
                 </div>
             </div>

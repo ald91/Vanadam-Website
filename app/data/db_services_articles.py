@@ -29,7 +29,7 @@ articles_IMG_dir = os.path.join(articles_dir, "ArticlesIMG")
 
 # === ARTICLE HELPERS ===
 
-def Article_Image_save(imagedata: str, articleID: str) -> str: #article_IMG_filename
+def article_image_save(imagedata: str, articleID: str) -> str: #article_IMG_filename
     #save image (as A###.jpeg linking it to articleID)
     try:
         file = imagedata
@@ -43,10 +43,10 @@ def Article_Image_save(imagedata: str, articleID: str) -> str: #article_IMG_file
     
     return article_IMG_filename
 
-def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
+def article_JSON_save(articleID: int, articleTitle: str, articleDescription: str, articleContent: str, articleTags:list) -> str: #article_JSON_filename
     
     #prep article and store to JSON with all info
-    articleData = {
+    article_data = {
         "articleID" : articleID,
         "articleTitle": articleTitle,
         "articleDescription" : articleDescription,
@@ -58,13 +58,13 @@ def Article_JSON_save(articleID: int, articleTitle: str, articleDescription: str
 
     article_save_location = os.path.join(articles_JSON_dir, article_JSON_filename)
 
-    json_str = json.dumps(articleData, indent=4)
+    json_str = json.dumps(article_data, indent=4)
     with open(article_save_location, "w") as f:
         f.write(json_str)
 
     return article_JSON_filename
 
-def Article_JSON_load(articleID: int) -> str:
+def article_JSON_load(articleID: int) -> str:
     """ loads a JSON file and returns the content as a HTML String that self formats in the users browser """
     
     file_path = f"{articles_JSON_dir}/A{articleID}.JSON"
@@ -166,8 +166,8 @@ def Register_New_Article(form: object) -> bool:
     articleInfo = dict(cur.fetchone())
     articleID = articleInfo["articleID"]
 
-    article_IMG_filename = Article_Image_save(articleImage, articleID)
-    article_JSON_filename = Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    article_IMG_filename = article_image_save(articleImage, articleID)
+    article_JSON_filename = article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
 
     #update DB record with img filename
     query = """
@@ -207,9 +207,9 @@ def Modify_Article_Data(articleID: int, form: object) -> bool:
     articleHidden = bool(form.hidden.data)
 
     if articleImage:
-        Article_Image_save(articleImage, articleID)
+        article_image_save(articleImage, articleID)
             
-    Article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
+    article_JSON_save(articleID, articleTitle, articleDescription, articleContent, articleTags)
 
     db = get_database()
     cur = db.cursor()
@@ -229,8 +229,8 @@ def Delete_Article(articleID: int) -> bool:
     if articleID == 1:
         return False
 
-    articleData = Single_Article_Query(articleID)
-    articlePostID = articleData.get("postID")
+    article_data = Single_Article_Query(articleID)
+    articlePostID = article_data.get("postID")
 
     try:
         db = get_database()
@@ -292,13 +292,13 @@ def Toggle_Article_Visibility(articleID: int) -> bool:
     
     """ Toggle an articles visibility flag True/False so that it cannot be seen by non admins"""
     
-    articleData = Single_Article_Query(articleID)
-    if not articleData:
+    article_data = Single_Article_Query(articleID)
+    if not article_data:
         print("article not found:", articleID)
         return False
     
-    print(articleData)
-    hidden = articleData.get("hidden")
+    print(article_data)
+    hidden = article_data.get("hidden")
     hidden = 0 if hidden else 1
 
     try:

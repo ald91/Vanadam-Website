@@ -13,7 +13,7 @@
         <div class="col-3">
             <div class="d-flex flex-column">
                 <img src="/static/Assets/BrandLogo.jpg">
-                <form action="{{ url_for('content.User_Self_Edit_Profile', userID=session['userID']) }}" method="get">
+                <form action="{{ url_for('content.user_self_edit_profile', userID=session['userID']) }}" method="get">
                     <button type="submit" class="btn btn-primary">Edit Your Profile</button>
                 </form>
             </div>
@@ -23,15 +23,15 @@
         <div class="col-9 d-flex flex-fill">
             <div class="d-flex flex-column flex-fill">
 
-                <p> Username : {{ userData.username }}</p>
-                <p> XBL name : {{ userData.xboxname }}</p>
-                <p> CSR Rank: {{ userData.arenarank }}</p>
-                <p> Email Adress: {{ userData.email }}</p>
+                <p> Username : {{ user_data.username }}</p>
+                <p> XBL name : {{ user_data.xboxname }}</p>
+                <p> CSR Rank: {{ user_data.arenarank }}</p>
+                <p> Email Adress: {{ user_data.email }}</p>
             </div>
         </div>
 
     </div>
-    <form name="userprofile" method="POST" action="{{ url_for('content.profilePage', userID=session['userID']) }}">
+    <form name="userprofile" method="POST" action="{{ url_for('content.profile_page', userID=session['userID']) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <h2 class="p-2"> Your Coaching Sessions </h2>
         <div class="row align-content-center p-1 m-1 my-auto" style="background-color: black!important;">
@@ -48,12 +48,12 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Price</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% if userCrequests|length == 0 %}
+                {% if user_crequests|length == 0 %}
                 <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
                 <p class="text-center"> no requests to show</p>
                 </div>  
                 {% endif %}
-                {% for crequest in userCrequests %}
+                {% for crequest in user_crequests %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
                     </div>
@@ -98,12 +98,12 @@
 
 
                 </div>
-                {% if userYTrequests|length == 0 %}
+                {% if user_YTrequests|length == 0 %}
                 <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
                 <p class="text-center"> no requests to show</p>
                 </div>  
                 {% endif %}
-                {% for YTrequest in userYTrequests %}
+                {% for YTrequest in user_YTrequests %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow d-flex justify-content-center" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}
                     </div>
@@ -124,7 +124,7 @@
                 </div>
                 {% endif %}
                 <div class="col-3 d-flex align-content-center justify-content-center">
-                    {% if YTrequest.status != "uploaded" or YTreuqest.status != "recorded" and YTrequest.YTrequestID %}
+                    {% if YTrequest.status != "uploaded" or YTrequest.status != "recorded" and YTrequest.YTrequestID %}
                     <button class="AdminDashBoardButton" type="submit" name="userprofile" value="delete_YTrequest({{ YTrequest.YTrequestID }})">Cancel</button>
                     {% elif YTrequest.stats == "uploaded" %} None Available {% endif %}
                 </div>

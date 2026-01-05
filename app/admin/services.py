@@ -14,6 +14,6 @@ def Post_Form_Match_Case(input: str) -> list[str,str]:
     else:
         action = str(input)
 
-    matchCase = [action, itemID]
+    match_case = [action, itemID]
 
-    return matchCase
+    return match_case

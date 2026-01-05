@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 
 {% block header %}
-{% block title %} Manage Youtube Request - {{ YTrequestData.YTrequestID }} {% endblock %}
+{% block title %} Manage Youtube Request - {{ YT_request_data.YTrequestID }} {% endblock %}
 {% endblock %}
 
 
@@ -10,11 +10,11 @@
 
 
 
-<H2 class="text-center">Youtube Request Number - {{ YTrequestData.YTrequestID }}</H2>
+<H2 class="text-center">Youtube Request Number - {{ YT_request_data.YTrequestID }}</H2>
 
 <div class="container-fluid justify-content-center m-1 p-1">
 
-    <form action="/admin/youtube-requests/{{ YTrequestData.YTrequestID }}" name="AdminUserForm" method="POST"
+    <form action="/admin/youtube-requests/{{ YT_request_data.YTrequestID }}" name="AdminUserForm" method="POST"
         enctype="multipart/form-data">
         {{ form.hidden_tag() }}
 

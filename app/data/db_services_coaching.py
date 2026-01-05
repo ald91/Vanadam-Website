@@ -1,61 +1,56 @@
-#TODO:ADAM
-from flask import session
-import os
 import json
-
+import os
+from flask import session
 from .db import get_database
-from .db_services_users import Single_User_Query
-
-from app.forms import CoachingForm, TimeSlotForm, YouTubeReviewForm
+from app.forms import CoachingForm, YouTubeReviewForm
 
 #directories
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
 data_dir = os.path.join(base_dir, "data")
 CoachingJSON_dir = os.path.join(data_dir,"Coaching")
 
-def Coaching_Query(who:str="self", userID:int=-1, crequestID:int=-1) -> list[dict]:
-    
+def coaching_query(who:str="self", userID:int=-1, crequestID:int=-1) -> list[dict]: 
     """ Queries COACHING table and returns any active coaching requests for that specific user. user who = "self" or who = "admin" for customization"""
-    
-    KEYS = { "crequestID", "crequestTime", "userID", "username", "sessiontype", "coach","agreeddate", "agreedtime", "delivered", "paid", "email", "xboxname", "arenarank",  "invoiceID" }
-    JSON_KEYS = { "availability", "trackernetwork", "details", "timezone" }
-    VALID_WHO = {"self" , "admin"}
+    keys = { "crequestID", "crequestTime", "userID", "username", "sessiontype", "coach","agreeddate", "agreedtime", "delivered", "paid", "email", "xboxname", "arenarank",  "invoiceID" }
+    JSON_keys = { "availability", "trackernetwork", "details", "timezone" }
+    valid_who = {"self" , "admin"}
+    coaching_data = None
 
     db = get_database()
     cur = db.cursor()
 
-    if who not in VALID_WHO:
-        raise ValueError("Invalid 'who' Value supplied only valid inputs are: ",VALID_WHO)
+    if who not in valid_who:
+        raise ValueError("Invalid 'who' Value supplied only valid inputs are: ",valid_who)
 
     #send all records
     if userID == -1 and who == "admin":
         cur.execute("SELECT * FROM CoachingRequests ORDER BY crequesttime DESC")
-        coachingData = cur.fetchall()
+        coaching_data = cur.fetchall()
     #send specific record (As admin)
     elif userID == -1 and who == "admin" and crequestID > 0:
         cur.execute("SELECT * FROM CoachingReuqests WHERE crecordID = ?", (crequestID,))
-        coachingData = cur.fetchone()
+        coaching_data = cur.fetchone()
     #send records for a specific user
     elif isinstance(userID, int):
         cur.execute("SELECT * FROM CoachingRequests WHERE userID = ?", (userID,))
-        coachingData = cur.fetchall()
+        coaching_data = cur.fetchall()
     else:
         print("invalid request")
         return False
     
-    coachingData = [dict(row) for row in coachingData]
+    coaching_data = [dict(row) for row in coaching_data]
 
     if crequestID > 0 and who == "admin":
-        jsondata = Coaching_Load_JSON(crequestID)
-        KEYS = KEYS.union(JSON_KEYS)
-        coachingData = [{**crecord, **jsondata} for crecord in coachingData]
+        jsondata = coaching_load_JSON(crequestID)
+        keys = keys.union(JSON_keys)
+        coaching_data = [{**crecord, **jsondata} for crecord in coaching_data]
 
     #apply keys before sending
-    coachingData = [{k: entry[k] for k in KEYS} for entry in coachingData]
-    print(coachingData)
-    return coachingData
+    coaching_data = [{k: entry[k] for k in keys} for entry in coaching_data]
+    print(coaching_data)
+    return coaching_data
 
-def Coaching_Record_Modify_Quick(crequestID, action):
+def coaching_record_modify_quick(crequestID, action):
 
     """ performs simply boolean or delete's of CoachingReuqests table"""
     db = get_database()
@@ -83,28 +78,26 @@ def Coaching_Record_Modify_Quick(crequestID, action):
         print(f"quick modification of crequest ({crequestID}) result in an error: ", e)
         return False
 
-def Coaching_Record_Modify(crequestID:int, form:object) -> bool:
-    
+def coaching_record_modify(crequestID:int, form:object) -> bool:
     """ modifies coaching records using "full" or "quick" method, takes CoachingForm object"""
-    print(form)
-
     db = get_database()
     cur = db.cursor()
-
-    username = form.username.data
+   
+    username = form.username.data.strip() if form.username.data !="" else None
     email = form.email.data
-    xboxname = form.xboxname.data
+    xboxname = form.xboxname.data if form.xboxname.data !="" else None
     arenarank = form.arenarank.data
     sessiontype = form.sessiontype.data
-    coach = form.coach.data
-    agreedtime = form.agreedtime.data
+    coach = "Vanadam"
+    agreedtime = form.agreedtime.data if form.agreedtime.data !="" else None
+    agreeddate = form.agreeddate.data if form.agreeddate.data !="" else None
     delivered = form.delivered.data or 0
     paid = form.paid.data or 0
     invoiceID = form.invoiceID.data
 
     #json fields
-    trackernetwork:str = form.trackernetwork.data
-    timezone = form.timezone.data
+    trackernetwork = form.trackernetwork.data or None
+    timezone = form.timezone.data 
     details = form.details.data
 
     monday = {
@@ -154,29 +147,28 @@ def Coaching_Record_Modify(crequestID:int, form:object) -> bool:
     
     try:
 
-        cur.execute(""" UPDATE CoachingRequests SET username = ?, email = ?, xboxname = ?, arenarank = ?, sessiontype = ?, coach = ?, agreedtime = ?, delivered = ?, paid = ?, invoiceID = ?
-            WHERE crequestID = ?""", (username, email, xboxname, arenarank, sessiontype, coach, agreedtime, delivered, paid, invoiceID, crequestID))
+        cur.execute(""" UPDATE CoachingRequests SET username = ?, email = ?, xboxname = ?, arenarank = ?, sessiontype = ?, coach = ?, agreedtime = ?, agreeddate = ?, delivered = ?, paid = ?, invoiceID = ?
+            WHERE crequestID = ?""", (username, email, xboxname, arenarank, sessiontype, coach, agreedtime, agreeddate, delivered, paid, invoiceID, crequestID))
         
         print("availability:", availability)
         print("trackernetwork:", trackernetwork)
         print("timezone:", timezone)
         print("details:", details)
 
-        if not Coaching_Save_JSON(crequestID, availability, trackernetwork, timezone, details):
+        if not coaching_save_JSON(crequestID, availability, trackernetwork, timezone, details):
             print('couldnt update JSON')
             raise ValueError("Failed to Save to JSON")
 
         db.commit()
         print(f"coaching request modified and saved")
-        return True
-    
+        return True   
     except Exception as e:
         db.rollback()
         print("couldnt update request: ", e)
         return False
- 
-def Register_New_Coaching_Request(form:object) -> bool:
 
+def register_new_coaching_request(form:object) -> bool:
+    """ registers a new coaching request in the DB"""
     userID:int = session.get('userID', 0)
     username:str = session.get('username', 'not provided')     
     sessiontype:str = form.sessiontype.data
@@ -252,7 +244,7 @@ def Register_New_Coaching_Request(form:object) -> bool:
         crequestID = cur.lastrowid
         print(crequestID)
         
-        if not Coaching_Save_JSON(crequestID, availabilty, trackernetwork, timezone, details):
+        if not coaching_save_JSON(crequestID, availabilty, trackernetwork, timezone, details):
             return False
 
         print(f"new coaching request saved {crequestID} by {username}")
@@ -264,7 +256,7 @@ def Register_New_Coaching_Request(form:object) -> bool:
         print("couldnt add request to database: ", e)
         return False
 
-def Coaching_Save_JSON(crequestID:int, availability:dict[dict[bool]], trackernetwork, timezone:str, details:str) -> bool:
+def coaching_save_JSON(crequestID:int, availability:dict[dict[bool]], trackernetwork, timezone:str, details:str) -> bool:
     
     """ takes crequestID / availability / timezone / details and saved into JSON format as {crequestID}.JSON"""
     
@@ -287,7 +279,7 @@ def Coaching_Save_JSON(crequestID:int, availability:dict[dict[bool]], trackernet
         print("could not write to crequest to JSON", e)
         return False
         
-def Coaching_Load_JSON(crequestID:int) -> dict:
+def coaching_load_JSON(crequestID:int) -> dict:
     """ Looks in Dir for associated coaching request JSON"""
     fileSaveLocation = f"{CoachingJSON_dir}/{crequestID}.json"
     try:
@@ -299,7 +291,7 @@ def Coaching_Load_JSON(crequestID:int) -> dict:
     except FileNotFoundError as e:
         print("could not find request file: ", e)
 
-def Coaching_Form_Data_Prep(crequestData:dict) -> object:
+def coaching_form_data_prep(crequestData:dict) -> object:
     
     """ takes a db entry from CoachingRequests with JSON data added in and preps for form prefill on admin dash"""
     print(crequestData)
@@ -315,6 +307,8 @@ def Coaching_Form_Data_Prep(crequestData:dict) -> object:
     form.xboxname.data = crequestData["xboxname"]
     form.arenarank.data = crequestData["arenarank"]
     form.timezone.data = crequestData["timezone"]
+    form.agreeddate.data = crequestData["agreeddate"]
+    form.agreedtime.data = crequestData["agreedtime"]
     form.paid.data = crequestData["paid"]
     form.delivered.data = crequestData["delivered"]
     
@@ -368,7 +362,7 @@ def Coaching_Form_Data_Prep(crequestData:dict) -> object:
 
 #for youtube requests which are still coaching
 
-def Register_New_YT_Request(form:object, sessionUserID) -> bool:
+def register_new_YT_request(form:object, sessionUserID) -> bool:
 
     """ takes a YT request form and registers it on the YTrequests Database user must be logged in"""
 
@@ -396,38 +390,38 @@ def Register_New_YT_Request(form:object, sessionUserID) -> bool:
     
     return True
 
-def Youtube_Query(who="self", userID:int = -1, YTrequestID:int = -1) -> list[dict]:
+def youtube_query(who="self", userID:int = -1, YTrequestID:int = -1) -> list[dict]:
  
     """ Queries YTRequests table and returns any Youtube requests for that specific user. user who = "self" or who = "admin" for customization"""
 
-    VALID_WHO = {"self" , "admin"}
+    valid_who = {"self" , "admin"}
 
     db = get_database()
     cur = db.cursor()
 
-    if who not in VALID_WHO:
-        raise ValueError("Invalid 'who' Value supplied only valid inputs are: ",VALID_WHO)
+    if who not in valid_who:
+        raise ValueError("Invalid 'who' Value supplied only valid inputs are: ",valid_who)
 
     #send all records
     if userID == -1 and who == "admin":
         cur.execute("SELECT * FROM YTRequests ORDER BY YTrequestTime DESC")
-        coachingData = cur.fetchall()
+        coaching_data = cur.fetchall()
     #send specific record (As admin)
     elif userID == -1 and who == "admin" and YTrequestID > 0:
         cur.execute("SELECT * FROM YTRequests WHERE crecordID = ?", (YTrequestID,))
-        coachingData = cur.fetchone()
+        coaching_data = cur.fetchone()
     #send records for a specific user
     elif isinstance(userID, int):
         cur.execute("SELECT * FROM YTRequests WHERE userID = ?", (userID,))
-        coachingData = cur.fetchall()
+        coaching_data = cur.fetchall()
     else:
         print("invalid request")
         return False
     
-    YTRequestData = [dict(row) for row in coachingData]
-    return YTRequestData
+    YT_request_data = [dict(row) for row in coaching_data]
+    return YT_request_data
 
-def YT_Record_Modify_Quick(YTrequestID:int, action:str) -> bool :
+def YT_record_modify_quick(YTrequestID:int, action:str) -> bool :
     """ performs simple string change or delete's of record from  YTRequests table"""
     db = get_database()
     cur = db.cursor()

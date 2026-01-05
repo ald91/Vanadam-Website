@@ -20,7 +20,7 @@
                     <h3 class="">Requests Overview</h3>
                 </div>
                 <div class="col-8">
-                    <p class="pt-2">total Requests on record: {{ AllYTrequestData|length }}</p>
+                    <p class="pt-2">total Requests on record: {{ all_YT_request_data|length }}</p>
                 </div>
             </div>
             <br>
@@ -41,7 +41,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
                 
-                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "recorded" %}
+                {% for YTrequest in all_YT_request_data %}{% if YTrequest["status"] == "recorded" %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
@@ -76,7 +76,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
                 
-                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "queued" %}
+                {% for YTrequest in all_YT_request_data %}{% if YTrequest["status"] == "queued" %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
@@ -111,7 +111,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
                 
-                {% for YTrequest in AllYTrequestData %}{% if YTrequest["status"] == "recieved" %}
+                {% for YTrequest in all_YT_request_data %}{% if YTrequest["status"] == "recieved" %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>
@@ -146,7 +146,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
                 
-                {% for YTrequest in AllYTrequestData %}
+                {% for YTrequest in all_YT_request_data %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestTime }}</div>

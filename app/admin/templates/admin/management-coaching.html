@@ -19,7 +19,7 @@
                     <h3 class="">Requests Overview</h3>
                 </div>
                 <div class="col-8">
-                    <p>total Requests on record: {{ AllCrequestsData|length }}</p>
+                    <p>total Requests on record: {{ all_crequests_data|length }}</p>
                 </div>
             </div>
             <br>
@@ -41,7 +41,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
 
-                {% for crequest in AllCrequestsData %}{% if crequest["paid"] != 1 and crequest["delivered"] == 1
+                {% for crequest in all_crequests_data %}{% if crequest["paid"] != 1 and crequest["delivered"] == 1
                 %}
 
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
@@ -84,8 +84,8 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == False and crequest["agreedtime"]
-                != "00:00:00" %}
+                {% for crequest in all_crequests_data %} {% if crequest["delivered"] == False and crequest["agreedtime"]
+                != None %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
                     </div>
@@ -127,8 +127,8 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == False and crequest["agreedtime"]
-                == "00:00:00" %}
+                {% for crequest in all_crequests_data %} {% if crequest["delivered"] == False and crequest["agreedtime"]
+                == None %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
                     </div>
@@ -169,7 +169,7 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Time</div>
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% for crequest in AllCrequestsData %} {% if crequest["delivered"] == True and crequest["paid"] == True
+                {% for crequest in all_crequests_data %} {% if crequest["delivered"] == True and crequest["paid"] == True
                 and crequest["agreedtime"] !="00:00:00" %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}

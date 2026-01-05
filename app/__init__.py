@@ -1,8 +1,9 @@
 #Flask
-from flask import Flask, session
+from flask import Flask, session, flash, redirect, request, url_for
 from flask_wtf import CSRFProtect
 from flask_mail import Mail
 from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 from flask_apscheduler import APScheduler
 
 #Security
@@ -26,7 +27,7 @@ from .admin import admin
 from .data import data
 from .HaloData import *
 from .data.db import g
-from .extensions import mail, serializer, security_salt, Register_Admins, Register_Test
+from .extensions import mail, serializer, security_salt, register_admins, register_test
 
 scheduler = APScheduler()
 
@@ -44,6 +45,11 @@ def app_create():
     #cross site protection
     CSRFProtect(app)
     mail.init_app(app)
+    
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        flash("security failed. Please try again.", "warning")
+        return redirect(request.referrer)
 
     #security items
     serializer = URLSafeTimedSerializer(app.secret_key)
@@ -92,9 +98,9 @@ def app_create():
 
     #populate DB with Admin1 and test user
     with app.app_context():
-        Register_Admins()
-        Register_Test()
-        #Register_Test()
+        register_admins()
+        register_test()
+        #register_test()
 
     #Scheduling for automated tasks
     scheduler.init_app(app)

@@ -6,26 +6,21 @@ import os
 from functools import wraps
 
 #app imports
-from app.data.db import create_database, db_path
 from app.services import *
 from app.forms import ArticleForm, AdminUserForm, CoachingForm, YouTubeReviewForm
-from app.data.routes import Data_Send_Article_IMG
 from app.services import Post_Form_Match_Case
 
 #db functions
 from app.data.db_services_articles import All_Articles_Query, Single_Article_Query, Register_New_Article, Get_Article_Data, Modify_Article_Data, Delete_Article, Toggle_Article_Visibility, Test_Article
-from app.data.db_services_videos import All_Videos_Query, Single_Video_Query, Toggle_Video_Visibility
+from app.data.db_services_videos import All_Videos_Query, Toggle_Video_Visibility
 from app.data.db_services_users import Single_User_Query, Modify_User_Data
-from app.data.db_services_coaching import Coaching_Query, Coaching_Save_JSON, Coaching_Load_JSON, Coaching_Record_Modify, Coaching_Record_Modify_Quick, Coaching_Form_Data_Prep, Youtube_Query, YT_Record_Modify_Quick, youtube_record_modify
+from app.data.db_services_coaching import coaching_query, coaching_record_modify, coaching_record_modify_quick, coaching_form_data_prep, youtube_query, YT_record_modify_quick, youtube_record_modify
 
 #self module
 from . import admin
 
 from .services_video import Update_Video_Database_Full, Google_API_V3_Write_Thumbnails
-from .services_users import All_Users_Management_Query, Delete_User, Ban_User, Unban_User, Update_User_Tags, Update_User_Is_Admin
-
-   
-
+from .services_users import All_Users_Management_Query, Delete_User, Ban_User, Unban_User
 ##################
 #-----Routes-----#
 ##################
@@ -78,9 +73,9 @@ def video_management():
         
     elif request.method == "POST":
         
-        matchCase = Post_Form_Match_Case(request.form.get("videoAction"))
-        action = matchCase[0] 
-        vidID = matchCase[1]
+        match_case = Post_Form_Match_Case(request.form.get("videoAction"))
+        action = match_case[0] 
+        vidID = match_case[1]
     
         match action:
             case "video_thumbnails":
@@ -99,7 +94,7 @@ def video_management():
                     flash(f"could not toggle video {vidID} visibility", "critical")
                 else:
                     flash(f"video {vidID} has had it's visibility toggled", "success")
-                return redirect(url_for(f"admin.video_management"))
+                return redirect(url_for("admin.video_management"))
     else:
         flash("internal routing error", "danger")
         return redirect(url_for("admin.video_management"))
@@ -116,16 +111,16 @@ def article_management():
     elif request.method == "POST":
         
         #JINJA 2 sends "articleAction(Article.ID)"
-        matchCase = Post_Form_Match_Case(request.form.get("articleAction"))
-        action = matchCase[0]
-        articleID = matchCase[1]
+        match_case = Post_Form_Match_Case(request.form.get("articleAction"))
+        action = match_case[0]
+        articleID = match_case[1]
 
         match action:
             case "article_new":
                 return redirect(url_for("admin.article_management_new"))
 
             case "article_modify":
-                return redirect(url_for(f"admin.article_management_individual", articleID=articleID))
+                return redirect(url_for("admin.article_management_individual", articleID=articleID))
             
             case "article_delete":
                 flag = Delete_Article(articleID)
@@ -135,8 +130,7 @@ def article_management():
 
                 else:
                     flash(f"article {articleID} has been Deleted successfully", "success")
-                    return redirect(url_for("admin.article_management"))
-            
+                    return redirect(url_for("admin.article_management"))           
             case "article_toggle":
                 flag = Toggle_Article_Visibility(articleID)
                 if flag == False:
@@ -149,19 +143,17 @@ def article_management():
                 if not flag:
                     flash("untable to initiate test article, did u try this on a populated DB?", "danger")
                 flash("test article initiated")
-                return redirect(url_for(f"admin.article_management"))  
+                return redirect(url_for("admin.article_management"))  
     else:
         flash("internal routing error", "danger")
-        return redirect(url_for("admin.article_management"))
-    
+        return redirect(url_for("admin.article_management"))   
     flash("internal routing error", "danger")
     return redirect(url_for("admin.article_management"))
 
 @admin.route('/article-management/new', methods=['GET', 'POST'])
 def article_management_new():
-    
+    """ creation of a new article using form object """
     form = ArticleForm()
-  
     if request.method == "POST":
         if form.validate_on_submit():
             print("form validated on submit")
@@ -174,25 +166,25 @@ def article_management_new():
 
 @admin.route('/article-management/<int:articleID>', methods=["GET", "POST"])
 def article_management_individual(articleID):
-    
+    """ retrieves and allows editing of a sigle article file by ID"""
     form = ArticleForm()
 
     if request.method == "GET":
-        articleData = Single_Article_Query(articleID)
-        articleText = Get_Article_Data(articleID)
+        article_data = Single_Article_Query(articleID)
+        article_text = Get_Article_Data(articleID)
 
-        form.title.data = articleText["articleTitle"] #json
-        form.description.data = articleText["articleDescription"] #json
-        form.content.data = articleText["articleContent"] #json
-        form.tags.data = articleText["articleTags"] #json
-        form.hidden.data = articleData["hidden"] #db
+        form.title.data = article_text["articleTitle"] #json
+        form.description.data = article_text["articleDescription"] #json
+        form.content.data = article_text["articleContent"] #json
+        form.tags.data = article_text["articleTags"] #json
+        form.hidden.data = article_data["hidden"] #db
 
-        return render_template('management-article-individual.html', articleData=articleData, form=form, articleText=articleText )
+        return render_template('management-article-individual.html', article_data=article_data, form=form, article_text=article_text )
 
     if request.method == "POST":
         if form.validate_on_submit():
-            modifyAttempt = Modify_Article_Data(articleID, form)
-            if modifyAttempt:
+            modify_attempt = Modify_Article_Data(articleID, form)
+            if modify_attempt:
                 flash("Article updated successfully", "success")
                 return redirect(url_for('admin.article_management'))
 
@@ -201,30 +193,30 @@ def article_management_individual(articleID):
                 return redirect(url_for('admin.article_management'))
         else:
             flash("form entry error", "danger")
-            return render_template(f"management-article.html", articleID=articleID) #sends user back to edit if there is an error
+            return render_template("management-article.html", articleID=articleID) #sends user back to edit if there is an error
 
 @admin.route('/user-management', methods=["GET", "POST"])
 def user_management():
-    
-    AllUserData = All_Users_Management_Query()
-    print(AllUserData)
+    """ admin dashboard for user accounts"""
+    all_user_data = All_Users_Management_Query()
+    print(all_user_data)
 
     if request.method == "GET":
-        return render_template('management-user.html', AllUserData=AllUserData)
+        return render_template('management-user.html', all_user_data=all_user_data)
 
     elif request.method == "POST":
 
-        matchCase = Post_Form_Match_Case(request.form.get("userAction"))
-        print(matchCase)
-        action = matchCase[0]
-        userID = matchCase[1]
+        match_case = Post_Form_Match_Case(request.form.get("userAction"))
+        print(match_case)
+        action = match_case[0]
+        userID = match_case[1]
 
         match action:
 
             case "user_new":
                 pass
             case "user_modify":
-                return redirect(url_for('admin.User_Management_Individual', userID=userID))
+                return redirect(url_for('admin.user_management_individual', userID=userID))
             case "user_delete":
                 flag = Delete_User(userID)
             case "user_ban":
@@ -246,48 +238,45 @@ def user_management():
     return redirect(url_for("admin.user_management"))
 
 @admin.route('/user-management/<int:userID>', methods=["GET", "POST"])
-def User_Management_Individual(userID: str):
+def user_management_individual(userID: str):
+    """ search and retrieve a user's data based on user ID, gives an editable form object"""
     form = AdminUserForm()
     
     if request.method == "GET":
-        userData = Single_User_Query("admin", userID)
-        form.username.data = userData["username"] 
-        form.email.data = userData["email"]
-        form.xboxname.data = userData["xboxname"]
-        form.timezone.data = userData["timezone"]
-        form.arenarank.data = userData["arenarank"]
-        form.isAdmin.data = userData["isAdmin"] | False
-        form.banned.data = userData["banned"]  | False
-        return render_template('management-user-individual.html', form=form, userData=userData)  
-    
+        user_data = Single_User_Query("admin", userID)
+        form.username.data = user_data["username"] 
+        form.email.data = user_data["email"]
+        form.xboxname.data = user_data["xboxname"]
+        form.timezone.data = user_data["timezone"]
+        form.arenarank.data = user_data["arenarank"]
+        form.isAdmin.data = user_data["isAdmin"] | False
+        form.banned.data = user_data["banned"]  | False
+        return render_template('management-user-individual.html', form=form, user_data=user_data)  
     elif request.method =="POST":
+        flag = None
         if form.validate_on_submit():
-                print(f"recieved update request to modify {userID}")
-                flag = Modify_User_Data(userID, form)
+            print(f"recieved update request to modify {userID}")
+            flag = Modify_User_Data(userID, form)       
         if flag:
             flash(f"user data for {userID} has been updated", "success")
         else:
             flash(f"user data for {userID} has not been updated, an error occured", "warning")
-        
-        return redirect(url_for('admin.user_management'))     
-        
+            return redirect(url_for('admin.user_management'))
     else:
         flash("invalid request parameter", "critical")
-        return redirect(url_for('admin.user_management'))
+    return redirect(url_for('admin.user_management'))
     
 @admin.route('/coaching-requests', methods=["GET", "POST"])
 def coaching_management():
-    
-    AllCrequestsData = Coaching_Query("admin")
+    """ shows all coaching requests from the database CoachingRequests table"""
+    all_crequests_data = coaching_query("admin")
 
     if request.method == "GET":
-        return render_template('management-coaching.html', AllCrequestsData=AllCrequestsData)  
-    
-    
+        return render_template('management-coaching.html', all_crequests_data=all_crequests_data)
     elif request.method == "POST":
-        matchCase = Post_Form_Match_Case(request.form.get("coachingAction"))
-        action = matchCase[0] 
-        crequestID = int(matchCase[1])
+        match_case = Post_Form_Match_Case(request.form.get("coachingAction"))
+        action = match_case[0] 
+        crequestID = int(match_case[1])
 
         print(action, crequestID)
 
@@ -295,13 +284,13 @@ def coaching_management():
             case "modify":
                 return redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
             case "delivered":
-                if Coaching_Record_Modify_Quick(crequestID, action):
+                if coaching_record_modify_quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case "paid":
-                if Coaching_Record_Modify_Quick(crequestID, action):
+                if coaching_record_modify_quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case "delete":
-                if Coaching_Record_Modify_Quick(crequestID, action):
+                if coaching_record_modify_quick(crequestID, action):
                     flash(f"successfully marked ({crequestID}) as {action}","success")
             case _:
                 flash("invalid request","warning")
@@ -310,39 +299,37 @@ def coaching_management():
 
 @admin.route('/coaching-requests/<int:crequestID>', methods=["GET", "POST"])
 def coaching_management_request(crequestID):
+    """ retrieve the select coaching request (crequest) information from the database and provide a form that can be modified"""
     if request.method == "GET":
-        crequestData = Coaching_Query("admin", crequestID=crequestID)
+        crequestData = coaching_query("admin", crequestID=crequestID)
         crequestData = crequestData[0]
-        form = Coaching_Form_Data_Prep(crequestData)
-    
+        form = coaching_form_data_prep(crequestData) 
         return render_template('management-coaching-individual.html', crequestData=crequestData, form=form)
-
     elif request.method == "POST":
-            form = CoachingForm()
-            flag = Coaching_Record_Modify(crequestID, form)
-            if not flag:
-                flash(f"unable to update record {crequestID} an error occurded", "warning")
-                return redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
-            else:
-                flash(f"updated record {crequestID} successfully", "success")
-                return redirect(url_for('admin.coaching_management'))
-    flash(f"unexpected outcome", "critical")
+        form = CoachingForm()
+        flag = coaching_record_modify(crequestID, form)
+        if not flag:
+            flash(f"unable to update record {crequestID} an error occurded", "warning")
+            return redirect(url_for('admin.coaching_management_request', crequestID=crequestID))
+        else:
+            flash(f"updated record {crequestID} successfully", "success")
+            return redirect(url_for('admin.coaching_management'))
+    flash("unexpected outcome", "critical")
     return redirect(url_for('admin.coaching_management'))
-
 
 @admin.route('/youtube-requests', methods=["GET", "POST"])
 def youtube_management():
-
-    AllYTrequestData = Youtube_Query("admin")
+    """ show all YouTube VoD review requests from the database"""
+    all_YT_request_data = youtube_query("admin")
 
     if request.method == "GET":
-        return render_template('management-youtube.html', AllYTrequestData=AllYTrequestData)  
+        return render_template('management-youtube.html', all_YT_request_data=all_YT_request_data)  
     
     
     elif request.method == "POST":
-        matchCase = Post_Form_Match_Case(request.form.get("youtubeAction"))
-        action = matchCase[0] 
-        YTrequestID = int(matchCase[1])
+        match_case = Post_Form_Match_Case(request.form.get("youtubeAction"))
+        action = match_case[0] 
+        YTrequestID = int(match_case[1])
 
         print(action, YTrequestID)
 
@@ -350,16 +337,16 @@ def youtube_management():
             case "modify":
                 return redirect(url_for('admin.youtube_management_request', YTrequestID=YTrequestID))
             case "uploaded":
-                if YT_Record_Modify_Quick(YTrequestID, action):
+                if YT_record_modify_quick(YTrequestID, action):
                     flash(f"successfully marked ({YTrequestID}) as {action}","success")
             case "recorded":
-                if YT_Record_Modify_Quick(YTrequestID, action):
+                if YT_record_modify_quick(YTrequestID, action):
                     flash(f"successfully marked ({YTrequestID}) as {action}","success")
             case "queued":
-                if YT_Record_Modify_Quick(YTrequestID, action):
+                if YT_record_modify_quick(YTrequestID, action):
                     flash(f"successfully marked ({YTrequestID}) as {action}","success")
             case "delete":
-                if YT_Record_Modify_Quick(YTrequestID, action):
+                if YT_record_modify_quick(YTrequestID, action):
                     flash(f"successfully marked ({YTrequestID}) as {action}","success")
             case _:
                 flash("invalid request","warning")
@@ -368,30 +355,29 @@ def youtube_management():
 
 @admin.route('/youtube-requests/<int:YTrequestID>', methods=["GET", "POST"])
 def youtube_management_request(YTrequestID):
-    
+    """ retrieve and modify a single youtube request by ID from the database. provides an editable form"""
     form = YouTubeReviewForm()
     
     if request.method == "GET":
-        YTrequestData = Youtube_Query("admin", YTrequestID=YTrequestID)
-        YTrequestData = YTrequestData[0]
+        YT_request_data = youtube_query("admin", YTrequestID=YTrequestID)
+        YT_request_data = YT_request_data[0]
 
-        form.YTrequestID.data      = YTrequestData["YTrequestID"]
-        form.YTrequestTime.data    = YTrequestData["YTrequestTime"]
-        form.username.data         = YTrequestData["username"]
-        form.xboxname.data         = YTrequestData["xboxname"]
-        form.arenarank.data        = YTrequestData["arenarank"]
-        form.videoURL.data         = YTrequestData["videoURL"]
-        form.trackernetwork.data   = YTrequestData["trackernetwork"]
-        form.playlist.data         = YTrequestData["playlist"]
-        form.matchmap.data         = YTrequestData["matchmap"]
-        form.matchgamemode.data    = YTrequestData["matchgamemode"]
-        form.status.data           = YTrequestData["status"]
-        form.youtubevideoID.data       = YTrequestData["youtubevideoID"]
+        form.YTrequestID.data      = YT_request_data["YTrequestID"]
+        form.YTrequestTime.data    = YT_request_data["YTrequestTime"]
+        form.username.data         = YT_request_data["username"]
+        form.xboxname.data         = YT_request_data["xboxname"]
+        form.arenarank.data        = YT_request_data["arenarank"]
+        form.videoURL.data         = YT_request_data["videoURL"]
+        form.trackernetwork.data   = YT_request_data["trackernetwork"]
+        form.playlist.data         = YT_request_data["playlist"]
+        form.matchmap.data         = YT_request_data["matchmap"]
+        form.matchgamemode.data    = YT_request_data["matchgamemode"]
+        form.status.data           = YT_request_data["status"]
+        form.youtubevideoID.data       = YT_request_data["youtubevideoID"]
     
-        return render_template('management-youtube-individual.html', YTrequestData=YTrequestData, form=form)
+        return render_template('management-youtube-individual.html', YT_request_data=YT_request_data, form=form)
 
     elif request.method == "POST":
-            #TODO ADAM
             flag = youtube_record_modify(YTrequestID, form)
             if not flag:
                 flash(f"unable to update record {YTrequestID} an error occurded", "warning")
@@ -399,5 +385,5 @@ def youtube_management_request(YTrequestID):
             else:
                 flash(f"updated record {YTrequestID} successfully", "success")
                 return redirect(url_for('admin.youtube_management'))
-    flash(f"unexpected outcome", "critical")
+    flash("unexpected outcome", "critical")
     return redirect(url_for('admin.youtube_management'))

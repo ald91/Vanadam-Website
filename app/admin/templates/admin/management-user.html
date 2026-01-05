@@ -19,7 +19,7 @@
                     <h3 class=""> Users Overview</h3>
                 </div>
                 <div class="col-8">
-                    <p>total videos on record: {{ AllUserData|length }}</p>
+                    <p>total videos on record: {{ all_user_data|length }}</p>
                 </div>
             </div>
             <br>
@@ -48,7 +48,7 @@
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
 
-        {% for user in AllUserData %}{% if user.isAdmin == 1 and user.banned == 0 %}
+        {% for user in all_user_data %}{% if user.isAdmin == 1 and user.banned == 0 %}
                 <div id="{{ user.userID }} AdminTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>
@@ -79,7 +79,7 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">IsAdmin</div>
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% for user in AllUserData %}{% if user.isAdmin == 0 and user.banned == 0 %}
+                {% for user in all_user_data %}{% if user.isAdmin == 0 and user.banned == 0 %}
                 <div id="{{ user.userID }}UserTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>
@@ -110,7 +110,7 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">IsAdmin</div>
                     <div class="col-3 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% for user in AllUserData %}{% if user.banned == 1 %}
+                {% for user in all_user_data %}{% if user.banned == 1 %}
                 <div id="{{ user.userID }}UserTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ user.userID}}</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">{{ user.username }}</div>

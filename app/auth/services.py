@@ -106,12 +106,12 @@ def register_user(form):
             db.commit()
             
             cur.execute("SELECT * FROM Users WHERE username = ?", (username,))
-            userData = cur.fetchone()
+            user_data = cur.fetchone()
             
-            if userData:
-                userData = dict(userData)
-                session['userID'] = userData.get("userID")
-                session['username'] = userData.get("username")
+            if user_data:
+                user_data = dict(user_data)
+                session['userID'] = user_data.get("userID")
+                session['username'] = user_data.get("username")
             
             send_registration_email(username, email)
 
