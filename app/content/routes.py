@@ -6,7 +6,7 @@ from flask_session import Session
 from functools import wraps
 
 #app imports
-from app.services import Post_Form_Match_Case
+from app.services import post_form_match_case
 from app.forms import SearchForm
 from app.HaloData import *
 from app.forms import CoachingForm, ProfileEditForm, YouTubeReviewForm
@@ -36,6 +36,7 @@ def index():
 #TODO: Report system
 @content.route('/report', methods=['POST'])
 def report():
+    """send a report to admin dashboard for admins to review"""
     pass
 
 #TODO: Fontend
@@ -166,17 +167,15 @@ def profile_page(userID):
     userID:int = session.get('userID')
 
     if session['username'] is None and session['userID'] is None:
-            flash("you must be logged in to view your profile", "danger")
-            return redirect(url_for('content.index'))         
-    
+        flash("you must be logged in to view your profile", "danger")
+        return redirect(url_for('content.index'))           
     elif request.method == 'GET':
         user_data = Single_User_Query("self", userID) or None
         user_crequests= coaching_query("self", userID=session["userID"]) or None
         user_YTrequests = youtube_query("self", userID=session["userID"]) or None
-
     elif request.method == 'POST':
-        print(Post_Form_Match_Case(request.form.get("userprofile")))
-        match_case = Post_Form_Match_Case(request.form.get("userprofile"))
+        print(post_form_match_case(request.form.get("userprofile")))
+        match_case = post_form_match_case(request.form.get("userprofile"))
         print(match_case)
         action = match_case[0]
         requestID = match_case[1]

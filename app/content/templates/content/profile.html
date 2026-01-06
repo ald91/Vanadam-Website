@@ -48,11 +48,11 @@
                     <div class="col-1 d-flex align-content-center justify-content-center">Price</div>
                     <div class="col-2 d-flex align-content-center justify-content-center">Actions</div>
                 </div>
-                {% if user_crequests|length == 0 %}
+                {% if user_crequests is none %}
                 <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
                 <p class="text-center"> no requests to show</p>
                 </div>  
-                {% endif %}
+                {% else %}
                 {% for crequest in user_crequests %}
                 <div id="{{ crequest.crequestID }} DeliveredTableRow" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ crequest.crequestID }}
@@ -79,6 +79,7 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% endif %}
             </div>
         </div>
         <br>
@@ -98,11 +99,11 @@
 
 
                 </div>
-                {% if user_YTrequests|length == 0 %}
+                {% if user_YTrequests is none %}
                 <div id="DeliveredTableRow d-flex justify-content-center" class="row py-2"></div>
                 <p class="text-center"> no requests to show</p>
                 </div>  
-                {% endif %}
+                {% else %}
                 {% for YTrequest in user_YTrequests %}
                 <div id="{{ YTrequest.YTrequestID }} DeliveredTableRow d-flex justify-content-center" class="row py-2">
                     <div class="col-1 d-flex align-content-center justify-content-center">{{ YTrequest.YTrequestID }}
@@ -130,6 +131,7 @@
                 </div>
             </div>
             {% endfor %}
+            {% endif %}
     </form>
 </div>
 
