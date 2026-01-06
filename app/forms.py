@@ -150,9 +150,29 @@ class RecoveryForm(FlaskForm):
 
 #password change form
 class PasswordResetForm(FlaskForm):
-    username = StringField('Username')
-    password = PasswordField('Password')
-    password2 = PasswordField('Password2')
+    username = StringField('Username',
+                            validators=[
+                                DataRequired(message="Username is not Valid."),
+                                Length(min=3, max=16, message="Usernames must be between 3 and 16 characters"),
+                                #Regexp(r'^[A-Za-z][A-Za-a0-9_]*$', message="Usernames must contain letters, spaces or numbers only"),
+                            ])
+
+    password = PasswordField('Password',
+                             validators=[
+                                 DataRequired(),
+                                 Length(min=8, max=64, message="Password must be between 8 and 64 characters."),
+                                 # Regexp(
+                                 #    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
+                                 #    message="Password must contain uppercase, lowercase, number, and symbol."
+                                 # )
+                             ])
+
+    password2 = PasswordField('Confirm Password',
+                              validators=[
+                                  DataRequired(),
+                                  EqualTo('password', message="Passwords must match.")
+                              ])
+
     submit = SubmitField('submit')
     
 #profile edit form for use in LFG and Forums later

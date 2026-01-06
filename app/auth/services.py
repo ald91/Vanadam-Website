@@ -14,7 +14,7 @@ from app.extensions import mail, serializer, security_salt
 def log_in_user(form):
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data 
+        password = form.password.data
        
         db = get_database()
         cur = db.cursor()
@@ -116,8 +116,7 @@ def register_user(form):
                 session['username'] = user_data.get("username")
             
             send_registration_email(username, email)
-
-            return
+            return True
         
         else:
             return None
@@ -126,7 +125,8 @@ def register_user(form):
 
 def verify_reset_token(token, expiration=3600):
     try:
-        email = serializer.loads(token, salt=security_salt , max_age=expiration)
+        local_serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        email = local_serializer.loads(token, salt=security_salt , max_age=expiration)
     except Exception:
         return None
     return email
@@ -156,7 +156,7 @@ def recover_user(form):
     else:
         flash("Details incorrect", "danger")
 
-        return redirect(url_for('recovery'))
+        return redirect(url_for('auth.recovery'))
 
 def password_change(form):
     if form.validate_on_submit():
@@ -173,24 +173,25 @@ def password_change(form):
             db = get_database()
             cur = db.cursor()
 
-        # Check if user exists
+            # Check if user exists
             cur.execute("SELECT username FROM Users WHERE username = ?", (username,))
             print(f'username: {username} found in db')
             user = cur.fetchone()
 
-        if user:
-            cur.execute("""
-                UPDATE Users
-                SET password = ?
-                WHERE username = ?
-            """, (hashpass, username))
-            db.commit()
+            try:
+                cur.execute("""
+                    UPDATE Users
+                    SET password = ?
+                    WHERE username = ?
+                """, (hashpass, username))
+                db.commit()
 
-            print(f"✅ Password updated for user '{username}' with '{hashpass}")
-            return form
-        else:
-            print(f"⚠️ No user found with username: {username}")
-            return False
+                print(f"✅ Password updated for user '{username}' with '{hashpass}")
+                return form
+
+            except None:
+                print(f"⚠️ No user found with username: {username}")
+                return False
     
     flash("password change aborted", "danger")
-    return redirect(url_for('index'))
+    return redirect(url_for('content.index'))
