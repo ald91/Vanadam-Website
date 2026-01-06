@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash, request, session
 
 #app imports
 from app.forms import ArticleForm, AdminUserForm, CoachingForm, YouTubeReviewForm
-from app.services import Post_Form_Match_Case
+from app.services import post_form_match_case
 
 #db functions
 from app.data.db_services_articles import all_articles_query, single_article_query, register_new_article, get_article_data, modify_article_data, delete_article, toggle_article_visibility, test_article
@@ -69,7 +69,7 @@ def video_management():
         
     elif request.method == "POST":
         
-        match_case = Post_Form_Match_Case(request.form.get("videoAction"))
+        match_case = post_form_match_case(request.form.get("videoAction"))
         action = match_case[0] 
         vidID = match_case[1]
     
@@ -107,7 +107,7 @@ def article_management():
     elif request.method == "POST":
         
         #JINJA 2 sends "articleAction(Article.ID)"
-        match_case = Post_Form_Match_Case(request.form.get("articleAction"))
+        match_case = post_form_match_case(request.form.get("articleAction"))
         action = match_case[0]
         articleID = match_case[1]
 
@@ -202,7 +202,7 @@ def user_management():
 
     elif request.method == "POST":
 
-        match_case = Post_Form_Match_Case(request.form.get("userAction"))
+        match_case = post_form_match_case(request.form.get("userAction"))
         print(match_case)
         action = match_case[0]
         userID = match_case[1]
@@ -270,7 +270,7 @@ def coaching_management():
     if request.method == "GET":
         return render_template('management-coaching.html', all_crequests_data=all_crequests_data)
     elif request.method == "POST":
-        match_case = Post_Form_Match_Case(request.form.get("coachingAction"))
+        match_case = post_form_match_case(request.form.get("coachingAction"))
         action = match_case[0] 
         crequestID = int(match_case[1])
 
@@ -323,7 +323,7 @@ def youtube_management():
     
     
     elif request.method == "POST":
-        match_case = Post_Form_Match_Case(request.form.get("youtubeAction"))
+        match_case = post_form_match_case(request.form.get("youtubeAction"))
         action = match_case[0] 
         YTrequestID = int(match_case[1])
 

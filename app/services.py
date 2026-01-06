@@ -79,22 +79,16 @@ def check_ban(username:str) -> bool:
     else:
         return False
     
-def Post_Form_Match_Case(input: str) -> list[str,str]:
-    
-    """ takes a unnamed form from a post request on the dashboard and preps the responce so backend can direct to the correct item (video/article/user) etc."""
-    
+def post_form_match_case(string: str) -> list[str,str]:
+    """ takes a unnamed form from a post request on the dashboard and preps the responce so backend can direct to the correct item (video/article/user) etc."""  
     check = "("
-    itemID: str | None = None
-    
-    print(input)
-
-    if check in input:
-        input = input.split("(")
-        action = str(input[0])
-        itemID = input[1].replace("(","").replace(")","")
+    itemID: str | None = None 
+    if check in string:
+        string = string.split("(")
+        action = str(string[0])
+        itemID = string[1].replace("(","").replace(")","")
     else:
-        action = str(input)
+        action = str(string)
 
     match_case = [action, itemID]
-
     return match_case

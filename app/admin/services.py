@@ -1,4 +1,4 @@
-def Post_Form_Match_Case(input: str) -> list[str,str]:
+def post_form_match_case(input: str) -> list[str,str]:
     
     """ takes a unnamed form from a post request on the dashboard and preps the responce so backend can direct to the correct item (video/article/user) etc."""
     
