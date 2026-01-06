@@ -1,8 +1,9 @@
 #Flask
-from flask import render_template, redirect, url_for, flash, session
+from flask import render_template, redirect, url_for, flash, session, current_app
 from flask_mail import Message
 import os
 
+from itsdangerous import URLSafeTimedSerializer
 #Security
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -61,8 +62,9 @@ def send_registration_email(username,email):
 
 def send_recovery_email(email, username):
 
-    token = serializer.dumps(email, salt=security_salt) #salt token generated in app.py
-    reset_url = url_for('reset_password', token=token, _external=True)
+    local_serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    token = local_serializer.dumps(email, salt=security_salt)
+    reset_url = url_for('auth.reset_password', token=token, _external=True)
 
     msg = Message(
         subject="Vanadam Halo - Password Reset Request",
@@ -149,7 +151,7 @@ def recover_user(form):
         flash(f"Recovery Email Sent, Valid for {x}", "success")
 
         
-        return redirect(url_for('index'))
+        return redirect(url_for('content.index'))
     
     else:
         flash("Details incorrect", "danger")
