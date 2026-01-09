@@ -40,22 +40,26 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
 #Delete all but the 16 newest posts to the forums table,
 # uses Flask-APScheduler for automation, as defined in __init__.py
 def clear_stale_posts():
-    db = get_database()
-    cur = db.cursor()
+    from flask import current_app
 
-    query = """
-    DELETE FROM Forums
-    WHERE forumID NOT IN (
-        SELECT forumID FROM (
-            SELECT forumID
-            FROM Forums
-            ORDER BY forumID DESC
-            LIMIT 16
-        ) AS newest
-    )
-    """
-    cur.execute(query)
-    db.commit()
+    with current_app.app_context():
+        db = get_database()
+        cur = db.cursor()
+
+        query = """
+        DELETE FROM Forums
+        WHERE forumID NOT IN (
+            SELECT forumID FROM (
+                SELECT forumID
+                FROM Forums
+                ORDER BY forumID DESC
+                LIMIT 16
+            ) AS newest
+        )
+        """
+        
+        cur.execute(query)
+        db.commit()
 
 def video_DB_Daily_Update():
     from app.admin.services_video import Update_Video_Database_Full
