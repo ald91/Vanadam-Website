@@ -1,6 +1,6 @@
 from ..services import checkTags
 from ..data.db import get_database
-from flask import session, abort, flash
+from flask import session, abort, flash, redirect
 import sqlite3
 
 def post(form, username):
@@ -111,6 +111,9 @@ def check(forumID):
     cur.execute(query, (forumID,))
 
     post = dict(cur.fetchone())
+
+    if session.get("username") == None:
+        return redirect("auth.login")
 
     if session.get("username") == post["originalPoster"]:
         return True
