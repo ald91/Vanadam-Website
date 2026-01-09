@@ -8,6 +8,7 @@ from app.forms import CoachingForm, YouTubeReviewForm
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/admin -> parent
 data_dir = os.path.join(base_dir, "data")
 CoachingJSON_dir = os.path.join(data_dir,"Coaching")
+os.makedirs(CoachingJSON_dir, exist_ok=True)
 
 def coaching_query(who:str="self", userID:int=-1, crequestID:int=-1) -> list[dict]: 
     """ Queries COACHING table and returns any active coaching requests for that specific user. user who = "self" or who = "admin" for customization"""
@@ -28,7 +29,7 @@ def coaching_query(who:str="self", userID:int=-1, crequestID:int=-1) -> list[dic
         coaching_data = cur.fetchall()
     #send specific record (As admin)
     elif userID == -1 and who == "admin" and crequestID > 0:
-        cur.execute("SELECT * FROM CoachingReuqests WHERE crecordID = ?", (crequestID,))
+        cur.execute("SELECT * FROM CoachingRequests WHERE crecordID = ?", (crequestID,))
         coaching_data = cur.fetchone()
     #send records for a specific user
     elif isinstance(userID, int):

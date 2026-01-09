@@ -19,6 +19,10 @@ articles_dir = os.path.join(data_dir,"articles")
 articles_JSON_dir = os.path.join(articles_dir, "articlesJSON")
 articles_IMG_dir = os.path.join(articles_dir, "articlesIMG")
 
+os.makedirs(articles_dir, exist_ok=True)
+os.makedirs(articles_JSON_dir, exist_ok=True)
+os.makedirs(articles_IMG_dir, exist_ok=True)
+
 """ ARTICLE DB SCHEMA -> articleID / postID / title / description / json_filename / image_filename """
 
 # === ARTICLE HELPERS ===

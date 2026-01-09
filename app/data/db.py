@@ -51,6 +51,7 @@ def create_database(db_path):
     cursor.execute("""
     CREATE TABLE Posts (
         postID INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL CHECK (type IN ('article', 'video')),
         date TEXT DEFAULT (datetime('now'))
     );
     """)
@@ -113,7 +114,6 @@ def create_database(db_path):
         reason TEXT,
         date TEXT DEFAULT (datetime('now'))
     );
-
     """)
 
     # === ARTICLES ===
@@ -177,7 +177,7 @@ def create_database(db_path):
     # Content Linking table for all articles / videos using preset tags
     cursor.execute(""" 
     CREATE TABLE Tags (
-        tagName STRING PRIMARY KEY
+        tagName TEXT PRIMARY KEY
         );
     """)
 
@@ -230,7 +230,7 @@ def create_database(db_path):
         trackernetwork  TEXT,
         youtubevideoID  TEXT,  
         
-        FOREIGN KEY (userID) REFERENCES Users(UserID) ON DELETE CASCADE    
+        FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE    
         );
         """)
 
