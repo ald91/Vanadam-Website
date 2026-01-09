@@ -63,9 +63,8 @@ def search():
 
 @content.route('/search/results')
 def results():
-    results = process_search()
-
-    return render_template("results.html", results=results)
+    search_results = process_search()
+    return render_template("results.html", search_results=search_results, infiniteCSR_Lookup=infiniteCSR_Lookup, GAME_MODES=GAME_MODES)
 
 
 @content.route('/profile/<int:userID>', methods=['GET', 'POST'])

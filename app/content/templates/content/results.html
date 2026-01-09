@@ -1,19 +1,85 @@
-<h1>Search Results</h1>
+{% extends 'base.html'%}
 
-{% if results %}
-    {% for row in results %}
-        <div class="result-card">
-            {% if row.video_title %}
-                <h3>🎥 {{ row.video_title }}</h3>
-                <p>CSR: {{ row.csr }}</p>
-                <p>{{ row.gamemap }} – {{ row.gamemode }}</p>
-            {% elif row.article_title %}
-                <h3>📰 {{ row.article_title }}</h3>
-                <p>{{ row.description }}</p>
+{% block header %}
+{% block title %} Article Library {% endblock %}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container-fluid">
+    <h2> Search Results </h2>
+    <div class="row align-content-center mx-auto p-2 my-auto" style="background-color: black!important;">
+        <div class="d-flex flex-column" style="background-color: black!important; border-style: none!important;">
+            {% if search_results|length == 0 %}
+            <div class="row mb-1 d-flex align-content-center justify-content-center">
+            <h2 class="text-center p-4 m-3" style="height: 100px;">No Results Found Matching Crieria</h2>
+            <button onclick="history.back()" style="width: 100px;">Go Back</button>        
+            </div>
             {% endif %}
-            <small>Posted {{ row.date }}</small>
+            {% for result in search_results %}
+            {% if result["articleID"] is not none %}
+            <a href="articles/{{result.articleID}}" class="text-decoration-none">
+                <article id="{{ result.articleID }}" class="video-long">
+                    <div class="row mb-1 video-long">
+                        <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
+                            <img class="rounded-start-2"
+                                src="{{ url_for('data.Data_Send_Article_IMG', filename=result.image_filename) }}"
+                                width="auto" height="170px" />
+                        </div>
+                        <div class="col-6 flex-fill">
+                            <h2>{{ result.article_title }}</h2>
+                            <h4> {{ result.description }}<h4>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            {% elif result["vidID"] is not none %}
+            <a href="/videos/{{result.vidID}}" class="text-decoration-none">
+                <article id="{{ result.vidID }}" class="video-long">
+                    <div class="row mb-1 video-long">
+                        <div class="col-6 col-md-auto p-0 m-0 article-image" style="border-radius: 0px; height: 170px;">
+                            <img class="rounded-start-2"
+                                src="{{ url_for('static', filename='assets/videothumbs/' ~ result.vidID ~ '.jpeg') }}"
+                                width="auto" height="170px" />
+                            <iframe class="d-none" width="auto" height="170px"
+                                src="https://www.youtube.com/embed/{{ result.vidID }}?enablejsapi=1&autoplay=0&modestbranding=1&rel=0&controls=1&iv_load_policy=3"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="col-6 flex-fill">
+                            <h2>
+                                {% if result.gamemode is not none %}
+                                <img src="{{ url_for('static', filename='assets/modethumbs/' ~ result.gamemode ~ '_100x100.png') }}"
+                                    height="30px" width="auto" />
+                                {% endif %}
+                                {{ result.video_title }}
+                            </h2>
+                            <h3>{{ infiniteCSR_Lookup[result.csr] }}</h3>
+                            <p class="text-decoration-none"> uploaded on {{ result.date }}</p>
+                        </div>
+                        <div class="col-md-2 col-auto d-flex align-content-center justify-content-center">
+                            {% set ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Onyx", "HCS", "EHL"] %}
+                            {% for rank in ranks %}
+                            {% if rank in infiniteCSR_Lookup[result.csr] %}
+                            <img src="{{'../static/assets/icons/haloinfiniteranked/Signum' ~ rank ~ '.png'}}"
+                                style="height: 150px;" />
+                            {% endif %}
+                            {% endfor %}
+                            {% if result.videocategory == "Map Guide" %}
+                            <img src="../static/assets/icons/favicon.png" style="height:150px" />
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            </a>
+
+            {% endif %}
+            {% endfor %}
         </div>
-    {% endfor %}
-{% else %}
-    <p>No results found.</p>
-{% endif %}
+    </div>
+</div>
+
+{% endblock %}

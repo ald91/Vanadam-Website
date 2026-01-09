@@ -223,7 +223,7 @@ class SearchForm(FlaskForm):
             #('Halo: Spartan Strike', 'Halo: Spartan Strike'),
             #('Halo 5: Guardians', 'Halo 5: Guardians'),
             #('Halo Wars 2', 'Halo Wars 2'),
-            ('Halo Infinite', 'Halo Infinite')
+            #('Halo Infinite', 'Halo Infinite')
         ],
         option_widget=widgets.CheckboxInput(),
         widget=widgets.ListWidget(prefix_label=False),
@@ -238,7 +238,7 @@ class SearchForm(FlaskForm):
             ('Forbidden', 'Forbidden'),
             ('Fortress', 'Fortress'),
             ('Lattice', 'Lattice'),
-            ('Live Fire', 'Live Fire'),
+            ('Live fire', 'Live fire'),
             ('Origin', 'Origin'),
             ('Recharge', 'Recharge'),
             ('Serenity', 'Serenity'),
@@ -259,14 +259,14 @@ class SearchForm(FlaskForm):
         'Game Mode',
         choices=[
             ('', '-- Select a game mode --'),
-            ('Capture the Flag', 'Capture the Flag'),
+            ('Ctf', 'Capture the Flag'),
             ('Slayer', 'Slayer'),
             ('Oddball', 'Oddball'),
             #('Arena', 'Arena'),
             ('Strongholds', 'Strongholds'),
             #('Fiesta', 'Fiesta'),
             #('Juggernaut', 'Juggernaut'),
-            ('King of the Hill', 'King of the Hill'),
+            ('Koth', 'King of the Hill'),
             #('Stockpile', 'Stockpile'),
             ('Assault', 'Assault'),
             #('Domination', 'Domination')
@@ -295,12 +295,12 @@ class SearchForm(FlaskForm):
         'Max csr',
         choices=[
             ('', '-- Select a maximum Rank --'),
-            ('Bronze', 'Bronze'),
-            ('Silver', 'Silver'),
-            ('Gold', 'Gold'),
-            ('Platinum', 'platinum'),
-            ('Diamond', 'Diamond'),
-            ('Onyx', 'Onyx'),
+            ('0', 'Bronze'),
+            ('300', 'Silver'),
+            ('600', 'Gold'),
+            ('900', 'platinum'),
+            ('1200', 'Diamond'),
+            ('1500', 'Onyx'),
             ('EHL', 'EHL'),
             ('HCS', 'HCS'),
 

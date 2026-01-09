@@ -126,6 +126,7 @@ def app_create():
     @app.errorhandler(Exception)
     def content_error(e):
         """ returns the site error page if an exception takes place"""
+        print("exception report: ", Exception, e)
         return render_template('siteerror.html')
 
     return app
