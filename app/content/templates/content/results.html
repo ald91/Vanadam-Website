@@ -1,0 +1,19 @@
+<h1>Search Results</h1>
+
+{% if results %}
+    {% for row in results %}
+        <div class="result-card">
+            {% if row.video_title %}
+                <h3>🎥 {{ row.video_title }}</h3>
+                <p>CSR: {{ row.csr }}</p>
+                <p>{{ row.gamemap }} – {{ row.gamemode }}</p>
+            {% elif row.article_title %}
+                <h3>📰 {{ row.article_title }}</h3>
+                <p>{{ row.description }}</p>
+            {% endif %}
+            <small>Posted {{ row.date }}</small>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No results found.</p>
+{% endif %}

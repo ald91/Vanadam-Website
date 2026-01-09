@@ -21,7 +21,7 @@ DATA = os.path.join(DIR, "API_SCRAPE.JSON")
 UPLOADS_PLAYLIST_ID = "UU4wPP_aSG0kR924KKE2OGWQ"  # Your channel's uploads playlist
 
 #helper functions
-def Calculate_Video_MMR(videoData):
+def Calculate_Video_csr(videoData):
     rank = ["Bronze 1", "Bronze 2", "Bronze 3", "Bronze 4", "Bronze 5", "Silver 1", "Silver 2", "Silver 3", "Silver 4", "Silver 5", "Gold 1", "Gold 2", "Gold 3", "Gold 4", "Gold 5", "Gold 6", "Platinum 1", "Platinum 2", "Platinum 3", "Platinum 4", "Platinum 5", "Platinum 6", "Diamond 1", "Diamond 2", "Diamond 3", "Diamond 4", "Diamond 5", "Diamond 6","b1", "b2", "b3", "b4", "b5", "s1", "s2", "s3", "s4", "s5", "g1", "g2", "g3", "g4", "g5", "g6", "p1", "p2", "p3", "p4", "p5", "p6", "d1", "d2", "d3", "d4", "d5", "d6" , "onyx", "EHL", "HCS"]
 
     rankStandardize = { 
@@ -314,7 +314,7 @@ def Google_API_V3_Modify_Values() -> list[dict]:
         video["title"] = videoTitle
 
         #new keys  
-        video["csr"] = Calculate_Video_MMR(description)
+        video["csr"] = Calculate_Video_csr(description)
         video["gameMap"] = Calculate_Video_Map(description, videoTitle)
         video["gameMode"] = Calculate_Video_Gamemode(description, videoTitle)
         video["type"] = Calculate_Video_Type(description, duration)

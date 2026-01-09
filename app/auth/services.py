@@ -1,8 +1,9 @@
 #Flask
-from flask import render_template, redirect, url_for, flash, session
+from flask import render_template, redirect, url_for, flash, session, current_app
 from flask_mail import Message
 import os
 
+from itsdangerous import URLSafeTimedSerializer
 #Security
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,7 +14,7 @@ from app.extensions import mail, serializer, security_salt
 def log_in_user(form):
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data 
+        password = form.password.data
        
         db = get_database()
         cur = db.cursor()
@@ -61,8 +62,9 @@ def send_registration_email(username,email):
 
 def send_recovery_email(email, username):
 
-    token = serializer.dumps(email, salt=security_salt) #salt token generated in app.py
-    reset_url = url_for('reset_password', token=token, _external=True)
+    local_serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    token = local_serializer.dumps(email, salt=security_salt)
+    reset_url = url_for('auth.reset_password', token=token, _external=True)
 
     msg = Message(
         subject="Vanadam Halo - Password Reset Request",
@@ -114,8 +116,7 @@ def register_user(form):
                 session['username'] = user_data.get("username")
             
             send_registration_email(username, email)
-
-            return
+            return True
         
         else:
             return None
@@ -124,7 +125,8 @@ def register_user(form):
 
 def verify_reset_token(token, expiration=3600):
     try:
-        email = serializer.loads(token, salt=security_salt , max_age=expiration)
+        local_serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        email = local_serializer.loads(token, salt=security_salt , max_age=expiration)
     except Exception:
         return None
     return email
@@ -149,12 +151,12 @@ def recover_user(form):
         flash(f"Recovery Email Sent, Valid for {x}", "success")
 
         
-        return redirect(url_for('index'))
+        return redirect(url_for('content.index'))
     
     else:
         flash("Details incorrect", "danger")
 
-        return redirect(url_for('recovery'))
+        return redirect(url_for('auth.recovery'))
 
 def password_change(form):
     if form.validate_on_submit():
@@ -171,24 +173,25 @@ def password_change(form):
             db = get_database()
             cur = db.cursor()
 
-        # Check if user exists
+            # Check if user exists
             cur.execute("SELECT username FROM Users WHERE username = ?", (username,))
             print(f'username: {username} found in db')
             user = cur.fetchone()
 
-        if user:
-            cur.execute("""
-                UPDATE Users
-                SET password = ?
-                WHERE username = ?
-            """, (hashpass, username))
-            db.commit()
+            try:
+                cur.execute("""
+                    UPDATE Users
+                    SET password = ?
+                    WHERE username = ?
+                """, (hashpass, username))
+                db.commit()
 
-            print(f"✅ Password updated for user '{username}' with '{hashpass}")
-            return form
-        else:
-            print(f"⚠️ No user found with username: {username}")
-            return False
+                print(f"✅ Password updated for user '{username}' with '{hashpass}")
+                return form
+
+            except None:
+                print(f"⚠️ No user found with username: {username}")
+                return False
     
     flash("password change aborted", "danger")
-    return redirect(url_for('index'))
+    return redirect(url_for('content.index'))

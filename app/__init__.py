@@ -109,6 +109,7 @@ def app_create():
     scheduler.add_job(
         id='clear_stale_posts',
         func=clear_stale_posts,
+        args=[app],
         trigger='interval',
         minutes=30
     )

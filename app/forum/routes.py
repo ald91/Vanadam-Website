@@ -43,8 +43,8 @@ def create_post():
 
     return render_template("create_post.html", form=form, username=username)
 
-@login_required
 @forum.route('/<id>/comment', methods=["GET", "POST"])
+@login_required
 def create_comment(id):
     form = CommentForm()
     username = session.get('username')

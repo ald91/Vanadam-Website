@@ -1,5 +1,5 @@
 from ..data.db import get_database
-from app.forms import SearchForm
+from flask import request
 
 def fetchSideBar() -> list[dict]:
     
@@ -62,3 +62,89 @@ def fetchNewsBar() -> list[dict]:
     print(cur.fetchone()[0])
 
     return news
+
+def process_search():
+    """Receives arguments from content.routes.search(), called in content.routes.results"""
+    db = get_database()
+    cur = db.cursor()
+
+    # Pull params from URL
+    date = request.args.get("date")
+    date_selector = request.args.get("date_selector")
+    tags = request.args.get("tags")
+    vid_type = request.args.get("vid_type")
+    gamemode = request.args.get("gamemode")
+    min_csr = request.args.get("min_csr")
+    max_csr = request.args.get("max_csr")
+    selected_maps = request.args.getlist("maps")
+
+    # =====================
+    # Base query
+    # =====================
+    query = """
+            SELECT Posts.postID, \
+                   Posts.date, \
+                   Videos.vidID, \
+                   Videos.title   AS video_title, \
+                   Videos.csr, \
+                   Videos.gamemap, \
+                   Videos.gamemode, \
+                   Videos.videotype, \
+                   Articles.articleID, \
+                   Articles.title AS article_title, \
+                   Articles.description, \
+                   Articles.image_filename
+            FROM Posts
+                     LEFT JOIN Videos ON Videos.postID = Posts.postID
+                     LEFT JOIN Articles ON Articles.postID = Posts.postID \
+            """
+
+    conditions = []
+    params = []
+
+    # =====================
+    # Filters
+    # =====================
+    if date:
+        if date_selector == "On":
+            conditions.append("date(Posts.date) = date(?)")
+        elif date_selector == "Before":
+            conditions.append("date(Posts.date) < date(?)")
+        elif date_selector == "After":
+            conditions.append("date(Posts.date) > date(?)")
+        params.append(date)
+
+    if vid_type:
+        conditions.append("Videos.videotype = ?")
+        params.append(vid_type)
+
+    if gamemode:
+        conditions.append("Videos.gamemode = ?")
+        params.append(gamemode)
+
+    if selected_maps:
+        placeholders = ",".join("?" for _ in selected_maps)
+        conditions.append(f"Videos.gamemap IN ({placeholders})")
+        params.extend(selected_maps)
+
+    if min_csr:
+        conditions.append("Videos.csr >= ?")
+        params.append(min_csr)
+
+    if max_csr:
+        conditions.append("Videos.csr <= ?")
+        params.append(max_csr)
+
+    if tags:
+        query += """
+            JOIN PostTags ON PostTags.postID = Posts.postID
+            JOIN Tags ON Tags.tagName = PostTags.tagName
+            """
+        conditions.append("Tags.tagName = ?")
+        params.append(tags)
+
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+
+    cur.execute(query, params)
+    return cur.fetchall()
