@@ -37,11 +37,10 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         cur.execute("INSERT OR IGNORE INTO Tags(tagName) VALUES(?)", (tag,))
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
-def clear_stale_posts():
+def clear_stale_posts(app):
     """Delete all but the 16 newest posts to the forums table, uses Flask-APScheduler for automation, as defined in __init__.py"""
-    from flask import current_app
     try:
-        with current_app.app_context():
+        with app.app_context():
             db = get_database()
             cur = db.cursor()
 
