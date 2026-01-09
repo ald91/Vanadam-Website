@@ -1,7 +1,7 @@
 {
     "crequestID": 3,
-    "timezone": "Europe/London",
-    "trackernetwork": "https://halotracker.com/halo-infinite/profile/xbl/l%20Vanadam%20l/overview?experience=overall",
+    "timezone": "Europe/Athens",
+    "trackernetwork": "",
     "availability": {
         "monday": {
             "morning": false,
@@ -13,16 +13,16 @@
             "morning": false,
             "afternoon": false,
             "evening": false,
-            "late": true
+            "late": false
         },
         "wednesday": {
             "morning": false,
-            "afternoon": true,
+            "afternoon": false,
             "evening": false,
             "late": false
         },
         "thursday": {
-            "morning": true,
+            "morning": false,
             "afternoon": false,
             "evening": false,
             "late": false
@@ -30,21 +30,21 @@
         "friday": {
             "morning": false,
             "afternoon": false,
-            "evening": true,
+            "evening": false,
             "late": false
         },
         "saturday": {
             "morning": false,
-            "afternoon": true,
+            "afternoon": false,
             "evening": false,
             "late": false
         },
         "sunday": {
-            "morning": true,
+            "morning": false,
             "afternoon": false,
             "evening": false,
             "late": false
         }
     },
-    "details": "Test 1234"
+    "details": ""
 }

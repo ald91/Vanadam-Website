@@ -1,1 +1,0 @@
-{'username': 'Vanadam', 'agreedtime': '00:00:00', 'timezone': 'Europe/London', 'agreeddate': '0000-00-00', 'crequestTime': '2025-12-22 15:18:27', 'crequestID': 1, 'sessiontype': 'Invidiual Vod Review', 'paid': 0, 'coach': 'Vanadam', 'userID': 0, 'arenarank': 'Platinum 1', 'invoiceID': None, 'xboxname': 'L Vanadam L', 'delivered': 0, 'email': 'xbkx_davis@hotmail.co.uk'}
