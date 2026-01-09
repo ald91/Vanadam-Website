@@ -18,7 +18,7 @@ from app.data.db_services_users import User_Profile_Update, Single_User_Query
 from app.data.db_services_coaching import register_new_coaching_request, coaching_save_JSON, register_new_YT_request, coaching_record_modify_quick, YT_record_modify_quick, coaching_query,  youtube_query
 #self
 from . import content
-from .services import fetchNewsBar, fetchSideBar 
+from .services import fetchNewsBar, fetchSideBar , process_search
 
 ##################
 #-----Routes-----#
@@ -33,132 +33,40 @@ def index():
 
     return render_template('index.html', news=news, videos=videos)
 
-#TODO: Report system
-@content.route('/report', methods=['POST'])
-def report():
-    """send a report to admin dashboard for admins to review"""
-    pass
-
 #TODO: Fontend
 @content.route('/search', methods=['GET', 'POST'])
 def search():
-    """ search posts (videos / articles) using criteria given in form"""
+    """Retrieve params from form, package into dict to be sent to search_results for processing"""
     form = SearchForm()
+
     if form.validate_on_submit():
-        # Extract form data variables
-        #General Filters
-        date = form.date.data
-        if date is None:
-            #date=todaysdate
-            pass
-        date_selector = form.date_selector.data #Determines wether to search for posts before, after or on given date
 
-        tags = form.tags.data #Array of tags
+        search_params = {
+            "date": form.date.data.isoformat() if form.date.data else None,
+            "date_selector": form.date_selector.data,
+            "tags": form.tags.data,
+            "vid_type": form.vid_type.data,
+            "gamemode": form.gamemode.data,
+            "min_csr": form.min_csr.data,
+            "max_csr": form.max_csr.data,
+            "maps": form.maps.data
+        }
+        #Strip empty values
+        search_params = {
+            k: v for k, v in search_params.items()
+            if v not in (None, "", [])
+        }
 
-        #Blog filters
-        original_poster = form.original_poster.data
+        return redirect(url_for("content.results", **search_params))
 
-        #Video Filters
-        vid_type = form.vid_type.data
-        selected_games = form.games.data #Array of games
-        selected_maps = form.maps.data #Array of maps
-        gamemode = form.gamemode.data
-        
-        min_mmr = form.min_mmr.data
-        if min_mmr is None:
-            min_mmr = 0
-        max_mmr = form.max_mmr.data
-        if max_mmr is None:
-            max_mmr = 9999
+    return render_template("search.html", form=form)
 
-        # Print for debugging
-        print("Date:", date)
-        print("Date Selector:", date_selector)
+@content.route('/search/results')
+def results():
+    results = process_search()
 
-        print("Tags:", tags)
+    return render_template("results.html", results=results)
 
-        print("Original Poster:", original_poster)
-        print("Video Type:", vid_type)
-        print("Selected Games:", selected_games)
-        print("Selected Maps:", selected_maps)
-        print("Game Mode:", gamemode)
-        print("Min MMR:", min_mmr)
-        print("Max MMR:", max_mmr)
-
-        db = get_database()
-        cur = db.cursor()
-
-        #SQL, filters are applied as needed, with conditions and parameters being put into respective lists and
-        #concatenated into query
-        query = "SELECT * FROM Posts"
-        conditions = []
-        params = []
-
-        # DATE FILTERS
-        if date_selector == 'On':
-            conditions.append("date = ?")
-            params.append(date)
-
-        elif date_selector == 'Before':
-            conditions.append("date < ?")
-            params.append(date)
-
-        elif date_selector == 'After':
-            conditions.append("date > ?")
-            params.append(date)
-
-        # TAGS WILL NEED REWORKING, JSONIFY?
-        if tags:
-            conditions.append("tags = ?")
-            params.append(tags)
-
-        # ORIGINAL POSTER
-        if original_poster:
-            conditions.append("original_poster = ?")
-            params.append(original_poster)
-
-        # VIDEO TYPE
-        if vid_type:
-            conditions.append("video_type = ?")
-            params.append(vid_type)
-
-        # SELECTED GAMES (list)
-        if selected_games:
-            placeholders = ",".join("?" for _ in selected_games) #iterate through selected_games list, join them. comma-seperated
-            conditions.append(f"game IN ({placeholders})")       #
-            params.extend(selected_games)
-
-        # SELECTED MAPS (list)
-        if selected_maps:
-            placeholders = ",".join("?" for _ in selected_maps)
-            conditions.append(f"map IN ({placeholders})")
-            params.extend(selected_maps)
-
-        # GAME MODE
-        if gamemode:
-            conditions.append("gamemode = ?")
-            params.append(gamemode)
-
-        # MMR RANGE
-        if min_mmr is not None:
-            conditions.append("mmr >= ?")
-            params.append(min_mmr)
-
-        if max_mmr is not None:
-            conditions.append("mmr <= ?")
-            params.append(max_mmr)
-
-        # Combine WHERE if any conditions exist
-        if conditions:
-            query += " WHERE " + " AND ".join(conditions)
-
-        print("Final Query:", query)
-        print("Params:", params)
-
-        # Execute
-        cur.execute(query, params)
-        result = cur.fetchall()
-    return render_template('search.html', form=form)
 
 @content.route('/profile/<int:userID>', methods=['GET', 'POST'])
 def profile_page(userID):

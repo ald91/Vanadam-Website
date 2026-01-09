@@ -274,8 +274,8 @@ class SearchForm(FlaskForm):
         validators=[Optional()]
     )
 
-    min_mmr = SelectField(
-        'Min MMR',
+    min_csr = SelectField(
+        'Min csr',
         choices=[
             ('', '-- Select a minimum Rank --'),
             ('Bronze', 'Bronze'),
@@ -291,8 +291,8 @@ class SearchForm(FlaskForm):
         validators=[Optional()]
     )
 
-    max_mmr = SelectField(
-        'Max MMR',
+    max_csr = SelectField(
+        'Max csr',
         choices=[
             ('', '-- Select a maximum Rank --'),
             ('Bronze', 'Bronze'),
