@@ -146,5 +146,7 @@ def process_search():
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    cur.execute(query, params)
-    return cur.fetchall()
+    results = cur.execute(query, params)
+    results = [dict(row) for row in results]
+
+    return results
