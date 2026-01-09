@@ -1,65 +1,19 @@
-{% extends "base.html" %}
-{% block content %}
-
 <h1>Search Results</h1>
-<hr>
 
-<div class="container-fluid">
-    <div class="row align-content-center mx-auto p-2 my-auto"
-         style="background-color: black!important;">
-        <div class="d-flex flex-column"
-             style="background-color: black!important; border-style: none!important;">
-
-            {% if results %}
-                {% for row in results %}
-
-                    {# Decide link target #}
-                    {% if row.vidID %}
-                        {% set link = url_for('videos.view', vidID=row.vidID) %}
-                        {% set icon = "🎥" %}
-                        {% set title = row.video_title %}
-                    {% elif row.articleID %}
-                        {% set link = url_for('articles.view', articleID=row.articleID) %}
-                        {% set icon = "📰" %}
-                        {% set title = row.article_title %}
-                    {% endif %}
-
-                    <a href="{{ link }}" class="text-decoration-none">
-                        <article class="video-long mb-2">
-                            <div class="row">
-                                <div class="col-12 flex-fill flex-column">
-
-                                    <h2>
-                                        {{ icon }} {{ title }}
-                                    </h2>
-
-                                    {% if row.video_title %}
-                                        <h4>
-                                            {{ row.gamemap }} – {{ row.gamemode }}
-                                            {% if row.csr %}
-                                                | CSR {{ row.csr }}
-                                            {% endif %}
-                                        </h4>
-                                    {% elif row.article_title %}
-                                        <h4>{{ row.description }}</h4>
-                                    {% endif %}
-
-                                    <small class="text-muted">
-                                        Posted {{ row.date }}
-                                    </small>
-
-                                </div>
-                            </div>
-                        </article>
-                    </a>
-
-                {% endfor %}
-            {% else %}
-                <p class="text-center mt-3">No results found.</p>
+{% if results %}
+    {% for row in results %}
+        <div class="result-card">
+            {% if row.video_title %}
+                <h3>🎥 {{ row.video_title }}</h3>
+                <p>CSR: {{ row.csr }}</p>
+                <p>{{ row.gamemap }} – {{ row.gamemode }}</p>
+            {% elif row.article_title %}
+                <h3>📰 {{ row.article_title }}</h3>
+                <p>{{ row.description }}</p>
             {% endif %}
-
+            <small>Posted {{ row.date }}</small>
         </div>
-    </div>
-</div>
-
-{% endblock %}
+    {% endfor %}
+{% else %}
+    <p>No results found.</p>
+{% endif %}
