@@ -37,29 +37,30 @@ def checkTags(cur: object, postType:str, postID:int, tags: str | list ) -> None:
         cur.execute("INSERT OR IGNORE INTO Tags(tagName) VALUES(?)", (tag,))
         cur.execute("INSERT OR IGNORE INTO PostTags(PostID, tagName) VALUES(?, ?)", (postID, tag))
 
-#Delete all but the 16 newest posts to the forums table,
-# uses Flask-APScheduler for automation, as defined in __init__.py
 def clear_stale_posts():
+    """Delete all but the 16 newest posts to the forums table, uses Flask-APScheduler for automation, as defined in __init__.py"""
     from flask import current_app
+    try:
+        with current_app.app_context():
+            db = get_database()
+            cur = db.cursor()
 
-    with current_app.app_context():
-        db = get_database()
-        cur = db.cursor()
+            query = """
+            DELETE FROM Forums
+            WHERE forumID NOT IN (
+                SELECT forumID FROM (
+                    SELECT forumID
+                    FROM Forums
+                    ORDER BY forumID DESC
+                    LIMIT 16
+                ) AS newest
+            )
+            """
 
-        query = """
-        DELETE FROM Forums
-        WHERE forumID NOT IN (
-            SELECT forumID FROM (
-                SELECT forumID
-                FROM Forums
-                ORDER BY forumID DESC
-                LIMIT 16
-            ) AS newest
-        )
-        """
-        
-        cur.execute(query)
-        db.commit()
+            cur.execute(query)
+            db.commit()
+    except RuntimeError as e:
+        print(f"")
 
 def video_DB_Daily_Update():
     from app.admin.services_video import Update_Video_Database_Full
@@ -67,6 +68,7 @@ def video_DB_Daily_Update():
     return
 
 def check_ban(username:str) -> bool:
+    """Checks if a user has the banned flag, determines if they are allowed to post"""
     db = get_database()
     cur = db.cursor()
 
