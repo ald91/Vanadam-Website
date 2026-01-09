@@ -2,6 +2,7 @@ from flask import current_app
 from werkzeug.utils import secure_filename
 import json
 import os
+import shutil
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -15,8 +16,8 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # app/ad
 data_dir = os.path.join(base_dir, "data")
 assets_dir = os.path.join(base_dir, "static/assets")
 articles_dir = os.path.join(data_dir,"articles")
-articles_JSON_dir = os.path.join(articles_dir, "ArticlesJSON")
-articles_IMG_dir = os.path.join(articles_dir, "ArticlesIMG")
+articles_JSON_dir = os.path.join(articles_dir, "articlesJSON")
+articles_IMG_dir = os.path.join(articles_dir, "articlesIMG")
 
 """ ARTICLE DB SCHEMA -> articleID / postID / title / description / json_filename / image_filename """
 
@@ -310,53 +311,42 @@ def test_article() -> bool:
 
     with open(testFile_JSON_path,"r", encoding="utf-8") as f:
         data = json.load(f)
+        print("data= ", data, "\n")
 
     articleTitle = data["articleTitle"]
     articleDescription = data["articleDescription"]
-    article_content = data["article_content"]
     articleTags = data["articleTags"]
-    articleHidden = False
+    articleHidden = 0
 
     db = get_database()
     cur = db.cursor()
 
-    flag = single_article_query(1)
-    if flag != None:
-        print("flag=",flag)
-        return False
-    else:
-        print("flag =", flag)
+    #secure PostID FK (sets postID)
+    cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
+    postID = cur.lastrowid
+    
+    #save new article (sets articleID relating to post ID)
+    cur.execute("INSERT INTO Articles (postID, title, description, json_filename, image_filename, hidden) VALUES (?, ?, ?, ?, ?, ?)", (postID, articleTitle, articleDescription, testFile_JSON, testFile_IMG, articleHidden))
+    
+    cur.execute("SELECT articleID FROM Articles WHERE postID = ?", (postID,))
+    articleInfo = dict(cur.fetchone())
+    articleID = articleInfo["articleID"]
+    
 
-        #secure PostID FK (sets postID)
-        cur.execute("INSERT INTO Posts(date) VALUES (datetime('now'))")
-        postID = cur.lastrowid
+    checkTags(cur, "Article", postID, articleTags)
+    
+    #copy JSON and IMG file for testing purposes
+    src_json = f"{articles_JSON_dir}/test.json"
+    dst_json = f"{articles_JSON_dir}/A{articleID}.json"
 
-        #runs against DB for tags
-        checkTags(cur, "Article", postID, articleTags)
-        
-        #save new article (sets articleID relating to post ID)
-        cur.execute("INSERT INTO Articles (postID, title) VALUES (?, ?)", (postID, articleTitle))
+    src_img = f"{articles_IMG_dir}/test.jpeg"
+    dst_img = f"{articles_IMG_dir}/A{articleID}.jpeg"
 
-        #find article just saved to link JSON / IMG to DB
-        query =  """
-            SELECT articleID, postID, title, description, json_filename, image_filename, hidden
-            FROM Articles
-            WHERE title = ?
-        """
-        cur.execute(query, (articleTitle,))
-        articleInfo = dict(cur.fetchone())
-        articleID = articleInfo["articleID"]
+    shutil.copy2(src_json,dst_json)
+    print("json copied")
+    shutil.copy2(src_img, dst_img)
+    print("thumbcopied")
 
-        #update DB record with img filename
-        query = """
-            UPDATE Articles
-            SET  description = ?, image_filename = ?, json_filename = ?, hidden = ?
-            WHERE articleID = ? ;
-        """
-        cur.execute(query,(articleDescription, testFile_IMG, testFile_JSON, articleHidden, articleID))
-
-        checkTags(cur, "Article", postID, articleTags)
-
-        db.commit()
+    db.commit()
 
     return True

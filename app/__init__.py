@@ -1,5 +1,5 @@
 #Flask
-from flask import Flask, session, flash, redirect, request, url_for
+from flask import Flask, session, flash, redirect, request, url_for, render_template
 from flask_wtf import CSRFProtect
 from flask_mail import Mail
 from flask_wtf import CSRFProtect
@@ -121,6 +121,11 @@ def app_create():
     )
 
     print(app.url_map)
+
+    @app.errorhandler(Exception)
+    def content_error(e):
+        """ returns the site error page if an exception takes place"""
+        return render_template('siteerror.html')
 
     return app
 

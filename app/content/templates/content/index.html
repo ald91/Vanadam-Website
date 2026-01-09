@@ -111,15 +111,14 @@
     <div class="d-flex flex-column">
         {% for item in news %}
             {% if item.type == "Video" %}
-            <a href="/videos/{{ item.vidID }}" class="text-decoration-none">
+            <a href="/videos/{{item.vidID}}" class="text-decoration-none">
                 <article id="article-{{ item.postID }}">
                     <div class="row mb-1 align-content-around">
-                       
                         <div class="col-md-3 p-0 m-0 article-image" style="border-radius: 0px;">
                             <img class="rounded-start-2 img-fluid" src="{{ item.thumbnailsmax }}" />
                             <h4 class="d-sm-block d-xs-block d-md-none text-center text-bg-dark">{{ item.title }}</h4>
                         </div>
-                        <div class="col-9 col-md-9 ">
+                        <div class="col-9 col-md-9">
                             <h2 class="d-none d-xs-block d-sm-block">{{ item.title }}</h2>
                             <h4 class="d-none d-md-block">Published on {{ item.date }}</h4>
                             <p class="d-none d-md-block article-text text-truncate">{{ item.description }}</p>
@@ -128,16 +127,17 @@
                 </article>
             </a>
             {% elif item.type == "Article" %}
-            <a href="/articles/{{ item.postID }}" class="text-decoration-none">
-                            <article id="article-{{ item.postID }}">
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-3 p-0 m-0 overflow-hidden article-image img-fluid" style="border-radius: 0px;">
-                            <img class="rounded-start-2" src="{{ url_for('static', filename='assets/articlethumbs/' ~ item.postID ~ '.jpeg')}}" />
+            <a href="/articles/{{item.vidID}}" class="text-decoration-none">
+                <article id="article-{{ item.articleID }}">
+                    <div class="row mb-1 align-content-around">
+                        <div class="col-md-3 p-0 m-0 article-image" style="border-radius: 0px;">
+                            <img class="rounded-start-2 img-fluid" src="data/articles_img/{{item.thumbnailsmax}}"/>
+                            <h4 class="d-sm-block d-xs-block d-md-none text-center text-bg-dark">{{ item.title }}</h4>
                         </div>
-                        <div class="col-9 col-md-9 ">
-                            <h2>{{ item.title }}</h2>
-                            <h4>Published on {{ item.date }}</h4>
-                            <p class="article-text text-truncate">{{ item.description }}</p>
+                        <div class="col-9 col-md-9">
+                            <h2 class="d-none d-xs-block d-sm-block">{{ item.title }}</h2>
+                            <h4 class="d-none d-md-block">Published on {{ item.date }}</h4>
+                            <p class="d-none d-md-block article-text text-truncate">{{ item.description }}</p>
                         </div>
                     </div>
                 </article>

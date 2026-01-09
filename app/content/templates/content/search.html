@@ -8,7 +8,7 @@
 
 {% block content %}
     <div class="search-container">
-        <h1>Search Database</h1>
+        <h1>Search Website</h1>
         <form method="POST">
             {{ form.hidden_tag() }}
 
@@ -29,8 +29,9 @@
                 {{ form.min_mmr.label }} {{ form.min_mmr() }}
                 {{ form.max_mmr.label }} {{ form.max_mmr() }}
             </div>
-
-            {{ form.submit() }}
+            <br>
+            {{ form.submit(class="btn btn-primary") }}
+        
         </form>
     </div>
     {% endblock %}

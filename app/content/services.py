@@ -1,4 +1,5 @@
 from ..data.db import get_database
+from app.forms import SearchForm
 
 def fetchSideBar() -> list[dict]:
     
@@ -30,13 +31,12 @@ def fetchNewsBar() -> list[dict]:
     db = get_database()
     cur = db.cursor()
     params = ('discussion', 'map guide', 'news',  #video params
-              'discussion', 'map guide', 'news',  #article params
-               8) # number of items
+                8) # number of items
 
     newsquery = """
     SELECT *
     FROM (
-        SELECT 'Video' AS type, v.postID, v.title, v.thumbnailsmax, v.description, p.date
+        SELECT 'Video' AS type, v.postID, v.vidID, v.title, v.thumbnailsmax, v.description, p.date
         FROM Videos v
         JOIN Posts p on v.postID = p.postID
         JOIN PostTags pt ON v.postID = pt.postID
@@ -44,11 +44,10 @@ def fetchNewsBar() -> list[dict]:
 
         UNION ALL
 
-        SELECT 'Article' AS type, a.postID, a.title, a.image_filename, a.description, p.date
+        SELECT 'Article' AS type, a.postID, a.articleID, a.title, a.image_filename, a.description, p.date
         FROM Articles a
         JOIN Posts p on a.postID = p.postID
         JOIN PostTags pt ON a.postID = pt.postID
-        WHERE pt.tagName IN (?, ?, ?)
     )
     ORDER BY date DESC
     LIMIT ?;

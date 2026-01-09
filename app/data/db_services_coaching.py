@@ -476,7 +476,7 @@ def youtube_record_modify(YTrequestID:int, form:object) -> bool:
     try:
 
         cur.execute(""" UPDATE YTRequests SET username = ?, xboxname = ?, arenarank = ?, videoURL = ?, trackernetwork = ?, playlist = ?, matchmap = ?, matchgamemode = ?, status = ?, youtubevideoID = ? WHERE YTrequestID = ? """,
-                     (username, xboxname, arenarank, videoURL, trackernetwork, playlist, matchmap, matchgamemode, status, youtubevideoID))
+                     (username, xboxname, arenarank, videoURL, trackernetwork, playlist, matchmap, matchgamemode, status, youtubevideoID, YTrequestID))
 
         db.commit()
         print(f"youtube request modified and saved")
