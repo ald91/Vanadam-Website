@@ -9,14 +9,18 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(base_dir, "database.db")
 
 def get_database():
-    os.makedirs(base_dir, exist_ok=True) #make sure the directory is a thing
+    """Uses SQLite to retrieve the database. Each request receives its own SQLite connection to prevent cross-thread errors.
+       Flask g is automatically cleared at request teardown"""
+    os.makedirs(base_dir, exist_ok=True) #Ensure directory exists
 
+    #Checks for db instance in g (global variable in flask)
     if 'db' not in g:
+        #Ensure that database file exists
         if not os.path.exists(db_path):
             create_database(db_path)                       
-
+        #If no instance, create connection
         g.db = sqlite3.connect(db_path)
-        g.db.row_factory = sqlite3.Row
+        g.db.row_factory = sqlite3.Row #Results configured to be returned as sqlite Row objects as opposed to tuples.
         g.db.execute("PRAGMA foreign_keys = ON;")
         print(f"Connected to database at: {db_path}")
     return g.db
