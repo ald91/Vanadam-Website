@@ -246,36 +246,6 @@ def create_database(db_path):
     ON Reports (target_id, reported_by);
     """)
 
-
-
-    # == Triggers ===
-    # video table row additions
-#    cursor.execute("""
-#        CREATE TRIGGER videos_post_insert
-#        AFTER INSERT ON Videos
-#        FOR EACH ROW
-#        BEGIN
-#            -- Update the newly inserted video row to link to the post
-#            UPDATE Videos
-#            SET postID = (SELECT last_insert_rowid())
-#            WHERE vidID = NEW.vidID;
-#        END;                      
-#    """)
-#
-#    #article table row additions
-#    cursor.execute("""
-#        CREATE TRIGGER articles_post_insert
-#        AFTER INSERT ON Articles
-#        FOR EACH ROW
-#        BEGIN
-#            -- Update the newly inserted article row to link to the post
-#            UPDATE Articles
-#            SET postID = (SELECT last_insert_rowid())
-#            WHERE articleID = NEW.articleID;
-#        END;
-#                      
-#    """)
-
     conn.commit()
     conn.close()
     print("Database created successfully.")
