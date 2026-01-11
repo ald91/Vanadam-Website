@@ -13,7 +13,7 @@ from . import data
 def data_send_article_img(filename: str) -> str:
     """ returns a file path for article images x.jpeg. App cannot return files outside of static, this keeps data 
     in data so article files are easier to manage """
-    folder_path = os.path.join(current_app.root_path, "Data/Articles/ArticlesIMG")
+    folder_path = os.path.join(current_app.root_path, "data/articles/ArticlesIMG")
 
     return send_from_directory(folder_path, filename)
 

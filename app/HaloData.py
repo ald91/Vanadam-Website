@@ -11,7 +11,7 @@ def Modify_Halo_Data(form, credentials):
     pass
 
 
-#Data stored by game
+#data stored by game
 #can edit using admin panel
 
 GAME_MODES = {
