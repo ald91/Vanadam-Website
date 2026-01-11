@@ -59,9 +59,10 @@ def clear_stale_posts(app):
             cur.execute(query)
             db.commit()
     except RuntimeError as e:
-        print(f"")
+        print("Runtime error: ", e)
 
-def video_DB_Daily_Update():
+def video_db_daily_update():
+    """ causes video db to update periodically, called in app factory as a daily repeated process"""
     from app.admin.services_video import Update_Video_Database_Full
     Update_Video_Database_Full()
     return
@@ -82,8 +83,7 @@ def check_ban(username:str) -> bool:
     if result["banned"]:
         return True
     else:
-        return False
-    
+        return False   
 def post_form_match_case(string: str) -> list[str,str]:
     """ takes a unnamed form from a post request on the dashboard and preps the responce so backend can direct to the correct item (video/article/user) etc."""  
     check = "("
@@ -94,6 +94,5 @@ def post_form_match_case(string: str) -> list[str,str]:
         itemID = string[1].replace("(","").replace(")","")
     else:
         action = str(string)
-
     match_case = [action, itemID]
     return match_case

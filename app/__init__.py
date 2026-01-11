@@ -1,23 +1,21 @@
+""" app factory """
+import os
+import hashlib
+from dotenv import load_dotenv
+
 #Flask
 from flask import Flask, session, flash, redirect, request, url_for, render_template
 from flask_wtf import CSRFProtect
-from flask_mail import Mail
-from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
+from flask_mail import Mail
 from flask_apscheduler import APScheduler
 
 #Security
 from itsdangerous import URLSafeTimedSerializer
 
-#python modules
-import os, hashlib
-
 #Sessions
 from flask_session import Session
-from app.services import clear_stale_posts, video_DB_Daily_Update
-
-#env file loader
-from dotenv import load_dotenv
+from app.services import clear_stale_posts, video_db_daily_update
 
 #import modules
 from .auth import auth
@@ -32,6 +30,7 @@ from .extensions import mail, serializer, security_salt, register_admins, regist
 scheduler = APScheduler()
 
 def app_create():
+    """ app factory function"""
     app = Flask(__name__)
 
     #load environment variables
@@ -57,7 +56,7 @@ def app_create():
 
     #email functionality 
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-    app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
+    app.config['MAIL_PORT'] = os.getenv('MAIL_PORT', '587')
     app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True').lower() == 'true'
     app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False').lower() == 'true'
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
@@ -116,7 +115,7 @@ def app_create():
 
     scheduler.add_job(
         id='video_DB_Daily',
-        func=video_DB_Daily_Update,
+        func=video_db_daily_update,
         trigger='interval',
         minutes=1440
     )

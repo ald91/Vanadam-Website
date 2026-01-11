@@ -1,3 +1,5 @@
+""" provides routes for the admin dashboard and associated functions"""
+
 #external modules
 from flask import render_template, redirect, url_for, flash, request, session
 
@@ -31,12 +33,9 @@ def dashboard():
     """ admin dashboard """
     if request.method == "GET":
         return render_template('dashboard.html')
-
-    elif request.method == "POST":
-        
+    elif request.method == "POST":   
         action = request.form.get("dashboardAction") #dashboard form
         print(action)
-
         match action:
             case "video":
                 return redirect(url_for("admin.video_management"))
@@ -54,9 +53,8 @@ def dashboard():
                 return redirect(url_for("admin.dashboard"))
             case _:
                 pass
-    else:    
-        return redirect(url_for("admin.dashboard"))
-    
+    else:  
+        return redirect(url_for("admin.dashboard"))  
     return redirect(url_for("admin.dashboard"))
 
 @admin.route('/video-management', methods=["GET", "POST"])
@@ -65,14 +63,11 @@ def video_management():
 
     if request.method == "GET":
         videos = All_Videos_Query(True)
-        return render_template('management-video.html', videos=videos)
-        
-    elif request.method == "POST":
-        
+        return render_template('management-video.html', videos=videos)     
+    elif request.method == "POST":  
         match_case = post_form_match_case(request.form.get("videoAction"))
-        action = match_case[0] 
+        action = match_case[0]
         vidID = match_case[1]
-    
         match action:
             case "video_thumbnails":
                 flash("Video thumbnails folder update completes", "success")
