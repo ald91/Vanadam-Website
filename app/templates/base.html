@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vanadam Halo - {% block title %} {% endblock %}</title>
 
-    <link rel="icon" href="{{ url_for('static', filename='Assets/Icons/favicon.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='assets/Icons/favicon.png') }}">
 
     <!--Local CSS-->
      <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
@@ -28,7 +28,7 @@
             <div class="d-flex flex-column">
                 <div class="d-flex flex-fill">
                 <a class="navbar-brand" href="/">
-                    <img src="{{ url_for('static', filename='Assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
+                    <img src="{{ url_for('static', filename='assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
                     <span class>Vanadam Halo</span>
                                     <div class="align-content-right">
                     {% if session.get('userID') %}
@@ -68,7 +68,7 @@
         <nav class="d-none d-sm-block navbar navbar-expand navbar-dark fixed-top justify-content-center ">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
-                    <img src="{{ url_for('static', filename='Assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
+                    <img src="{{ url_for('static', filename='assets/BrandLogo.jpg')}}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">
                     <span class>Vanadam Halo</span>
                 </a>
                 <ul class="navbar-nav mx-auto">

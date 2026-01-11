@@ -68,7 +68,7 @@ def app_create():
     os.makedirs(SESSION_DIR, exist_ok=True)
 
     #Set upload location for article thumbnails
-    UPLOAD_FOLDER = 'static/Assets/articleThumbs'
+    UPLOAD_FOLDER = 'static/assets/articleThumbs'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     # Register all modules
