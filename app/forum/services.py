@@ -46,6 +46,7 @@ def delete_comment_record(id):
         db.commit()
 
 def prefill(form, id):
+    """When a user wishes to edit their post, this function is called to fill input boxes with pre-existing post data"""
     db = get_database()
     cur = db.cursor()
 
@@ -59,18 +60,20 @@ def prefill(form, id):
     return form
 
 def modify(form, id):
+    """Receives form from user in event they want to modify their post"""
     db = get_database()
     cur = db.cursor()
-
+    
     title = form.title.data
     content = form.content.data
     #Allow only original poster to modify
     if check(id):
-        query = "UPDATE Forums SET title = ?, content = ?"
-        cur.execute(query, (title, content))
+        query = "UPDATE Forums SET title = ?, content = ? WHERE forumID = ?"
+        cur.execute(query, (title, content, id))
         db.commit()
 
 def fetch_all():
+    """Fetch all active LFG posts for the LFG homepage"""
     db = get_database()
     cur = db.cursor()
 
@@ -81,6 +84,7 @@ def fetch_all():
     return result
 
 def fetch_one(id):
+    """Fetch data for given LFG post"""
     db = get_database()
     cur = db.cursor()
     print(id)
@@ -93,6 +97,7 @@ def fetch_one(id):
     return result
 
 def fetch_comments(id):
+    """Fetch all comments for given post"""
     db = get_database()
     cur = db.cursor()
 
@@ -102,8 +107,9 @@ def fetch_comments(id):
     result = cur.fetchall()
     return result
 
-#Checks current user from session against provided username (original poster), optionally, args can provide postID
+
 def check(forumID):
+    """Checks current user from session against provided username (original poster), optionally, args can provide postID"""
     db = get_database()
     cur = db.cursor()
 
@@ -121,6 +127,7 @@ def check(forumID):
         return False
 
 def file_report(form, current_user):
+    """Receive report from form and write to database"""
     db = get_database()
     cur = db.cursor()
 
@@ -137,6 +144,7 @@ def file_report(form, current_user):
         print("Report Success")
         flash("Report successful, an administrator has been notified.", "success")
 
+    #Users may only report page once
     except sqlite3.IntegrityError:
         db.rollback()
         print("User has already reported this target")
